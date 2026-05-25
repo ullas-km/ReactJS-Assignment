@@ -1,0 +1,44 @@
+.section-form {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+  align-items: center;
+}
+
+.section-input {
+  padding: 10px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  outline: none;
+  font-size: 14px;
+}
+
+.section-input:focus {
+  border-color: #2f80ed;
+  box-shadow: 0 0 0 3px rgba(47, 128, 237, 0.2);
+}
+
+/* reuse your existing buttons */
+
+@media (max-width: 768px) {
+
+  .section-form {
+    flex-direction: column; /* stack inputs */
+    align-items: stretch;
+    gap: 12px;
+  }
+
+  .section-input {
+    width: 100%;
+  }
+
+  .students-table {
+    min-width: 500px; /* ensures all columns stay visible */
+  }
+
+  .table-wrapper {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+}

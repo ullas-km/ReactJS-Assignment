@@ -1,0 +1,79 @@
+.form-box {
+  margin-bottom: 20px;
+  display: flex;
+  gap: 10px;
+}
+
+.input-box {
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+}
+
+.add-btn {
+  background: #10b981;
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.update-btn {
+  background: #f59e0b;
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.edit-btn {
+  background: #2f80ed;
+  color: white;
+  border: none;
+  padding: 6px 10px;
+  margin-right: 5px;
+  border-radius: 5px;
+}
+
+.delete-btn {
+  background: #ef4444;
+  color: white;
+  border: none;
+  padding: 6px 10px;
+  border-radius: 5px;
+}
+
+@media (max-width: 768px) {
+  .form-box {
+    flex-direction: column; /* stack inputs */
+    gap: 12px;
+  }
+
+  .input-box {
+    width: 100%;
+  }
+
+  .add-btn,
+  .update-btn {
+    width: 100%; /* full width buttons */
+  }
+}
+
+@media (max-width: 768px) {
+
+  .form-box {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .input-box {
+    width: 100%;
+  }
+
+  .add-btn,
+  .update-btn {
+    width: 100%;
+  }
+}
