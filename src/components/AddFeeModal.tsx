@@ -4,10 +4,10 @@ import { useState } from "react";
 
 import { addFee } from "../services/FeesApi";
 
-type Props = {
+type Props = Readonly<{
   onClose: () => void;
   refreshFees: () => void;
-};
+}>;
 
 export default function AddFeeModal({
   onClose,
@@ -50,11 +50,12 @@ export default function AddFeeModal({
 
         <div className="form-group">
 
-          <label>
+          <label htmlFor="studentId">
             Student ID
           </label>
 
           <input
+          id="studentId"
             value={studentId}
             onChange={(e) =>
               setStudentId(e.target.value)
@@ -65,11 +66,12 @@ export default function AddFeeModal({
 
         <div className="form-group">
 
-          <label>
+          <label htmlFor="amount">
             Amount
           </label>
 
           <input
+          id="amount"
             type="number"
             value={amount}
             onChange={(e) =>
@@ -81,11 +83,12 @@ export default function AddFeeModal({
 
         <div className="form-group">
 
-          <label>
+          <label htmlFor="duedate">
             Due Date
           </label>
 
           <input
+            id="duedate"
             type="date"
             value={dueDate}
             onChange={(e) =>
@@ -96,33 +99,18 @@ export default function AddFeeModal({
         </div>
 
         <div className="form-group">
+  <label htmlFor="status">Status</label>
 
-          <label>
-            Status
-          </label>
-
-          <select
-            value={status}
-            onChange={(e) =>
-              setStatus(e.target.value)
-            }
-          >
-
-            <option value="pending">
-              Pending
-            </option>
-
-            <option value="paid">
-              Paid
-            </option>
-
-            <option value="overdue">
-              Overdue
-            </option>
-
-          </select>
-
-        </div>
+  <select
+    id="status"
+    value={status}
+    onChange={(e) => setStatus(e.target.value)}
+  >
+    <option value="pending">Pending</option>
+    <option value="paid">Paid</option>
+    <option value="overdue">Overdue</option>
+  </select>
+</div>
 
         <div className="modal-actions">
 

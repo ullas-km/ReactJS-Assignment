@@ -1,7 +1,6 @@
-interface HeaderProps {
+type HeaderProps = Readonly<{
   name: string;
-  role: string;
-}
+}>;
 
 export default function Header({
   name

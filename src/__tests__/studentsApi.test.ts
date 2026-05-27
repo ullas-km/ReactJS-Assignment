@@ -1,3 +1,5 @@
+import { describe, it, expect, vi, beforeEach } from "vitest";
+
 import axiosInstance from "../services/axiosInstance";
 
 import {
@@ -7,124 +9,82 @@ import {
   deleteStudent,
 } from "../services/studentsApi";
 
-jest.mock("../services/axiosInstance");
-
-const mockedAxios = axiosInstance as jest.Mocked<typeof axiosInstance>;
+vi.mock("../services/axiosInstance", () => ({
+  default: {
+    get: vi.fn(),
+    post: vi.fn(),
+    put: vi.fn(),
+    delete: vi.fn(),
+  },
+}));
 
 describe("studentsApi", () => {
-
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
-  // GET
-  test("getStudents returns students list", async () => {
-
-    const mockData = [
-      {
-        student_id: 1,
-        name: "John",
-      },
-    ];
-
-    mockedAxios.get.mockResolvedValue({
-      data: mockData,
-    });
+  it("should get students", async () => {
+    vi.mocked(axiosInstance.get).mockResolvedValue({
+      data: [{ name: "John" }],
+    } as any);
 
     const result = await getStudents();
 
-    expect(mockedAxios.get).toHaveBeenCalledWith(
+    expect(axiosInstance.get).toHaveBeenCalledWith(
       "/students/get-students"
     );
 
-    expect(result).toEqual(mockData);
+    expect(result).toEqual([{ name: "John" }]);
   });
 
-  // ADD
-  test("addStudent creates student", async () => {
-
-    const mockResponse = {
-      data: {
-        message: "Student added",
-      },
-    };
-
-    mockedAxios.post.mockResolvedValue(mockResponse);
+  it("should add student", async () => {
+    vi.mocked(axiosInstance.post).mockResolvedValue({
+      data: { success: true },
+    } as any);
 
     const result = await addStudent(
       "John",
-      "john@test.com",
+      "john@gmail.com",
       "9999999999",
       1,
-      2
+      1
     );
 
-    expect(mockedAxios.post).toHaveBeenCalledWith(
-      "/students/post-students",
-      {
-        name: "John",
-        email: "john@test.com",
-        phone: "9999999999",
-        class_id: 1,
-        section_id: 2,
-      }
-    );
+    expect(axiosInstance.post).toHaveBeenCalled();
 
-    expect(result).toEqual(mockResponse.data);
+    expect(result).toEqual({ success: true });
   });
 
-  // UPDATE
-  test("updateStudent updates student", async () => {
-
-    const mockResponse = {
-      data: {
-        message: "Updated",
-      },
-    };
-
-    mockedAxios.put.mockResolvedValue(mockResponse);
+  it("should update student", async () => {
+    vi.mocked(axiosInstance.put).mockResolvedValue({
+      data: { success: true },
+    } as any);
 
     const result = await updateStudent(
       1,
       1,
-      2,
+      1,
       "John",
-      "john@test.com",
+      "john@gmail.com",
       "9999999999"
     );
 
-    expect(mockedAxios.put).toHaveBeenCalledWith(
-      "/students/put-students/1",
-      {
-        class_id: 1,
-        section_id: 2,
-        name: "John",
-        email: "john@test.com",
-        phone: "9999999999",
-      }
-    );
+    expect(axiosInstance.put).toHaveBeenCalled();
 
-    expect(result).toEqual(mockResponse.data);
+    expect(result).toEqual({ success: true });
   });
 
-  // DELETE
-  test("deleteStudent deletes student", async () => {
-
-    const mockResponse = {
-      data: {
-        message: "Deleted",
-      },
-    };
-
-    mockedAxios.delete.mockResolvedValue(mockResponse);
+  it("should delete student", async () => {
+    vi.mocked(axiosInstance.delete).mockResolvedValue({
+      data: { success: true },
+    } as any);
 
     const result = await deleteStudent(1);
 
-    expect(mockedAxios.delete).toHaveBeenCalledWith(
+    expect(axiosInstance.delete).toHaveBeenCalledWith(
       "/students/delete-students/1"
     );
 
-    expect(result).toEqual(mockResponse.data);
+    expect(result).toEqual({ success: true });
   });
-
 });

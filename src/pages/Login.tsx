@@ -1,4 +1,7 @@
-import { useState } from "react";
+import {
+  useState,
+  type ChangeEvent,
+} from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { loginUser } from "../services/authApi";
 import "../assets/css/login.css";
@@ -6,7 +9,6 @@ import "../assets/css/login.css";
 export default function LoginPage() {
   const navigate = useNavigate();
 
-  // ✅ single state (professional approach)
   const [form, setForm] = useState({
     email: "",
     password: "",
@@ -20,23 +22,38 @@ export default function LoginPage() {
   const [serverError, setServerError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  // ---------------- VALIDATION ----------------
   const validateField = (name: string, value: string) => {
-    if (name === "email") {
-      if (!value) return "Email is required";
-      if (!/^\S+@\S+\.\S+$/.test(value)) return "Invalid email format";
+
+  if (name === "email") {
+
+    if (!value) {
+      return "Email is required";
     }
 
-    if (name === "password") {
-      if (!value) return "Password is required";
-      if (value.length < 6) return "Minimum 6 characters required";
+    const emailRegex =
+      /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[A-Za-z]{2,}$/;
+
+    if (!emailRegex.test(value)) {
+      return "Invalid email format";
+    }
+  }
+
+  if (name === "password") {
+
+    if (!value) {
+      return "Password is required";
     }
 
-    return "";
-  };
+    if (value.length < 6) {
+      return "Minimum 6 characters required";
+    }
+  }
+
+  return "";
+};
 
   // ---------------- HANDLE CHANGE ----------------
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+ const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
 
     // update form state
@@ -53,7 +70,9 @@ export default function LoginPage() {
   };
 
   // ---------------- SUBMIT ----------------
-  const handleLogin = async (e: React.FormEvent) => {
+const handleLogin = async (
+  e: React.BaseSyntheticEvent
+): Promise<void> => {
     e.preventDefault();
     setServerError("");
 
@@ -94,8 +113,9 @@ export default function LoginPage() {
 
           {/* EMAIL */}
           <div className="loginfields">
-            <label>Email</label>
+            <label htmlFor="email">Email</label>
             <input
+            id="email"
               name="email"
               type="email"
               value={form.email}
@@ -106,8 +126,9 @@ export default function LoginPage() {
 
           {/* PASSWORD */}
           <div className="loginfields">
-            <label>Password</label>
+            <label htmlFor="password">Password</label>
             <input
+            id="password"
               name="password"
               type="password"
               value={form.password}

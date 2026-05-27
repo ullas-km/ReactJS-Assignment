@@ -1,4 +1,4 @@
-*{
+* {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
@@ -23,12 +23,12 @@
 .students-header h2 {
   font-size: 24px;
   font-weight: bold;
-  color: #1f2937;
+  color: #111827; /* darker for contrast */
 }
 
 .students-header p {
-  background: #eaf2ff;
-  color: #2F80ED;
+  background: #e0e7ff;
+  color: #1e40af; /* improved contrast */
   padding: 6px 12px;
   border-radius: 20px;
   font-size: 14px;
@@ -38,7 +38,7 @@
 /* TITLE */
 .students-title {
   margin-bottom: 15px;
-  color: #1f2937;
+  color: #111827;
 }
 
 /* TABLE WRAPPER */
@@ -55,31 +55,25 @@
   width: 100%;
   border-collapse: collapse;
   font-size: 15px;
-  background: white;
-  border-radius: 10px;
-  overflow: hidden;
 }
 
 /* HEADER */
 .students-table thead {
-  background-color: #2F80ED;
-  color: white;
+  background-color: #1e3a8a; /* darker blue = better contrast */
+  color: #ffffff;
 }
 
-.students-table th {
-  text-align: center;
-  padding: 12px;
-  font-weight: bold;
-}
-
-/* CELLS */
+.students-table th,
 .students-table td {
-  padding: 12px;
-  border-bottom: 1px solid #eee;
   text-align: center;
+  padding: 12px;
 }
 
-/* ROW HOVER */
+/* ROWS */
+.students-table td {
+  border-bottom: 1px solid #eee;
+}
+
 .students-table tbody tr:hover {
   background-color: #f3f6ff;
   transition: 0.2s;
@@ -92,126 +86,12 @@
   gap: 10px;
 }
 
-/* EDIT BUTTON */
+/* BUTTONS */
 .edit-btn {
   padding: 6px 12px;
-  background: #2F80ED;
-  border: none;
+  background: #1d4ed8;
   color: white;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: 0.2s;
-}
-
-.edit-btn:hover {
-  background: #1c6dd0;
-}
-
-/* DELETE BUTTON */
-.delete-btn {
-  padding: 6px 12px;
-  background: #ef4444;
   border: none;
-  color: white;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: 0.2s;
-}
-
-.delete-btn:hover {
-  background: #dc2626;
-}
-
-/* EDIT BOX */
-.edit-box {
-  margin-bottom: 15px;
-  padding: 15px;
-  background: #ffffff;
-  border: 1px solid #e5e7eb;
-  border-radius: 10px;
-}
-
-/* INPUTS */
-.edit-box input {
-  width: 100%;
-  padding: 10px;
-  margin-bottom: 10px;
-  border-radius: 8px;
-  border: 1px solid #d1d5db;
-}
-
-.edit-box input:focus {
-  border-color: #2F80ED;
-  outline: none;
-}
-.edit-box {
-  margin-bottom: 20px;
-  padding: 20px;
-  background: #ffffff;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  max-width: 500px;
-}
-
-/* Title inside edit box */
-.edit-box h3 {
-  margin-bottom: 5px;
-  font-size: 18px;
-  color: #2c3e50;
-}
-
-/* Inputs */
-.edit-box input {
-  padding: 10px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  outline: none;
-  font-size: 14px;
-  transition: 0.2s;
-}
-
-.edit-box input:focus {
-  border-color: #7ee481;
-  box-shadow: 0 0 0 2px rgba(126, 228, 129, 0.2);
-}
-
-/* Buttons container feel */
-.edit-box button {
-  padding: 10px;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  font-weight: bold;
-  transition: 0.3s;
-}
-
-/* Update button */
-.edit-box button:first-of-type {
-  background: #7ee481;
-  color: black;
-}
-
-.edit-box button:first-of-type:hover {
-  background: #5fd66a;
-}
-
-/* Cancel button */
-.edit-box button:last-of-type {
-  background: #e74c3c;
-  color: white;
-}
-
-.edit-box button:last-of-type:hover {
-  background: #c0392b;
-}
-.edit-btn {
-  padding: 6px 14px;
-  background: #2F80ED;
-  border: none;
-  color: white;
   border-radius: 6px;
   cursor: pointer;
   font-weight: 500;
@@ -219,15 +99,15 @@
 }
 
 .edit-btn:hover {
-  background: #1c6dd0;
+  background: #1e40af;
   transform: translateY(-1px);
 }
 
 .delete-btn {
-  padding: 6px 14px;
-  background: #ef4444;
-  border: none;
+  padding: 6px 12px;
+  background: #dc2626;
   color: white;
+  border: none;
   border-radius: 6px;
   cursor: pointer;
   font-weight: 500;
@@ -235,179 +115,39 @@
 }
 
 .delete-btn:hover {
-  background: #dc2626;
+  background: #b91c1c;
   transform: translateY(-1px);
 }
+
+/* ADD BUTTON */
+
+
 /* MODAL OVERLAY */
 .modal-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.5);
-
+  background: rgba(0,0,0,0.5);
   display: flex;
   justify-content: center;
   align-items: center;
-
   z-index: 1000;
 }
 
 /* MODAL BOX */
 .modal-box {
-  width: 420px;
-  background: white;
-
-  padding: 25px;
-  border-radius: 14px;
-
-  box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-
-  animation: modalOpen 0.2s ease;
-}
-
-/* TITLE */
-.modal-box h2 {
-  color: #1f2937;
-  margin-bottom: 5px;
-}
-
-/* INPUTS */
-.modal-box input {
-  padding: 12px;
-
-  border: 1px solid #d1d5db;
-  border-radius: 8px;
-
-  font-size: 14px;
-
-  transition: 0.2s;
-}
-
-.modal-box input:focus {
-  outline: none;
-  border-color: #2F80ED;
-
-  box-shadow: 0 0 0 3px rgba(47,128,237,0.15);
-}
-
-/* BUTTON CONTAINER */
-.modal-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 10px;
-
-  margin-top: 10px;
-}
-
-/* ADD BUTTON */
-.modal-add-btn {
-  background: #22c55e;
-  color: white;
-
-  border: none;
-  padding: 10px 18px;
-
-  border-radius: 8px;
-  cursor: pointer;
-
-  font-weight: bold;
-  transition: 0.2s;
-}
-
-.modal-add-btn:hover {
-  background: #16a34a;
-}
-
-/* CANCEL BUTTON */
-.modal-cancel-btn {
-  background: #ef4444;
-  color: white;
-
-  border: none;
-  padding: 10px 18px;
-
-  border-radius: 8px;
-  cursor: pointer;
-
-  font-weight: bold;
-  transition: 0.2s;
-}
-
-.modal-cancel-btn:hover {
-  background: #dc2626;
-}
-
-/* ANIMATION */
-@keyframes modalOpen {
-  from {
-    opacity: 0;
-    transform: scale(0.95);
-  }
-
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
-/* ADD THIS IN viewstudents.css */
-
-.add-btn{
-  padding: 10px 18px;
-  border: none;
-  border-radius: 8px;
-  background-color: #2F80ED;
-  color: white;
-  cursor: pointer;
-  font-weight: bold;
-  transition: 0.3s;
-}
-
-.add-btn:hover{
-  background-color: #1c6dd0;
-}
-
-/* MODAL OVERLAY */
-
-.modal-overlay{
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0,0,0,0.5);
-
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  z-index: 1000;
-}
-
-/* MODAL BOX */
-
-.modal-box{
-  background: white;
-  padding: 25px;
-  border-radius: 12px;
   width: 400px;
-
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.2);
   display: flex;
   flex-direction: column;
   gap: 15px;
-
-  box-shadow: 0 4px 20px rgba(0,0,0,0.2);
 }
 
-.modal-box h2{
-  color: #1f2937;
-}
-
+/* INPUTS */
 .modal-box input,
-.modal-box select{
+.modal-box select {
   padding: 10px;
   border: 1px solid #d1d5db;
   border-radius: 8px;
@@ -415,111 +155,151 @@
 }
 
 .modal-box input:focus,
-.modal-box select:focus{
-  border-color: #2F80ED;
+.modal-box select:focus {
+  border-color: #1d4ed8;
 }
 
-/* ACTION BUTTONS */
-
-.modal-actions{
+/* MODAL ACTIONS */
+.modal-actions {
   display: flex;
   gap: 10px;
 }
 
-.modal-add-btn{
-  flex: 1;
-  padding: 10px;
-  border: none;
-  border-radius: 8px;
-  background-color: #2F80ED;
-  color: white;
-  cursor: pointer;
-  font-weight: bold;
-}
-
-.modal-add-btn:hover{
-  background-color: #1c6dd0;
-}
-
-.modal-cancel-btn{
-  flex: 1;
-  padding: 10px;
-  border: none;
-  border-radius: 8px;
-  background-color: #ef4444;
-  color: white;
-  cursor: pointer;
-  font-weight: bold;
-}
-
-.modal-cancel-btn:hover{
-  background-color: #dc2626;
-}
-
-.form-group{
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.form-group label{
-  font-size: 14px;
-  font-weight: 600;
-  color: #374151;
-}
-
-/* HEADER ADD BUTTON */
+/* BUTTONS */
+/* HEADER + ADD BUTTON */
+.add-btn,
 .header-add-btn {
   padding: 10px 18px;
   border: none;
   border-radius: 8px;
-  background-color: #22c55e;
-  color: white;
+  background-color: #15803d; /* darker green */
+  color: #ffffff;
   cursor: pointer;
   font-weight: bold;
   transition: 0.2s;
 }
 
+.add-btn:hover,
 .header-add-btn:hover {
-  background-color: #16a34a;
+  background-color: #166534; /* even darker */
 }
 
+/* MODAL ADD BUTTON */
+.modal-add-btn {
+  flex: 1;
+  padding: 10px;
+  background: #15803d; /* FIXED */
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.modal-add-btn:hover {
+  background: #166534;
+}
+
+.modal-cancel-btn {
+  flex: 1;
+  padding: 10px;
+  background: #dc2626;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.modal-cancel-btn:hover {
+  background: #b91c1c;
+}
+
+/* FORM GROUP */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-group label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #374151;
+}
+
+/* EDIT BOX */
+.edit-box {
+  width: 100%;
+  padding: 20px;
+  margin-bottom: 20px;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+/* EDIT FORM INPUTS */
+.edit-box input,
+.edit-box select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  outline: none;
+  font-size: 14px;
+}
+
+.edit-box input:focus,
+.edit-box select:focus {
+  border-color: #1d4ed8;
+}
+
+/* EDIT BUTTONS */
+.edit-box button {
+  padding: 10px 16px;
+  border: none;
+  border-radius: 8px;
+  color: white;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+/* UPDATE BUTTON */
+.edit-box .modal-actions button:first-child {
+  background: #15803d;
+}
+
+.edit-box .modal-actions button:first-child:hover {
+  background: #166534;
+}
+
+/* CANCEL BUTTON */
+.edit-box .modal-actions button:last-child {
+  background: #dc2626;
+}
+
+.edit-box .modal-actions button:last-child:hover {
+  background: #b91c1c;
+}
+
+/* MOBILE */
 @media (max-width: 768px) {
 
-  /* PAGE PADDING */
   .students-page {
     padding: 14px;
   }
 
-  /* HEADER STACK */
   .students-header {
     flex-direction: column;
     align-items: flex-start;
     gap: 10px;
   }
 
-  .students-header h2 {
-    font-size: 20px;
-  }
-
-  /* TABLE WRAPPER */
-  .table-wrapper {
-    padding: 12px;
-    overflow-x: auto; /* already good, keeps horizontal scroll */
-  }
-
-  /* TABLE TEXT SMALLER */
   .students-table {
     font-size: 13px;
-    min-width: 600px; /* forces scroll instead of breaking */
+    min-width: 600px;
   }
 
-  .students-table th,
-  .students-table td {
-    padding: 10px;
-  }
-
-  /* ACTION BUTTONS STACK */
   .actions {
     flex-direction: column;
     gap: 6px;
@@ -528,40 +308,9 @@
   .edit-btn,
   .delete-btn {
     width: 100%;
-    font-size: 12px;
   }
 
-  /* EDIT BOX FULL WIDTH */
-  .edit-box {
-    width: 100%;
-    max-width: 100%;
-    padding: 14px;
-  }
-
-  /* MODAL FULL SCREEN FEEL */
   .modal-box {
     width: 90%;
-    max-width: 360px;
-    padding: 18px;
-  }
-
-  .modal-actions {
-    flex-direction: column;
-  }
-
-  .modal-add-btn,
-  .modal-cancel-btn {
-    width: 100%;
-  }
-
-  /* HEADER ADD BUTTON */
-  .header-add-btn {
-    width: 100%;
-  }
-  .students-table th:nth-child(3),
-  .students-table td:nth-child(3),
-  .students-table th:nth-child(4),
-  .students-table td:nth-child(4) {
-    display: none; /* hides email + phone */
   }
 }

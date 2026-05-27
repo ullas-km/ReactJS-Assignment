@@ -1,10 +1,12 @@
 import { Navigate } from "react-router-dom";
 
+type ProtectedRouteProps = Readonly<{
+  children: React.ReactNode;
+}>;
+
 export default function ProtectedRoute({
   children,
-}: {
-  children: React.ReactNode;
-}) {
+}: ProtectedRouteProps) {
 
   const token = localStorage.getItem("token");
 

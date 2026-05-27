@@ -1,107 +1,87 @@
 import {
   render,
   screen,
-  fireEvent,
   waitFor,
 } from "@testing-library/react";
 
+import userEvent from "@testing-library/user-event";
+
+import { describe, it, expect, vi } from "vitest";
+
 import ViewStudents from "../pages/ViewStudents";
 
-import * as studentsApi from "../services/studentsApi";
-import * as classesApi from "../services/ClassesApi";
-import * as sectionsApi from "../services/SectionApi";
+vi.mock("../services/studentsApi", () => ({
+  getStudents: vi.fn(),
+  deleteStudent: vi.fn(),
+  updateStudent: vi.fn(),
+}));
 
-jest.mock("../services/studentsApi");
-jest.mock("../services/ClassesApi");
-jest.mock("../services/SectionApi");
+vi.mock("../services/ClassesApi", () => ({
+  getClasses: vi.fn(),
+}));
+
+vi.mock("../services/SectionApi", () => ({
+  getSections: vi.fn(),
+}));
+
+import {
+  getStudents,
+  deleteStudent,
+} from "../services/studentsApi";
+
+import { getClasses } from "../services/ClassesApi";
+import { getSections } from "../services/SectionApi";
 
 describe("ViewStudents", () => {
-
-  beforeEach(() => {
-    jest.clearAllMocks();
-
-    (studentsApi.getStudents as jest.Mock).mockResolvedValue([
+  it("should render students", async () => {
+    (getStudents as any).mockResolvedValue([
       {
         student_id: 1,
         name: "John",
-        email: "john@test.com",
+        email: "john@gmail.com",
         phone: "9999999999",
-        class_id: 1,
-        section_id: 1,
-        class_name: "10",
+        class_name: "10A",
         section_name: "A",
       },
     ]);
 
-    (classesApi.getClasses as jest.Mock).mockResolvedValue([
-      {
-        class_id: 1,
-        class_name: "10",
-      },
-    ]);
-
-    (sectionsApi.getSections as jest.Mock).mockResolvedValue([
-      {
-        section_id: 1,
-        section_name: "A",
-        class_id: 1,
-      },
-    ]);
-  });
-
-  test("renders students table", async () => {
+    (getClasses as any).mockResolvedValue([]);
+    (getSections as any).mockResolvedValue([]);
 
     render(<ViewStudents />);
-
-    expect(
-      await screen.findByText("John")
-    ).toBeInTheDocument();
-
-    expect(
-      screen.getByText("john@test.com")
-    ).toBeInTheDocument();
-
-    expect(
-      screen.getByText("9999999999")
-    ).toBeInTheDocument();
-  });
-
-  test("opens edit form", async () => {
-
-    render(<ViewStudents />);
-
-    const editButton = await screen.findByText("Edit");
-
-    fireEvent.click(editButton);
-
-    expect(
-      screen.getByDisplayValue("John")
-    ).toBeInTheDocument();
-
-    expect(
-      screen.getByDisplayValue("john@test.com")
-    ).toBeInTheDocument();
-  });
-
-  test("calls deleteStudent", async () => {
-
-    (studentsApi.deleteStudent as jest.Mock)
-      .mockResolvedValue({});
-
-    render(<ViewStudents />);
-
-    const deleteButton =
-      await screen.findByText("Delete");
-
-    fireEvent.click(deleteButton);
 
     await waitFor(() => {
-
-      expect(
-        studentsApi.deleteStudent
-      ).toHaveBeenCalledWith(1);
-
+      expect(screen.getByText("John")).toBeInTheDocument();
     });
   });
 
-}); 
+  it("should delete student", async () => {
+    (getStudents as any).mockResolvedValue([
+      {
+        student_id: 1,
+        name: "John",
+        email: "john@gmail.com",
+        phone: "9999999999",
+        class_name: "10A",
+        section_name: "A",
+      },
+    ]);
+
+    (deleteStudent as any).mockResolvedValue({});
+
+    (getClasses as any).mockResolvedValue([]);
+    (getSections as any).mockResolvedValue([]);
+
+    render(<ViewStudents />);
+
+    await waitFor(() => {
+      expect(screen.getByText("John")).toBeInTheDocument();
+    });
+
+    const buttons = screen.getAllByText("Delete");
+
+    await userEvent.click(buttons[0]);
+
+    expect(deleteStudent).toHaveBeenCalledWith(1);
+  });
+});

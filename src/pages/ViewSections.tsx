@@ -101,15 +101,15 @@ export default function ViewSections() {
           ))}
         </select>
 
-        {editId !== null ? (
-          <button className="update-btn" onClick={handleUpdate}>
-            Update
-          </button>
-        ) : (
-          <button className="add-btn" onClick={handleAdd}>
-            Add
-          </button>
-        )}
+        {editId === null ? (
+  <button className="add-btn" onClick={handleAdd}>
+    Add
+  </button>
+) : (
+  <button className="update-btn" onClick={handleUpdate}>
+    Update
+  </button>
+)}
       </div>
 
       {/* TABLE */}

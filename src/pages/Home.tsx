@@ -37,14 +37,15 @@ export default function DashboardHome() {
 
       <div className="card-grid">
         {cards.map((c) => (
-          <div
-            key={c.title}
-            className="dashboard-card"
-            onClick={() => navigate(c.path)}
-          >
-            <h3>{c.title}</h3>
-            <p>Manage {c.title.toLowerCase()}</p>
-          </div>
+          <button
+  key={c.title}
+  type="button"
+  className="dashboard-card"
+  onClick={() => navigate(c.path)}
+>
+  <h3>{c.title}</h3>
+  <p>Manage {c.title.toLowerCase()}</p>
+</button>
         ))}
       </div>
     </div>

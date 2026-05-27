@@ -72,15 +72,15 @@ export default function ViewTeachers() {
           placeholder="Teacher Name"
         />
 
-        {editId !== null ? (
-          <button className="update-btn" onClick={handleUpdate}>
-            Update
-          </button>
-        ) : (
-          <button className="add-btn" onClick={handleAdd}>
-            Add
-          </button>
-        )}
+        {editId === null ? (
+  <button className="add-btn" onClick={handleAdd}>
+    Add
+  </button>
+) : (
+  <button className="update-btn" onClick={handleUpdate}>
+    Update
+  </button>
+)}
       </div>
 
       {/* TABLE */}

@@ -2,10 +2,10 @@ import { useState, useEffect } from "react";
 import { addStudent } from "../services/studentsApi";
 import { getClasses } from "../services/ClassesApi";
 import { getSections } from "../services/SectionApi";
-type Props = {
+type Props = Readonly<{
   onClose: () => void;
   refreshStudents: () => void;
-};
+}>;
 
 export default function AddStudentModal({
   onClose,
@@ -55,39 +55,40 @@ const fetchSections = async () => {
       <h2>Add Student</h2>
 
       <div className="form-group">
-        <label>Name</label>
-
-        <input
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-        />
-      </div>
-
-      <div className="form-group">
-        <label>Email</label>
-
-        <input
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
-      </div>
+  <label htmlFor="name">Name</label>
+  <input
+    id="name"
+    value={name}
+    onChange={(e) => setName(e.target.value)}
+  />
+</div>
 
       <div className="form-group">
-        <label>Phone</label>
-
-        <input
-          value={phone}
-          onChange={(e) => setPhone(e.target.value)}
-        />
-      </div>
+  <label htmlFor="email">Email</label>
+  <input
+    id="email"
+    value={email}
+    onChange={(e) => setEmail(e.target.value)}
+  />
+</div>
 
       <div className="form-group">
-        <label>Class ID</label>
+  <label htmlFor="phone">Phone</label>
+  <input
+    id="phone"
+    value={phone}
+    onChange={(e) => setPhone(e.target.value)}
+  />
+</div>
 
-        <select
-  value={classId}
-  onChange={(e) => setClassId(e.target.value)}
->
+      <div className="form-group">
+  <label htmlFor="classId">Class ID</label>
+
+  <select
+    id="classId"
+    value={classId}
+    onChange={(e) => setClassId(e.target.value)}
+  >
   <option value="">Select Class</option>
 
   {classes.map((c) => (
@@ -102,12 +103,13 @@ const fetchSections = async () => {
       </div>
 
       <div className="form-group">
-        <label>Section ID</label>
+  <label htmlFor="sectionId">Section ID</label>
 
-        <select
-  value={sectionId}
-  onChange={(e) => setSectionId(e.target.value)}
->
+  <select
+    id="sectionId"
+    value={sectionId}
+    onChange={(e) => setSectionId(e.target.value)}
+  >
   <option value="">Select Section</option>
 
   {sections

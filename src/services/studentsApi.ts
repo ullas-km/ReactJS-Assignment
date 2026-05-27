@@ -9,7 +9,7 @@ export const getStudents = async () => {
 // ADD
 export const addStudent = async (
   name: string,
-  email: string,
+  email: string, 
   phone: string,
   class_id: number,
   section_id: number

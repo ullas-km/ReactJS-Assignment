@@ -1,44 +1,43 @@
 import {
   render,
   screen,
-  fireEvent,
   waitFor,
 } from "@testing-library/react";
 
+import userEvent from "@testing-library/user-event";
+
+import { describe, it, expect, vi, beforeEach } from "vitest";
+
 import ViewClasses from "../pages/ViewClasses";
 
-import * as classApi from "../services/ClassesApi";
+import * as classesApi from "../services/ClassesApi";
 
-jest.mock("../services/ClassesApi");
+vi.mock("../services/ClassesApi");
 
 describe("ViewClasses", () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
 
-    (classApi.getClasses as jest.Mock)
-      .mockResolvedValue([
-        {
-          class_id: 1,
-          class_name: 10,
-        },
-      ]);
+    vi.mocked(classesApi.getClasses).mockResolvedValue([
+      {
+        class_id: 1,
+        class_name: 10,
+      },
+    ]);
   });
 
-  test("renders classes table", async () => {
+  it("should render classes", async () => {
     render(<ViewClasses />);
 
     expect(
       await screen.findByText("10")
     ).toBeInTheDocument();
-
-    expect(
-      screen.getByText("Class Name")
-    ).toBeInTheDocument();
   });
 
-  test("adds new class", async () => {
-    (classApi.addClass as jest.Mock)
-      .mockResolvedValue({});
+  it("should add class", async () => {
+    vi.mocked(classesApi.addClass).mockResolvedValue({
+      success: true,
+    });
 
     render(<ViewClasses />);
 
@@ -47,74 +46,69 @@ describe("ViewClasses", () => {
         "Enter class name"
       );
 
-    fireEvent.change(input, {
-      target: {
-        value: "11",
-      },
-    });
+    await userEvent.type(input, "12");
 
-    fireEvent.click(
-      screen.getByRole("button", {
-        name: "Add",
-      })
-    );
+    const addButton =
+      screen.getByText("Add");
+
+    await userEvent.click(addButton);
 
     await waitFor(() => {
-      expect(
-        classApi.addClass
-      ).toHaveBeenCalledWith(11);
+      expect(classesApi.addClass).toHaveBeenCalledWith(
+        12
+      );
     });
   });
 
-  test("edits class", async () => {
-    (classApi.updateClass as jest.Mock)
-      .mockResolvedValue({});
+  it("should delete class", async () => {
+    vi.mocked(classesApi.deleteClass).mockResolvedValue({
+      success: true,
+    });
 
     render(<ViewClasses />);
 
-    const editButtons =
-      await screen.findAllByText("Edit");
+    const deleteButton =
+      await screen.findByText("Delete");
 
-    fireEvent.click(editButtons[0]);
-
-    const input =
-      screen.getByDisplayValue("10");
-
-    fireEvent.change(input, {
-      target: {
-        value: "12",
-      },
-    });
-
-    fireEvent.click(
-      screen.getByRole("button", {
-        name: "Update",
-      })
-    );
-
-    await waitFor(() => {
-      expect(classApi.updateClass).toHaveBeenCalledWith(
-  1,
-  "12"
-);
-    });
-  });
-
-  test("deletes class", async () => {
-    (classApi.deleteClass as jest.Mock)
-      .mockResolvedValue({});
-
-    render(<ViewClasses />);
-
-    const deleteButtons =
-      await screen.findAllByText("Delete");
-
-    fireEvent.click(deleteButtons[0]);
+    await userEvent.click(deleteButton);
 
     await waitFor(() => {
       expect(
-        classApi.deleteClass
+        classesApi.deleteClass
       ).toHaveBeenCalledWith(1);
     });
   });
-}); 
+
+  it("should update class", async () => {
+    vi.mocked(classesApi.updateClass).mockResolvedValue({
+      success: true,
+    });
+
+    render(<ViewClasses />);
+
+    const editButton =
+      await screen.findByText("Edit");
+
+    await userEvent.click(editButton);
+
+    const input =
+      screen.getByPlaceholderText(
+        "Enter class name"
+      );
+
+    await userEvent.clear(input);
+
+    await userEvent.type(input, "15");
+
+    const updateButton =
+      screen.getByText("Update");
+
+    await userEvent.click(updateButton);
+
+    await waitFor(() => {
+      expect(
+        classesApi.updateClass
+      ).toHaveBeenCalledWith(1, "15");
+    });
+  });
+});

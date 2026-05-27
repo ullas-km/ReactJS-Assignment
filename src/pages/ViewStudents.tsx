@@ -110,36 +110,40 @@ const fetchSections = async () => {
     <h3>Edit Student</h3>
 
     <div className="form-group">
-      <label>Name</label>
+      <label htmlFor="student-name">Name</label>
 
       <input
+      id="student-name"
         value={name}
         onChange={(e) => setName(e.target.value)}
       />
     </div>
 
     <div className="form-group">
-      <label>Email</label>
+      <label htmlFor="student-email">Email</label>
 
       <input
+      id="student-email"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
       />
     </div>
 
     <div className="form-group">
-      <label>Phone</label>
+      <label htmlFor="student-phone">Phone</label>
 
       <input
+      id="student-phone"
         value={phone}
         onChange={(e) => setPhone(e.target.value)}
       />
     </div>
 
     <div className="form-group">
-      <label>Class</label>
+      <label htmlFor="student-class">Class</label>
 
       <select
+      id="student-class"
   value={classId}
   onChange={(e) => setClassId(Number(e.target.value))}
 >
@@ -157,9 +161,9 @@ const fetchSections = async () => {
     </div>
 
     <div className="form-group">
-      <label>Section</label>
+      <label htmlFor="student-section">Section</label>
 
-      <select
+      <select id="student-section"
   value={sectionId}
   onChange={(e) => setSectionId(Number(e.target.value))}
 >
@@ -219,10 +223,10 @@ const fetchSections = async () => {
                 <td>{s.phone}</td>
                 <td>{s.class_name}</td>
                 <td>{s.section_name}</td>
-
+<td className="actions">
                 <div className="modal-actions">
 
-<td className="actions">
+
 
   <button
     onClick={() => handleEditClick(s)}
@@ -237,10 +241,10 @@ const fetchSections = async () => {
   >
     Delete
   </button>
-
+</div>
 </td>
 
-</div>
+
 
               </tr>
             ))}

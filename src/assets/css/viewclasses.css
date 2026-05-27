@@ -1,58 +1,60 @@
 /* EDIT BUTTON */
 .edit-btn {
   padding: 6px 12px;
-  background: #2F80ED;
+  background: #1d4ed8;
   border: none;
-  color: white;
+  color: #ffffff;
   border-radius: 6px;
   cursor: pointer;
   transition: 0.2s;
 }
 
 .edit-btn:hover {
-  background: #1c6dd0;
+  background: #1e40af;
 }
 
 /* DELETE BUTTON */
 .delete-btn {
   padding: 6px 12px;
-  background: #ef4444;
+  background: #dc2626;
   border: none;
-  color: white;
+  color: #ffffff;
   border-radius: 6px;
   cursor: pointer;
   transition: 0.2s;
 }
 
 .delete-btn:hover {
-  background: #dc2626;
+  background: #991b1b;
 }
 
 .add-btn {
   padding: 8px 14px;
-  background: #10b981;
+  background: #047857; /* darker green */
   border: none;
-  color: white;
+  color: #ffffff;
   border-radius: 6px;
   cursor: pointer;
 }
 
 .add-btn:hover {
-  background: #059669;
+  background: #065f46;
 }
 
 .update-btn {
   padding: 8px 14px;
-  background: #f59e0b;
+  background: #b45309; /* darker amber */
   border: none;
-  color: white;
+  color: #ffffff;
   border-radius: 6px;
   cursor: pointer;
 }
 
 .update-btn:hover {
-  background: #d97706;
+  background: #92400e;
 }
+
+
 
 .class-input {
   padding: 10px 12px;

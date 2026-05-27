@@ -1,6 +1,8 @@
 import axios from 'axios';
 
-const API_BASE = import.meta.env.VITE_API_URL;
+import { API_URL } from "../config";
+
+const API_BASE = API_URL;
 const AUTH_API = `${API_BASE}/auth`;
 
 export interface LoginPayload {
@@ -8,9 +10,6 @@ export interface LoginPayload {
     password: string;
 }
 
-// export interface LoginResponse {
-//     token: string;
-// }
 export interface User {
     user_id: number;
     name: string;

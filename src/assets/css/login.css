@@ -41,6 +41,7 @@
   align-items: center;
   justify-content: space-between;
   gap: 12px;
+  margin-bottom: 6px;
 }
 
 /* LABEL LEFT */
@@ -48,15 +49,6 @@
   width: 100px;
   font-size: 14px;
   color: #374151;
-}
-
-/* INPUT RIGHT */
-.loginfields input {
-  flex: 1;
-  padding: 10px;
-  border-radius: 8px;
-  border: 1px solid #d1d5db;
-  outline: none;
 }
 
 .loginfields input:focus {
@@ -76,8 +68,8 @@
 .error {
   color: #ef4444;
   text-align: center;
-  margin-bottom: 10px;
-  font-size: 14px;
+  font-size: 13px;
+  margin: 2px 0 10px 110px; 
 }
 
 /* BUTTON */
@@ -86,7 +78,7 @@
   padding: 12px;
   border-radius: 8px;
   border: none;
-  background-color: #2f80ed;
+  background-color: #1E40AF;
   color: white;
   font-size: 16px;
   cursor: pointer;
@@ -109,30 +101,10 @@
   font-weight: bold;
 }
 
-.loginfields {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  margin-bottom: 6px;
-}
-
-.loginfields label {
-  width: 100px;
-  font-size: 14px;
-  color: #374151;
-}
-
 .loginfields input {
   flex: 1;
   padding: 10px;
   border-radius: 8px;
   border: 1px solid #d1d5db;
   outline: none;
-}
-
-.error {
-  color: #ef4444;
-  font-size: 13px;
-  margin: 2px 0 10px 110px; /* aligns under input */
 }

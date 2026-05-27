@@ -9,7 +9,9 @@ export default function WelcomePage() {
 
  const user = JSON.parse(localStorage.getItem("user") || "null");
 
-if (!user) return null;
+if (!user) {
+  return null;
+}
 
   return (
 
@@ -21,7 +23,6 @@ if (!user) return null;
 
         <Header
           name={user.name}
-          role={user.role}
         />
 
         <div className="dashboard-main">

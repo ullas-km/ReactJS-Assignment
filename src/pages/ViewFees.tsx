@@ -155,7 +155,7 @@ const handleUpdate = async () => {
                 <td>{f.id}</td>
                 <td>{f.student_id}</td>
                 <td>{f.amount}</td>
-                <td>{f.due_date}</td>
+                <td>{new Date(f.due_date).toLocaleDateString()}</td>
                 <td>{f.status}</td>
 
                 <td className="actions">

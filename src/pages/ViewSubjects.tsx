@@ -7,8 +7,6 @@ import {
   deleteSubject,
 } from "../services/SubjectApi";
 
-import "../assets/css/viewSubjects.css";
-
 export default function ViewSubjects() {
 
   const [subjects, setSubjects] = useState<any[]>([]);
@@ -87,21 +85,21 @@ export default function ViewSubjects() {
           placeholder="Subject Name"
         />
 
-        {editId !== null ? (
-          <button
-            className="update-btn"
-            onClick={handleUpdate}
-          >
-            Update
-          </button>
-        ) : (
-          <button
-            className="add-btn"
-            onClick={handleAdd}
-          >
-            Add
-          </button>
-        )}
+        {editId === null ? (
+  <button
+    className="add-btn"
+    onClick={handleAdd}
+  >
+    Add
+  </button>
+) : (
+  <button
+    className="update-btn"
+    onClick={handleUpdate}
+  >
+    Update
+  </button>
+)}
       </div>
 
       <table className="students-table">

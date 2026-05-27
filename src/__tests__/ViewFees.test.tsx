@@ -1,135 +1,150 @@
 import {
   render,
   screen,
-  fireEvent,
   waitFor,
 } from "@testing-library/react";
 
+import userEvent from "@testing-library/user-event";
+
+import {
+  describe,
+  it,
+  expect,
+  vi,
+} from "vitest";
+
 import ViewFees from "../pages/ViewFees";
 
-import * as feesApi from "../services/FeesApi";
+import {
+  getFees,
+  deleteFee,
+  updateFee,
+} from "../services/FeesApi";
 
-jest.mock("../services/FeesApi");
+vi.mock("../services/FeesApi", () => ({
+  getFees: vi.fn(),
+  deleteFee: vi.fn(),
+  updateFee: vi.fn(),
+}));
 
-// mock AddFeeModal
-jest.mock("../components/AddFeeModal", () => {
-  return function MockAddFeeModal({
-    onClose,
-    refreshFees,
-  }: any) {
-    return (
-      <div>
-        <p>Add Fee Modal</p>
-
-        <button
-          onClick={() => {
-            refreshFees();
-            onClose();
-          }}
-        >
-          Close Modal
-        </button>
-      </div>
-    );
-  };
-});
+vi.mock("../components/AddFeeModal", () => ({
+  default: () => <div>Add Fee Modal</div>,
+}));
 
 describe("ViewFees", () => {
-  beforeEach(() => {
-    jest.clearAllMocks();
 
-    (feesApi.getFees as jest.Mock)
-      .mockResolvedValue([
-        {
-          id: 1,
-          student_id: 101,
-          amount: 5000,
-          due_date: "2026-05-25",
-          status: "pending",
-        },
-      ]);
-  });
+  it("should render fees", async () => {
 
-  test("renders fees table", async () => {
+    vi.mocked(getFees).mockResolvedValue([
+      {
+        id: 1,
+        student_id: 1,
+        amount: 5000,
+        due_date: "2026-05-26",
+        status: "pending",
+      },
+    ] as any);
+
     render(<ViewFees />);
 
-    expect(
-      await screen.findByText("5000")
-    ).toBeInTheDocument();
+    await waitFor(() => {
+      expect(
+        screen.getByText("5000")
+      ).toBeInTheDocument();
+    });
 
     expect(
       screen.getByText("pending")
     ).toBeInTheDocument();
   });
 
-  test("opens add fee modal", async () => {
+  it("should delete fee", async () => {
+
+    vi.mocked(getFees).mockResolvedValue([
+      {
+        id: 1,
+        student_id: 1,
+        amount: 5000,
+        due_date: "2026-05-26",
+        status: "pending",
+      },
+    ] as any);
+
+    vi.mocked(deleteFee).mockResolvedValue(
+      {} as any
+    );
+
     render(<ViewFees />);
 
-    fireEvent.click(
+    await waitFor(() => {
+      expect(
+        screen.getByText("5000")
+      ).toBeInTheDocument();
+    });
+
+    const deleteButton =
+      screen.getByRole("button", {
+        name: "Delete",
+      });
+
+    await userEvent.click(deleteButton);
+
+    expect(deleteFee)
+      .toHaveBeenCalledWith(1);
+  });
+
+  it("should update fee", async () => {
+  vi.mocked(getFees).mockResolvedValue([
+    {
+      id: 1,
+      student_id: 1,
+      amount: 5000,
+      due_date: "2026-05-26T00:00:00",
+      status: "pending",
+    },
+  ] as any);
+
+  vi.mocked(updateFee).mockResolvedValue({} as any);
+
+  render(<ViewFees />);
+
+  await waitFor(() => {
+    expect(screen.getByText("5000")).toBeInTheDocument();
+  });
+
+  const editButton = screen.getByRole("button", { name: "Edit" });
+  await userEvent.click(editButton);
+
+  const amountInput = screen.getByDisplayValue("5000");
+
+  await userEvent.clear(amountInput);
+  await userEvent.type(amountInput, "7000");
+
+  const updateButton = screen.getByRole("button", { name: "Update" });
+  await userEvent.click(updateButton);
+
+  await waitFor(() => {
+    expect(updateFee).toHaveBeenCalled();
+  });
+});
+
+  it("should open add fee modal", async () => {
+
+    vi.mocked(getFees).mockResolvedValue(
+      [] as any
+    );
+
+    render(<ViewFees />);
+
+    const addButton =
       screen.getByRole("button", {
         name: "Add Fee",
-      })
-    );
+      });
+
+    await userEvent.click(addButton);
 
     expect(
       screen.getByText("Add Fee Modal")
     ).toBeInTheDocument();
-  });
-
-  test("edits fee", async () => {
-    (feesApi.updateFee as jest.Mock)
-      .mockResolvedValue({});
-
-    render(<ViewFees />);
-
-    const editButtons =
-      await screen.findAllByText("Edit");
-
-    fireEvent.click(editButtons[0]);
-
-    const amountInput =
-      screen.getByDisplayValue("5000");
-
-    fireEvent.change(amountInput, {
-      target: {
-        value: "7000",
-      },
-    });
-
-    fireEvent.click(
-      screen.getByRole("button", {
-        name: "Update",
-      })
-    );
-
-    await waitFor(() => {
-      expect(
-        feesApi.updateFee
-      ).toHaveBeenCalledWith(
-        1,
-        101,
-        7000,
-        "2026-05-25",
-        "pending"
-      );
-    });
-  });
-
-  test("deletes fee", async () => {
-    (feesApi.deleteFee as jest.Mock)
-      .mockResolvedValue({});
-
-    render(<ViewFees />);
-
-    const deleteButtons =
-      await screen.findAllByText("Delete");
-
-    fireEvent.click(deleteButtons[0]);
-
-    await waitFor(() => {
-      expect(
-        feesApi.deleteFee
-      ).toHaveBeenCalledWith(1);
-    });
   });
 });

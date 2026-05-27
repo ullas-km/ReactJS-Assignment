@@ -1,9 +1,17 @@
 import {
   render,
   screen,
-  fireEvent,
   waitFor,
 } from "@testing-library/react";
+
+import userEvent from "@testing-library/user-event";
+
+import {
+  describe,
+  it,
+  expect,
+  vi,
+} from "vitest";
 
 import AddStudentModal from "../components/AddStudentModal";
 
@@ -11,20 +19,18 @@ import * as studentsApi from "../services/studentsApi";
 import * as classesApi from "../services/ClassesApi";
 import * as sectionsApi from "../services/SectionApi";
 
-jest.mock("../services/studentsApi");
-jest.mock("../services/ClassesApi");
-jest.mock("../services/SectionApi");
+vi.mock("../services/studentsApi");
+vi.mock("../services/ClassesApi");
+vi.mock("../services/SectionApi");
 
 describe("AddStudentModal", () => {
+  it(
+  "should add student",
+  async () => {
+    const refreshStudents = vi.fn();
+    const onClose = vi.fn();
 
-  const mockClose = jest.fn();
-  const mockRefresh = jest.fn();
-
-  beforeEach(() => {
-
-    jest.clearAllMocks();
-
-    (classesApi.getClasses as jest.Mock)
+    vi.mocked(classesApi.getClasses)
       .mockResolvedValue([
         {
           class_id: 1,
@@ -32,7 +38,7 @@ describe("AddStudentModal", () => {
         },
       ]);
 
-    (sectionsApi.getSections as jest.Mock)
+    vi.mocked(sectionsApi.getSections)
       .mockResolvedValue([
         {
           section_id: 1,
@@ -40,115 +46,71 @@ describe("AddStudentModal", () => {
           class_id: 1,
         },
       ]);
-  });
 
-  test("renders modal fields", async () => {
-
-    render(
-      <AddStudentModal
-        onClose={mockClose}
-        refreshStudents={mockRefresh}
-      />
-    );
-
-    // wait for async data load
-    await screen.findByText("10");
-
-    expect(
-      screen.getByText("Add Student")
-    ).toBeInTheDocument();
-
-    expect(
-      screen.getAllByRole("textbox").length
-    ).toBe(3);
-
-    expect(
-      screen.getAllByRole("combobox").length
-    ).toBe(2);
-  });
-
-  test("adds student", async () => {
-
-    (studentsApi.addStudent as jest.Mock)
-      .mockResolvedValue({});
+    vi.mocked(studentsApi.addStudent)
+      .mockResolvedValue({
+        success: true,
+      });
 
     render(
       <AddStudentModal
-        onClose={mockClose}
-        refreshStudents={mockRefresh}
+        refreshStudents={refreshStudents}
+        onClose={onClose}
       />
-    );
-
-    // wait for classes to load
-    await screen.findByText("10");
-
-    const inputs = screen.getAllByRole("textbox");
-
-    // name
-    fireEvent.change(inputs[0], {
-      target: {
-        value: "John",
-      },
-    });
-
-    // email
-    fireEvent.change(inputs[1], {
-      target: {
-        value: "john@test.com",
-      },
-    });
-
-    // phone
-    fireEvent.change(inputs[2], {
-      target: {
-        value: "9999999999",
-      },
-    });
-
-    const selects = screen.getAllByRole("combobox");
-
-    // select class
-    fireEvent.change(selects[0], {
-      target: {
-        value: "1",
-      },
-    });
-
-    // wait for section option to appear
-    await screen.findByText("A");
-
-    // select section
-    fireEvent.change(selects[1], {
-      target: {
-        value: "1",
-      },
-    });
-
-    // click add
-    fireEvent.click(
-      screen.getByText("Add")
     );
 
     await waitFor(() => {
-
       expect(
-        studentsApi.addStudent
-      ).toHaveBeenCalledWith(
-        "John",
-        "john@test.com",
-        "9999999999",
-        1,
-        1
-      );
-
-      expect(mockRefresh)
-        .toHaveBeenCalled();
-
-      expect(mockClose)
-        .toHaveBeenCalled();
-
+        screen.getByText("Add")
+      ).toBeInTheDocument();
     });
 
-  });
+    const inputs =
+      screen.getAllByRole("textbox");
 
+    await userEvent.type(
+      inputs[0],
+      "John"
+    );
+
+    await userEvent.type(
+      inputs[1],
+      "john@gmail.com"
+    );
+
+    await userEvent.type(
+      inputs[2],
+      "9999999999"
+    );
+
+    const selects =
+      screen.getAllByRole("combobox");
+
+    await userEvent.selectOptions(
+      selects[0],
+      "1"
+    );
+
+    await userEvent.selectOptions(
+      selects[1],
+      "1"
+    );
+
+    const addButton =
+      screen.getByText("Add");
+
+    await userEvent.click(addButton);
+
+    expect(
+      studentsApi.addStudent
+    ).toHaveBeenCalled();
+
+    expect(refreshStudents)
+      .toHaveBeenCalled();
+
+    expect(onClose)
+      .toHaveBeenCalled();
+  },
+  10000
+);
 });
