@@ -8,7 +8,6 @@ import {
 } from "../services/SubjectApi";
 
 export default function ViewSubjects() {
-
   const [subjects, setSubjects] = useState<any[]>([]);
 
   const [subjectName, setSubjectName] =
@@ -17,42 +16,41 @@ export default function ViewSubjects() {
   const [editId, setEditId] =
     useState<number | null>(null);
 
-    const fetchSubjects = async () => {
+  const [showModal, setShowModal] =
+    useState(false);
+
+  const fetchSubjects = async () => {
     const data = await getSubjects();
     setSubjects(data);
   };
-  
+
   useEffect(() => {
     fetchSubjects();
   }, []);
 
-  
-
   const handleAdd = async () => {
+    if (!subjectName.trim()) return;
 
     await addSubject(subjectName);
 
     setSubjectName("");
+    setShowModal(false);
 
     fetchSubjects();
   };
 
   const handleDelete = async (id: number) => {
-
     await deleteSubject(id);
-
     fetchSubjects();
   };
 
   const handleEdit = (s: any) => {
-
     setEditId(s.sub_id);
-
     setSubjectName(s.subject_name);
+    setShowModal(true);
   };
 
   const handleUpdate = async () => {
-
     if (editId === null) return;
 
     await updateSubject(
@@ -61,46 +59,96 @@ export default function ViewSubjects() {
     );
 
     setEditId(null);
-
     setSubjectName("");
+    setShowModal(false);
 
     fetchSubjects();
+  };
+
+  const handleOpenAddModal = () => {
+    setEditId(null);
+    setSubjectName("");
+    setShowModal(true);
   };
 
   return (
     <div className="students-page">
 
       <div className="students-header">
+
         <h2>Subjects</h2>
+
+        <button
+          className="add-btn"
+          onClick={handleOpenAddModal}
+        >
+          Add Subject
+        </button>
+
       </div>
 
-      <div className="form-box">
+      {showModal && (
+        <div className="modal-overlay">
 
-        <input
-          className="input-box"
-          value={subjectName}
-          onChange={(e) =>
-            setSubjectName(e.target.value)
-          }
-          placeholder="Subject Name"
-        />
+          <div className="modal-box">
 
-        {editId === null ? (
-  <button
-    className="add-btn"
-    onClick={handleAdd}
-  >
-    Add
-  </button>
-) : (
-  <button
-    className="update-btn"
-    onClick={handleUpdate}
-  >
-    Update
-  </button>
-)}
-      </div>
+            <h2>
+              {editId === null
+                ? "Add Subject"
+                : "Edit Subject"}
+            </h2>
+
+            <div className="form-group">
+
+              <label htmlFor="subject-name">
+                Subject Name
+              </label>
+
+              <input
+                id="subject-name"
+                value={subjectName}
+                onChange={(e) =>
+                  setSubjectName(
+                    e.target.value
+                  )
+                }
+                placeholder="Subject Name"
+              />
+
+            </div>
+
+            <div className="modal-actions">
+
+              <button
+                className="modal-add-btn"
+                onClick={
+                  editId === null
+                    ? handleAdd
+                    : handleUpdate
+                }
+              >
+                {editId === null
+                  ? "Add"
+                  : "Update"}
+              </button>
+
+              <button
+                className="modal-cancel-btn"
+                onClick={() => {
+                  setShowModal(false);
+                  setEditId(null);
+                  setSubjectName("");
+                }}
+              >
+                Cancel
+              </button>
+
+            </div>
+
+          </div>
+
+        </div>
+      )}
 
       <table className="students-table">
 
@@ -149,4 +197,4 @@ export default function ViewSubjects() {
 
     </div>
   );
-} 
+}

@@ -1,0 +1,40 @@
+.edit-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  margin-top: 10px;
+}
+
+/* UPDATE BUTTON */
+.edit-update-btn {
+  padding: 10px 16px;
+  border: none;
+  border-radius: 8px;
+  background: #15803d;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.edit-update-btn:hover {
+  background: #166534;
+  transform: translateY(-1px);
+}
+
+/* CANCEL BUTTON */
+.edit-cancel-btn {
+  padding: 10px 16px;
+  border: none;
+  border-radius: 8px;
+  background: #dc2626;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.edit-cancel-btn:hover {
+  background: #b91c1c;
+  transform: translateY(-1px);
+}

@@ -16,6 +16,8 @@
 
 .logo {
   margin-bottom: 20px;
+  font-size: 24px;
+  font-weight: bold;
 }
 
 .menu {
@@ -143,4 +145,10 @@
   .sidebar.open {
     transform: translateX(0);
   }
+}
+
+.logo-link {
+  color: white;
+  text-decoration: none;
+  display: inline-block;
 }

@@ -18,6 +18,7 @@ import FeesSummary from "../components/FeesSummary";
 import SubjectsSummary from "../components/SubjectsSummary";
 import ViewSubjects from "../pages/ViewSubjects";
 import Home from "../pages/Home";
+import RoleRoute from "./RoleRoute";
 
 export default function AppRoutes() {
   return (
@@ -25,38 +26,80 @@ export default function AppRoutes() {
       <Route path="/" element={<LoginPage />} />
 
       <Route
-        path="/welcome/*"
-        element={
-          <ProtectedRoute>
-            <WelcomePage />
-          </ProtectedRoute>
-        }
-      >
-        <Route index element={<Home />} />
+  element={
+    <ProtectedRoute>
+      <WelcomePage />
+    </ProtectedRoute>
+  }
+>
+  <Route path="/home" element={<Home />} />
 
-        <Route path="students" element={<StudentsSummary />} />
+  <Route path="/students"  element={
+    <RoleRoute allowedRoles={["admin"]}>
+      <StudentsSummary />
+    </RoleRoute>
+  } />
+  <Route path="/students/view" element={
+    <RoleRoute allowedRoles={["admin"]}>
+      <ViewStudents />
+    </RoleRoute>
+  } />
 
-        <Route path="students/view" element={<ViewStudents />} />
-        <Route path="fees" element={<FeesSummary />} />
-<Route path="fees/view" element={<ViewFees />} />
-<Route path="classes" element={<ClassesSummary />} />
-<Route path="classes/view" element={<ViewClasses />} />
-<Route path="teachers" element={<TeachersSummary />} />
-<Route path="teachers/view" element={<ViewTeachers />} />
-<Route path="sections" element={<SectionsSummary />} />
-<Route path="sections/view" element={<ViewSections />} />
-<Route
-  path="subjects"
-  element={<SubjectsSummary />}
-/>
+  <Route path="/fees" element={
+    <RoleRoute allowedRoles={["admin"]}>
+      <FeesSummary />
+    </RoleRoute>
+  } />
+  <Route path="/fees/view" element={
+    <RoleRoute allowedRoles={["admin"]}>
+      <ViewFees />
+    </RoleRoute>
+  } />
 
-<Route
-  path="subjects/view"
-  element={<ViewSubjects />}
-/>
+  <Route path="/classes" element={
+    <RoleRoute allowedRoles={["admin"]}>
+      <ClassesSummary />
+    </RoleRoute>
+  } />
+  <Route path="/classes/view" element={
+    <RoleRoute allowedRoles={["admin"]}>
+      <ViewClasses />
+    </RoleRoute>
+  } />
 
-        
-      </Route>
+  <Route path="/teachers" element={
+    <RoleRoute allowedRoles={["admin"]}>
+      <TeachersSummary />
+    </RoleRoute>
+  } />
+  <Route path="/teachers/view" element={
+    <RoleRoute allowedRoles={["admin"]}>
+      <ViewTeachers />
+    </RoleRoute>
+  } />
+
+  <Route path="/sections" element={
+    <RoleRoute allowedRoles={["admin"]}>
+      <SectionsSummary />
+    </RoleRoute>
+  } />
+  <Route path="/sections/view" element={
+    <RoleRoute allowedRoles={["admin"]}>
+      <ViewSections />
+    </RoleRoute>
+  } />
+
+  <Route path="/subjects" element={
+    <RoleRoute allowedRoles={["admin"]}>
+      <SubjectsSummary />
+    </RoleRoute>
+  } />
+  <Route path="/subjects/view" element={
+    <RoleRoute allowedRoles={["admin"]}>
+      <ViewSubjects />
+    </RoleRoute>
+  } />
+</Route>
       
 
       <Route path="*" element={<NotFound />} />

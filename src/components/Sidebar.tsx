@@ -43,12 +43,20 @@ export default function Sidebar({ role }: SidebarProps) {
 
       {/* SIDEBAR */}
       <div className={`sidebar ${mobileOpen ? "open" : ""}`}>
-        <h2 className="logo">School App</h2>
+        <h2 className="logo">
+  <Link
+    to="/home"
+    onClick={closeSidebar}
+    className="logo-link"
+  >
+    School App
+  </Link>
+</h2>
 
         <ul className="menu">
           {/* HOME */}
           <li>
-            <Link to="/welcome" onClick={closeSidebar}>
+            <Link to="/home" onClick={closeSidebar}>
               Home
             </Link>
           </li>
@@ -60,7 +68,7 @@ export default function Sidebar({ role }: SidebarProps) {
                 className="menu-btn"
                 onClick={() => {
                   toggleMenu("students");
-                  navigate("/welcome/students");
+                  navigate("students");
                   closeSidebar();
                 }}
               >
@@ -74,7 +82,7 @@ export default function Sidebar({ role }: SidebarProps) {
                 <ul className="dropdown-menu">
                   <li>
                     <Link
-                      to="/welcome/students/view"
+                      to="students/view"
                       onClick={closeSidebar}
                     >
                       View Students
@@ -92,7 +100,7 @@ export default function Sidebar({ role }: SidebarProps) {
                 className="menu-btn"
                 onClick={() => {
                   toggleMenu("fees");
-                  navigate("/welcome/fees");
+                  navigate("/fees");
                   closeSidebar();
                 }}
               >
@@ -106,7 +114,7 @@ export default function Sidebar({ role }: SidebarProps) {
                 <ul className="dropdown-menu">
                   <li>
                     <Link
-                      to="/welcome/fees/view"
+                      to="/fees/view"
                       onClick={closeSidebar}
                     >
                       View Fees
@@ -124,7 +132,7 @@ export default function Sidebar({ role }: SidebarProps) {
                 className="menu-btn"
                 onClick={() => {
                   toggleMenu("classes");
-                  navigate("/welcome/classes");
+                  navigate("/classes");
                   closeSidebar();
                 }}
               >
@@ -138,7 +146,7 @@ export default function Sidebar({ role }: SidebarProps) {
                 <ul className="dropdown-menu">
                   <li>
                     <Link
-                      to="/welcome/classes/view"
+                      to="/classes/view"
                       onClick={closeSidebar}
                     >
                       View Classes
@@ -156,7 +164,7 @@ export default function Sidebar({ role }: SidebarProps) {
                 className="menu-btn"
                 onClick={() => {
                   toggleMenu("sections");
-                  navigate("/welcome/sections");
+                  navigate("/sections");
                   closeSidebar();
                 }}
               >
@@ -170,7 +178,7 @@ export default function Sidebar({ role }: SidebarProps) {
                 <ul className="dropdown-menu">
                   <li>
                     <Link
-                      to="/welcome/sections/view"
+                      to="/sections/view"
                       onClick={closeSidebar}
                     >
                       View Sections
@@ -188,7 +196,7 @@ export default function Sidebar({ role }: SidebarProps) {
                 className="menu-btn"
                 onClick={() => {
                   toggleMenu("teachers");
-                  navigate("/welcome/teachers");
+                  navigate("/teachers");
                   closeSidebar();
                 }}
               >
@@ -202,7 +210,7 @@ export default function Sidebar({ role }: SidebarProps) {
                 <ul className="dropdown-menu">
                   <li>
                     <Link
-                      to="/welcome/teachers/view"
+                      to="/teachers/view"
                       onClick={closeSidebar}
                     >
                       View Teachers
@@ -220,7 +228,7 @@ export default function Sidebar({ role }: SidebarProps) {
                 className="menu-btn"
                 onClick={() => {
                   toggleMenu("subjects");
-                  navigate("/welcome/subjects");
+                  navigate("/subjects");
                   closeSidebar();
                 }}
               >
@@ -234,7 +242,7 @@ export default function Sidebar({ role }: SidebarProps) {
                 <ul className="dropdown-menu">
                   <li>
                     <Link
-                      to="/welcome/subjects/view"
+                      to="/subjects/view"
                       onClick={closeSidebar}
                     >
                       View Subjects

@@ -29,7 +29,7 @@ export default function StudentsSummary() {
 
         <div className="card">
           <h3>Active Classes</h3>
-          <p>10</p>
+          <p>{students.length}</p>
         </div>
       </div>
     </div>

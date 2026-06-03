@@ -95,7 +95,7 @@ const handleLogin = async (
       localStorage.setItem("token", data.token);
       localStorage.setItem("user", JSON.stringify(data.user));
 
-      navigate("/welcome");
+      navigate("/home");
     } catch {
       setServerError("Invalid credentials");
     } finally {

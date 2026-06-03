@@ -19,11 +19,13 @@ describe("StudentsSummary", () => {
     render(<StudentsSummary />);
 
     await waitFor(() => {
-      expect(screen.getByText("2")).toBeInTheDocument();
+      const totalCard = screen
+        .getByText("Total Students")
+        .closest(".card");
+
+      expect(totalCard).toHaveTextContent("2");
     });
 
-    expect(
-      screen.getByText("Total Students")
-    ).toBeInTheDocument();
+    expect(screen.getByText("Total Students")).toBeInTheDocument();
   });
 });

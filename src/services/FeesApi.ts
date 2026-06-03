@@ -1,6 +1,6 @@
 import axiosInstance from "./axiosInstance";
 
-// GET
+// GETf
 export const getFees = async () => {
   const res = await axiosInstance.get("/fees/get-fees");
   return res.data;

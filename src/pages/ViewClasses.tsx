@@ -7,12 +7,15 @@ import {
   deleteClass,
 } from "../services/ClassesApi";
 
-import "../assets/css/viewClasses.css"
+import "../assets/css/viewClasses.css";
 
 export default function ViewClasses() {
   const [classes, setClasses] = useState<any[]>([]);
 
- const [className, setClassName] = useState<number | "">("");
+  const [showModal, setShowModal] = useState(false);
+
+  const [className, setClassName] = useState("");
+
   const [editId, setEditId] = useState<number | null>(null);
 
   useEffect(() => {
@@ -26,7 +29,10 @@ export default function ViewClasses() {
 
   const handleAdd = async () => {
     await addClass(Number(className));
+
     setClassName("");
+    setShowModal(false);
+
     fetchClasses();
   };
 
@@ -37,49 +43,89 @@ export default function ViewClasses() {
 
   const handleEdit = (c: any) => {
     setEditId(c.class_id);
-    setClassName(c.class_name);
+    setClassName(c.class_name.toString());
+
+    setShowModal(true);
   };
 
   const handleUpdate = async () => {
     if (!editId) return;
 
-    await updateClass(editId, className.toString());
+    await updateClass(editId, className);
 
     setEditId(null);
     setClassName("");
+    setShowModal(false);
+
     fetchClasses();
   };
 
   return (
     <div className="students-page">
-
       <div className="students-header">
         <h2>Classes</h2>
+
+        <button
+          className="add-btn"
+          onClick={() => {
+            setEditId(null);
+            setClassName("");
+            setShowModal(true);
+          }}
+        >
+          Add Class
+        </button>
       </div>
 
-      {/* ADD / EDIT */}
-      <div style={{ marginBottom: "20px" }}>
-        <input
-  className="class-input"
-  value={className}
-  onChange={(e) =>
-    setClassName(
-      e.target.value === ""
-        ? ""
-        : Number(e.target.value)
-    )
-  }
-  placeholder="Enter class name"
-/>
+      {showModal && (
+        <div className="modal-overlay">
+          <div className="modal-box">
+            <h2>
+              {editId ? "Edit Class" : "Add Class"}
+            </h2>
 
-        {editId ? (
-          <button className="update-btn" onClick={handleUpdate}>Update</button>
-        ) : (
-          <button className="add-btn" onClick={handleAdd}>Add</button>
-        )}
-      </div>
+            <div className="form-group">
+              <label htmlFor="className">
+                Class Name
+              </label>
 
-      {/* TABLE */}
+              <input
+                id="className"
+                value={className}
+                onChange={(e) =>
+                  setClassName(e.target.value)
+                }
+                placeholder="Enter class name"
+              />
+            </div>
+
+            <div className="modal-actions">
+              <button
+                className="modal-add-btn"
+                onClick={
+                  editId
+                    ? handleUpdate
+                    : handleAdd
+                }
+              >
+                {editId ? "Update" : "Add"}
+              </button>
+
+              <button
+                className="modal-cancel-btn"
+                onClick={() => {
+                  setShowModal(false);
+                  setEditId(null);
+                  setClassName("");
+                }}
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       <table className="students-table">
         <thead>
           <tr>
@@ -94,20 +140,22 @@ export default function ViewClasses() {
               <td>{c.class_name}</td>
 
               <td>
-  <button
-    className="edit-btn"
-    onClick={() => handleEdit(c)}
-  >
-    Edit
-  </button>
+                <button
+                  className="edit-btn"
+                  onClick={() => handleEdit(c)}
+                >
+                  Edit
+                </button>
 
-  <button
-    className="delete-btn"
-    onClick={() => handleDelete(c.class_id)}
-  >
-    Delete
-  </button>
-</td>
+                <button
+                  className="delete-btn"
+                  onClick={() =>
+                    handleDelete(c.class_id)
+                  }
+                >
+                  Delete
+                </button>
+              </td>
             </tr>
           ))}
         </tbody>

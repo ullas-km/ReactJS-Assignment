@@ -12,7 +12,9 @@ import "../assets/css/viewTeachers.css";
 export default function ViewTeachers() {
   const [teachers, setTeachers] = useState<any[]>([]);
   const [teacherName, setTeacherName] = useState("");
+
   const [editId, setEditId] = useState<number | null>(null);
+  const [showModal, setShowModal] = useState(false);
 
   const fetchTeachers = async () => {
     const data = await getTeachers();
@@ -23,28 +25,28 @@ export default function ViewTeachers() {
     fetchTeachers();
   }, []);
 
-  
-
-  // ADD
   const handleAdd = async () => {
+    if (!teacherName.trim()) return;
+
     await addTeacher(teacherName);
+
     setTeacherName("");
+    setShowModal(false);
+
     fetchTeachers();
   };
 
-  // DELETE
   const handleDelete = async (id: number) => {
     await deleteTeacher(id);
     fetchTeachers();
   };
 
-  // EDIT
   const handleEdit = (t: any) => {
     setEditId(t.teacher_id);
     setTeacherName(t.teacher_name);
+    setShowModal(true);
   };
 
-  // UPDATE
   const handleUpdate = async () => {
     if (editId === null) return;
 
@@ -52,39 +54,96 @@ export default function ViewTeachers() {
 
     setEditId(null);
     setTeacherName("");
+    setShowModal(false);
+
     fetchTeachers();
+  };
+
+  const handleOpenAddModal = () => {
+    setEditId(null);
+    setTeacherName("");
+    setShowModal(true);
   };
 
   return (
     <div className="students-page">
 
       <div className="students-header">
+
         <h2>Teachers</h2>
+
+        <button
+          className="add-btn"
+          onClick={handleOpenAddModal}
+        >
+          Add Teacher
+        </button>
+
       </div>
 
-      {/* FORM */}
-      <div className="form-box">
+      {showModal && (
+        <div className="modal-overlay">
 
-        <input
-          className="input-box"
-          value={teacherName}
-          onChange={(e) => setTeacherName(e.target.value)}
-          placeholder="Teacher Name"
-        />
+          <div className="modal-box">
 
-        {editId === null ? (
-  <button className="add-btn" onClick={handleAdd}>
-    Add
-  </button>
-) : (
-  <button className="update-btn" onClick={handleUpdate}>
-    Update
-  </button>
-)}
-      </div>
+            <h2>
+              {editId === null
+                ? "Add Teacher"
+                : "Edit Teacher"}
+            </h2>
 
-      {/* TABLE */}
+            <div className="form-group">
+
+              <label htmlFor="teacher-name">
+                Teacher Name
+              </label>
+
+              <input
+                id="teacher-name"
+                value={teacherName}
+                onChange={(e) =>
+                  setTeacherName(e.target.value)
+                }
+                placeholder="Teacher Name"
+              />
+
+            </div>
+
+            <div className="modal-actions">
+
+              <button
+                className="modal-add-btn"
+                onClick={
+                  editId === null
+                    ? handleAdd
+                    : handleUpdate
+                }
+              >
+                {editId === null
+                  ? "Add"
+                  : "Update"}
+              </button>
+
+              <button
+                className="modal-cancel-btn"
+                onClick={() => {
+                  setShowModal(false);
+                  setEditId(null);
+                  setTeacherName("");
+                }}
+              >
+                Cancel
+              </button>
+
+            </div>
+
+          </div>
+
+        </div>
+      )}
+
       <table className="students-table">
+
         <thead>
           <tr>
             <th>Teacher Name</th>
@@ -93,26 +152,39 @@ export default function ViewTeachers() {
         </thead>
 
         <tbody>
+
           {teachers.map((t) => (
             <tr key={t.teacher_id}>
+
               <td>{t.teacher_name}</td>
 
               <td>
-                <button className="edit-btn" onClick={() => handleEdit(t)}>
+
+                <button
+                  className="edit-btn"
+                  onClick={() => handleEdit(t)}
+                >
                   Edit
                 </button>
 
                 <button
                   className="delete-btn"
-                  onClick={() => handleDelete(t.teacher_id)}
+                  onClick={() =>
+                    handleDelete(t.teacher_id)
+                  }
                 >
                   Delete
                 </button>
+
               </td>
+
             </tr>
           ))}
+
         </tbody>
+
       </table>
+
     </div>
   );
 }
