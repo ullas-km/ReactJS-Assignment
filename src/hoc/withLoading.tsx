@@ -1,5 +1,3 @@
-// src/hoc/withLoading.tsx
-
 import { useEffect, useState } from "react";
 
 export default function withLoading<
