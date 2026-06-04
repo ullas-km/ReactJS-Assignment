@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
+import withLoading from "../hoc/withLoading";
 
 import { getSubjects }
 from "../services/SubjectApi";
 
-export default function SubjectsSummary() {
+function SubjectsSummary() {
 
   const [subjects, setSubjects] =
     useState<any[]>([]);
@@ -41,3 +42,7 @@ export default function SubjectsSummary() {
     </div>
   );
 }
+
+export default withLoading(
+  SubjectsSummary
+);

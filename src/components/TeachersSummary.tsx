@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { getTeacherStats } from "../services/TeacherApi";
+import withLoading from "../hoc/withLoading";
 
-export default function TeachersSummary() {
+function TeachersSummary() {
   const [stats, setStats] = useState({
     total: 0,
     active: 0,
@@ -36,3 +37,7 @@ export default function TeachersSummary() {
     </div>
   );
 }
+
+export default withLoading(
+  TeachersSummary
+);

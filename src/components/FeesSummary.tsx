@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
 import { getFeeStats } from "../services/FeesApi";
+import withLoading from "../hoc/withLoading";
 
 import "../assets/css/feesummary.css"
 
-export default function FeesSummary() {
+function FeesSummary() {
   const [stats, setStats] = useState({
     total: 0,
     paid: 0,  
@@ -50,3 +51,7 @@ export default function FeesSummary() {
     </div>
   );
 } 
+
+export default withLoading(
+  FeesSummary
+);

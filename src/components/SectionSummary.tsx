@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { getSections } from "../services/SectionApi";
+import withLoading from "../hoc/withLoading";
 
-export default function SectionsSummary() {
+function SectionsSummary() {
   const [sections, setSections] = useState<any[]>([]);
 
   useEffect(() => {
@@ -37,3 +38,7 @@ export default function SectionsSummary() {
     </div>
   );
 }
+
+export default withLoading(
+  SectionsSummary
+);

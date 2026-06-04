@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { getClassStats } from "../services/ClassesApi";
+import withLoading from "../hoc/withLoading";
 
-export default function ClassesSummary() {
+function ClassesSummary() {
   const [stats, setStats] = useState({
     total: 0,
   });
@@ -30,3 +31,7 @@ export default function ClassesSummary() {
     </div>
   );
 }
+
+export default withLoading(
+  ClassesSummary
+);

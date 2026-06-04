@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { getStudents } from "../services/studentsApi";
+import withLoading from "../hoc/withLoading";
 
-export default function StudentsSummary() {
+function StudentsSummary() {
   const [students, setStudents] = useState<any[]>([]);
 
   useEffect(() => {
@@ -35,3 +36,7 @@ export default function StudentsSummary() {
     </div>
   );
 }
+
+export default withLoading(
+  StudentsSummary
+);
