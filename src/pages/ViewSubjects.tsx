@@ -8,43 +8,66 @@ import {
 } from "../services/SubjectApi";
 
 export default function ViewSubjects() {
-  const [subjects, setSubjects] = useState<any[]>([]);
+  interface Subject {
+    sub_id: number;
+    subject_name: string;
+  }
 
-  const [subjectName, setSubjectName] =
-    useState("");
+  const [subjects, setSubjects] = useState<Subject[]>([]);
 
-  const [editId, setEditId] =
-    useState<number | null>(null);
+  const [subjectName, setSubjectName] = useState("");
 
-  const [showModal, setShowModal] =
-    useState(false);
+  const [editId, setEditId] = useState<number | null>(null);
+
+  const [showModal, setShowModal] = useState(false);
 
   const fetchSubjects = async () => {
-    const data = await getSubjects();
-    setSubjects(data);
+    try {
+      const data = await getSubjects();
+      setSubjects(data);
+    } catch (error) {
+      console.error("Failed to fetch subjects:", error);
+    }
   };
 
   useEffect(() => {
-    fetchSubjects();
-  }, []);
+  const loadSubjects = async () => {
+    try {
+      const data = await getSubjects();
+      setSubjects(data);
+    } catch (error) {
+      console.error("Failed to fetch subjects:", error);
+    }
+  };
+
+  loadSubjects();
+}, []);
 
   const handleAdd = async () => {
     if (!subjectName.trim()) return;
 
-    await addSubject(subjectName);
+    try {
+      await addSubject(subjectName);
 
-    setSubjectName("");
-    setShowModal(false);
+      setSubjectName("");
+      setShowModal(false);
 
-    fetchSubjects();
+      fetchSubjects();
+    } catch (error) {
+      console.error("Failed to add subject:", error);
+    }
   };
 
   const handleDelete = async (id: number) => {
-    await deleteSubject(id);
-    fetchSubjects();
+    try {
+      await deleteSubject(id);
+      fetchSubjects();
+    } catch (error) {
+      console.error("Failed to delete subject:", error);
+    }
   };
 
-  const handleEdit = (s: any) => {
+  const handleEdit = (s: Subject) => {
     setEditId(s.sub_id);
     setSubjectName(s.subject_name);
     setShowModal(true);
@@ -53,16 +76,17 @@ export default function ViewSubjects() {
   const handleUpdate = async () => {
     if (editId === null) return;
 
-    await updateSubject(
-      editId,
-      subjectName
-    );
+    try {
+      await updateSubject(editId, subjectName);
 
-    setEditId(null);
-    setSubjectName("");
-    setShowModal(false);
+      setEditId(null);
+      setSubjectName("");
+      setShowModal(false);
 
-    fetchSubjects();
+      fetchSubjects();
+    } catch (error) {
+      console.error("Failed to update subject:", error);
+    }
   };
 
   const handleOpenAddModal = () => {
@@ -73,63 +97,36 @@ export default function ViewSubjects() {
 
   return (
     <div className="students-page">
-
       <div className="students-header">
-
         <h2>Subjects</h2>
 
-        <button
-          className="add-btn"
-          onClick={handleOpenAddModal}
-        >
+        <button className="add-btn" onClick={handleOpenAddModal}>
           Add Subject
         </button>
-
       </div>
 
       {showModal && (
         <div className="modal-overlay">
-
           <div className="modal-box">
-
-            <h2>
-              {editId === null
-                ? "Add Subject"
-                : "Edit Subject"}
-            </h2>
+            <h2>{editId === null ? "Add Subject" : "Edit Subject"}</h2>
 
             <div className="form-group">
-
-              <label htmlFor="subject-name">
-                Subject Name
-              </label>
+              <label htmlFor="subject-name">Subject Name</label>
 
               <input
                 id="subject-name"
                 value={subjectName}
-                onChange={(e) =>
-                  setSubjectName(
-                    e.target.value
-                  )
-                }
+                onChange={(e) => setSubjectName(e.target.value)}
                 placeholder="Subject Name"
               />
-
             </div>
 
             <div className="modal-actions">
-
               <button
                 className="modal-add-btn"
-                onClick={
-                  editId === null
-                    ? handleAdd
-                    : handleUpdate
-                }
+                onClick={editId === null ? handleAdd : handleUpdate}
               >
-                {editId === null
-                  ? "Add"
-                  : "Update"}
+                {editId === null ? "Add" : "Update"}
               </button>
 
               <button
@@ -142,16 +139,12 @@ export default function ViewSubjects() {
               >
                 Cancel
               </button>
-
             </div>
-
           </div>
-
         </div>
       )}
 
       <table className="students-table">
-
         <thead>
           <tr>
             <th>Subject Name</th>
@@ -160,41 +153,26 @@ export default function ViewSubjects() {
         </thead>
 
         <tbody>
-
           {subjects.map((s) => (
             <tr key={s.sub_id}>
-
               <td>{s.subject_name}</td>
 
               <td>
-
-                <button
-                  className="edit-btn"
-                  onClick={() =>
-                    handleEdit(s)
-                  }
-                >
+                <button className="edit-btn" onClick={() => handleEdit(s)}>
                   Edit
                 </button>
 
                 <button
                   className="delete-btn"
-                  onClick={() =>
-                    handleDelete(s.sub_id)
-                  }
+                  onClick={() => handleDelete(s.sub_id)}
                 >
                   Delete
                 </button>
-
               </td>
-
             </tr>
           ))}
-
         </tbody>
-
       </table>
-
     </div>
   );
 }

@@ -26,13 +26,11 @@ describe("studentsApi", () => {
   it("should get students", async () => {
     vi.mocked(axiosInstance.get).mockResolvedValue({
       data: [{ name: "John" }],
-    } as any);
+    });
 
     const result = await getStudents();
 
-    expect(axiosInstance.get).toHaveBeenCalledWith(
-      "/students/get-students"
-    );
+    expect(axiosInstance.get).toHaveBeenCalledWith("/students/get-students");
 
     expect(result).toEqual([{ name: "John" }]);
   });
@@ -40,14 +38,14 @@ describe("studentsApi", () => {
   it("should add student", async () => {
     vi.mocked(axiosInstance.post).mockResolvedValue({
       data: { success: true },
-    } as any);
+    });
 
     const result = await addStudent(
       "John",
       "john@gmail.com",
       "9999999999",
       1,
-      1
+      1,
     );
 
     expect(axiosInstance.post).toHaveBeenCalled();
@@ -58,7 +56,7 @@ describe("studentsApi", () => {
   it("should update student", async () => {
     vi.mocked(axiosInstance.put).mockResolvedValue({
       data: { success: true },
-    } as any);
+    });
 
     const result = await updateStudent(
       1,
@@ -66,7 +64,7 @@ describe("studentsApi", () => {
       1,
       "John",
       "john@gmail.com",
-      "9999999999"
+      "9999999999",
     );
 
     expect(axiosInstance.put).toHaveBeenCalled();
@@ -77,12 +75,12 @@ describe("studentsApi", () => {
   it("should delete student", async () => {
     vi.mocked(axiosInstance.delete).mockResolvedValue({
       data: { success: true },
-    } as any);
+    });
 
     const result = await deleteStudent(1);
 
     expect(axiosInstance.delete).toHaveBeenCalledWith(
-      "/students/delete-students/1"
+      "/students/delete-students/1",
     );
 
     expect(result).toEqual({ success: true });

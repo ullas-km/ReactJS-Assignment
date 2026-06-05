@@ -1,8 +1,4 @@
-import {
-  render,
-  screen,
-  waitFor,
-} from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 
 import userEvent from "@testing-library/user-event";
 
@@ -29,9 +25,7 @@ describe("ViewClasses", () => {
   it("should render classes", async () => {
     render(<ViewClasses />);
 
-    expect(
-      await screen.findByText("10")
-    ).toBeInTheDocument();
+    expect(await screen.findByText("10")).toBeInTheDocument();
   });
 
   it("should add class", async () => {
@@ -41,22 +35,27 @@ describe("ViewClasses", () => {
 
     render(<ViewClasses />);
 
-    const input =
-      screen.getByPlaceholderText(
-        "Enter class name"
-      );
+// Open modal first
+await userEvent.click(
+  screen.getByRole("button", {
+    name: /add class/i,
+  }),
+);
 
-    await userEvent.type(input, "12");
+const input = screen.getByPlaceholderText(
+  "Enter class name",
+);
 
-    const addButton =
-      screen.getByText("Add");
+await userEvent.type(input, "12");
 
-    await userEvent.click(addButton);
+const addButton = screen.getByRole("button", {
+  name: /^add$/i,
+});
+
+await userEvent.click(addButton);
 
     await waitFor(() => {
-      expect(classesApi.addClass).toHaveBeenCalledWith(
-        12
-      );
+      expect(classesApi.addClass).toHaveBeenCalledWith(12);
     });
   });
 
@@ -67,15 +66,12 @@ describe("ViewClasses", () => {
 
     render(<ViewClasses />);
 
-    const deleteButton =
-      await screen.findByText("Delete");
+    const deleteButton = await screen.findByText("Delete");
 
     await userEvent.click(deleteButton);
 
     await waitFor(() => {
-      expect(
-        classesApi.deleteClass
-      ).toHaveBeenCalledWith(1);
+      expect(classesApi.deleteClass).toHaveBeenCalledWith(1);
     });
   });
 
@@ -86,29 +82,22 @@ describe("ViewClasses", () => {
 
     render(<ViewClasses />);
 
-    const editButton =
-      await screen.findByText("Edit");
+    const editButton = await screen.findByText("Edit");
 
     await userEvent.click(editButton);
 
-    const input =
-      screen.getByPlaceholderText(
-        "Enter class name"
-      );
+    const input = screen.getByPlaceholderText("Enter class name");
 
     await userEvent.clear(input);
 
     await userEvent.type(input, "15");
 
-    const updateButton =
-      screen.getByText("Update");
+    const updateButton = screen.getByText("Update");
 
     await userEvent.click(updateButton);
 
     await waitFor(() => {
-      expect(
-        classesApi.updateClass
-      ).toHaveBeenCalledWith(1, "15");
+      expect(classesApi.updateClass).toHaveBeenCalledWith(1, "15");
     });
   });
 });

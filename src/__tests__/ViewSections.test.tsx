@@ -1,17 +1,8 @@
-import {
-  render,
-  screen,
-  waitFor,
-} from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 
 import userEvent from "@testing-library/user-event";
 
-import {
-  describe,
-  it,
-  expect,
-  vi,
-} from "vitest";
+import { describe, it, expect, vi } from "vitest";
 
 import ViewSections from "../pages/ViewSections";
 
@@ -36,190 +27,148 @@ vi.mock("../services/ClassesApi", () => ({
 }));
 
 describe("ViewSections", () => {
-
   it("should render sections", async () => {
-
     vi.mocked(getSections).mockResolvedValue([
       {
         section_id: 1,
         section_name: "A",
         class_id: 1,
       },
-    ] as any);
+    ]);
 
     vi.mocked(getClasses).mockResolvedValue([
       {
         class_id: 1,
         class_name: "10",
       },
-    ] as any);
+    ]);
 
     render(<ViewSections />);
 
     await waitFor(() => {
-      expect(
-        screen.getByText("A")
-      ).toBeInTheDocument();
+      expect(screen.getByText("A")).toBeInTheDocument();
     });
 
-    expect(
-      screen.getByText("10")
-    ).toBeInTheDocument();
+    expect(screen.getByText("10")).toBeInTheDocument();
   });
 
   it("should add section", async () => {
-
-    vi.mocked(getSections).mockResolvedValue(
-      [] as any
-    );
+    vi.mocked(getSections).mockResolvedValue([]);
 
     vi.mocked(getClasses).mockResolvedValue([
       {
         class_id: 1,
         class_name: "10",
       },
-    ] as any);
+    ]);
 
-    vi.mocked(addSection).mockResolvedValue(
-      {} as any
-    );
+    vi.mocked(addSection).mockResolvedValue({});
 
     render(<ViewSections />);
 
-    const input =
-      screen.getByPlaceholderText(
-        "Section Name (A/B/C)"
-      );
+await userEvent.click(
+  screen.getByRole("button", {
+    name: /add section/i,
+  }),
+);
+
+const input = screen.getByPlaceholderText(
+  "Section Name (A/B/C)",
+);
 
     await userEvent.type(input, "A");
 
-    const select =
-      screen.getByRole("combobox");
+    const select = screen.getByRole("combobox");
 
-    await userEvent.selectOptions(
-      select,
-      "1"
-    );
+    await userEvent.selectOptions(select, "1");
 
-    const addButton =
-      screen.getByRole("button", {
-        name: "Add",
-      });
+    const addButton = screen.getByRole("button", {
+      name: "Add",
+    });
 
     await userEvent.click(addButton);
 
-    expect(addSection)
-      .toHaveBeenCalledWith(
-        "A",
-        1
-      );
+    expect(addSection).toHaveBeenCalledWith("A", 1);
   });
 
   it("should delete section", async () => {
-
     vi.mocked(getSections).mockResolvedValue([
       {
         section_id: 1,
         section_name: "A",
         class_id: 1,
       },
-    ] as any);
+    ]);
 
     vi.mocked(getClasses).mockResolvedValue([
       {
         class_id: 1,
         class_name: "10",
       },
-    ] as any);
+    ]);
 
-    vi.mocked(deleteSection).mockResolvedValue(
-      {} as any
-    );
+    vi.mocked(deleteSection).mockResolvedValue({});
 
     render(<ViewSections />);
 
     await waitFor(() => {
-      expect(
-        screen.getByText("A")
-      ).toBeInTheDocument();
+      expect(screen.getByText("A")).toBeInTheDocument();
     });
 
-    const deleteButton =
-      screen.getByRole("button", {
-        name: "Delete",
-      });
+    const deleteButton = screen.getByRole("button", {
+      name: "Delete",
+    });
 
     await userEvent.click(deleteButton);
 
-    expect(deleteSection)
-      .toHaveBeenCalledWith(1);
+    expect(deleteSection).toHaveBeenCalledWith(1);
   });
 
   it("should update section", async () => {
-
     vi.mocked(getSections).mockResolvedValue([
       {
         section_id: 1,
         section_name: "A",
         class_id: 1,
       },
-    ] as any);
+    ]);
 
     vi.mocked(getClasses).mockResolvedValue([
       {
         class_id: 1,
         class_name: "10",
       },
-    ] as any);
+    ]);
 
-    vi.mocked(updateSection).mockResolvedValue(
-      {} as any
-    );
+    vi.mocked(updateSection).mockResolvedValue({});
 
     render(<ViewSections />);
 
     await waitFor(() => {
-      expect(
-        screen.getByText("A")
-      ).toBeInTheDocument();
+      expect(screen.getByText("A")).toBeInTheDocument();
     });
 
-    const editButton =
-      screen.getByRole("button", {
-        name: "Edit",
-      });
+    const editButton = screen.getByRole("button", {
+      name: "Edit",
+    });
 
     await userEvent.click(editButton);
 
-    const input =
-      screen.getByPlaceholderText(
-        "Section Name (A/B/C)"
-      );
+    const input = screen.getByPlaceholderText("Section Name (A/B/C)");
 
     await userEvent.clear(input);
-
     await userEvent.type(input, "B");
 
-    const select =
-      screen.getByRole("combobox");
+    const select = screen.getByRole("combobox");
 
-    await userEvent.selectOptions(
-      select,
-      "1"
-    );
+    await userEvent.selectOptions(select, "1");
 
-    const updateButton =
-      screen.getByRole("button", {
-        name: "Update",
-      });
+    const updateButton = screen.getByRole("button", {
+      name: "Update",
+    });
 
     await userEvent.click(updateButton);
 
-    expect(updateSection)
-      .toHaveBeenCalledWith(
-        1,
-        "B",
-        1
-      );
+    expect(updateSection).toHaveBeenCalledWith(1, "B", 1);
   });
 });

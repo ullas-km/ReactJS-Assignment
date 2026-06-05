@@ -9,9 +9,7 @@ export default function RoleRoute({
   allowedRoles,
   children,
 }: Readonly<RoleRouteProps>) {
-  const user = JSON.parse(
-    localStorage.getItem("user") || "null"
-  );
+  const user = JSON.parse(localStorage.getItem("user") || "null");
 
   if (!user) {
     return <Navigate to="/" replace />;

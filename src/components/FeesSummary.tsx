@@ -2,24 +2,24 @@ import { useEffect, useState } from "react";
 import { getFeeStats } from "../services/FeesApi";
 import withLoading from "../hoc/withLoading";
 
-import "../assets/css/feesummary.css"
+import "../assets/css/feesummary.css";
 
 function FeesSummary() {
   const [stats, setStats] = useState({
     total: 0,
-    paid: 0,  
+    paid: 0,
     pending: 0,
     overdue: 0,
   });
-
-  useEffect(() => {
-    fetchStats();
-  }, []);
 
   const fetchStats = async () => {
     const data = await getFeeStats();
     setStats(data);
   };
+
+  useEffect(() => {
+    fetchStats();
+  }, []);
 
   return (
     <div className="students-page">
@@ -50,8 +50,6 @@ function FeesSummary() {
       </div>
     </div>
   );
-} 
+}
 
-export default withLoading(
-  FeesSummary
-);
+export default withLoading(FeesSummary);

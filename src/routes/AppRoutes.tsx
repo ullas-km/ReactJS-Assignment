@@ -36,7 +36,7 @@ export default function AppRoutes() {
 
   <Route path="/students"  element={
     <RoleRoute allowedRoles={["admin"]}>
-      <StudentsSummary />
+      <StudentsSummary loading={false} />
     </RoleRoute>
   } />
   <Route path="/students/view" element={
@@ -47,7 +47,7 @@ export default function AppRoutes() {
 
   <Route path="/fees" element={
     <RoleRoute allowedRoles={["admin"]}>
-      <FeesSummary />
+      <FeesSummary loading={false} />
     </RoleRoute>
   } />
   <Route path="/fees/view" element={
@@ -58,7 +58,7 @@ export default function AppRoutes() {
 
   <Route path="/classes" element={
     <RoleRoute allowedRoles={["admin"]}>
-      <ClassesSummary />
+      <ClassesSummary loading={false} />
     </RoleRoute>
   } />
   <Route path="/classes/view" element={
@@ -69,7 +69,7 @@ export default function AppRoutes() {
 
   <Route path="/teachers" element={
     <RoleRoute allowedRoles={["admin"]}>
-      <TeachersSummary />
+      <TeachersSummary loading={false} />
     </RoleRoute>
   } />
   <Route path="/teachers/view" element={
@@ -80,7 +80,7 @@ export default function AppRoutes() {
 
   <Route path="/sections" element={
     <RoleRoute allowedRoles={["admin"]}>
-      <SectionsSummary />
+      <SectionsSummary loading={false} />
     </RoleRoute>
   } />
   <Route path="/sections/view" element={
@@ -91,7 +91,7 @@ export default function AppRoutes() {
 
   <Route path="/subjects" element={
     <RoleRoute allowedRoles={["admin"]}>
-      <SubjectsSummary />
+      <SubjectsSummary loading={false} />
     </RoleRoute>
   } />
   <Route path="/subjects/view" element={

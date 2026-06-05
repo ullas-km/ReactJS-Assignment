@@ -11,17 +11,12 @@ import { getStudents } from "../services/studentsApi";
 
 describe("StudentsSummary", () => {
   it("should render total students", async () => {
-    (getStudents as any).mockResolvedValue([
-      { id: 1 },
-      { id: 2 },
-    ]);
+    vi.mocked(getStudents).mockResolvedValue([{ id: 1 }, { id: 2 }]);
 
     render(<StudentsSummary />);
 
     await waitFor(() => {
-      const totalCard = screen
-        .getByText("Total Students")
-        .closest(".card");
+      const totalCard = screen.getByText("Total Students").closest(".card");
 
       expect(totalCard).toHaveTextContent("2");
     });

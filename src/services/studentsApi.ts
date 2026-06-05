@@ -9,10 +9,10 @@ export const getStudents = async () => {
 // ADD
 export const addStudent = async (
   name: string,
-  email: string, 
+  email: string,
   phone: string,
   class_id: number,
-  section_id: number
+  section_id: number,
 ) => {
   const res = await axiosInstance.post("/students/post-students", {
     name,
@@ -32,7 +32,7 @@ export const updateStudent = async (
   section_id: number,
   name: string,
   email: string,
-  phone: string
+  phone: string,
 ) => {
   const res = await axiosInstance.put(`/students/put-students/${id}`, {
     class_id,
@@ -47,9 +47,7 @@ export const updateStudent = async (
 
 // DELETE
 export const deleteStudent = async (id: number) => {
-  const res = await axiosInstance.delete(
-    `/students/delete-students/${id}`
-  );
+  const res = await axiosInstance.delete(`/students/delete-students/${id}`);
 
   return res.data;
 };

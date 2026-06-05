@@ -24,7 +24,7 @@ api.interceptors.response.use(
       globalThis.location.href = "/";
     }
     return Promise.reject(err);
-  }
+  },
 );
 
 export default api;

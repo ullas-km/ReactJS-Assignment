@@ -11,31 +11,21 @@ vi.mock("../services/FeesApi", () => ({
 }));
 
 describe("AddFeeModal", () => {
- it(
-  "should add fee",
-  async () => {
+  it("should add fee", async () => {
     const user = userEvent.setup();
 
     const refreshFees = vi.fn();
     const onClose = vi.fn();
 
-    vi.mocked(feesApi.addFee).mockResolvedValue({ success: true } as any);
+    vi.mocked(feesApi.addFee).mockResolvedValue({ success: true });
 
-    render(
-      <AddFeeModal
-        refreshFees={refreshFees}
-        onClose={onClose}
-      />
-    );
+    render(<AddFeeModal refreshFees={refreshFees} onClose={onClose} />);
 
     await user.type(screen.getByLabelText("Student ID"), "1");
     await user.type(screen.getByLabelText("Amount"), "5000");
     await user.type(screen.getByLabelText("Due Date"), "2026-05-26");
 
-    await user.selectOptions(
-      screen.getByRole("combobox"),
-      "paid"
-    );
+    await user.selectOptions(screen.getByRole("combobox"), "paid");
 
     await user.click(screen.getByRole("button", { name: /add/i }));
 
@@ -44,13 +34,11 @@ describe("AddFeeModal", () => {
         1,
         5000,
         "2026-05-26",
-        "paid"
+        "paid",
       );
 
       expect(refreshFees).toHaveBeenCalled();
       expect(onClose).toHaveBeenCalled();
     });
-    },
-  10000
-);
+  }, 10000);
 });

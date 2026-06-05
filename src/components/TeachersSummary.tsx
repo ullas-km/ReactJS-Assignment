@@ -38,6 +38,4 @@ function TeachersSummary() {
   );
 }
 
-export default withLoading(
-  TeachersSummary
-);
+export default withLoading(TeachersSummary);

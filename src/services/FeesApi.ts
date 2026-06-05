@@ -11,7 +11,7 @@ export const addFee = async (
   student_id: number,
   amount: number,
   due_date: string,
-  status: string
+  status: string,
 ) => {
   const res = await axiosInstance.post("/fees/post-fees", {
     student_id,
@@ -29,7 +29,7 @@ export const updateFee = async (
   student_id: number,
   amount: number,
   due_date: string,
-  status: string
+  status: string,
 ) => {
   const res = await axiosInstance.put(`/fees/put-fees/${id}`, {
     student_id,

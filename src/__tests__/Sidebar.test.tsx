@@ -9,9 +9,10 @@ import Sidebar from "../components/Sidebar";
 const mockNavigate = vi.fn();
 
 vi.mock("react-router-dom", async () => {
-  const actual = await vi.importActual<
-    typeof import("react-router-dom")
-  >("react-router-dom");
+  const actual =
+    await vi.importActual<typeof import("react-router-dom")>(
+      "react-router-dom",
+    );
 
   return {
     ...actual,
@@ -30,7 +31,7 @@ describe("Sidebar", () => {
     render(
       <MemoryRouter>
         <Sidebar role="admin" />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     const studentsBtn = screen.getByRole("button", {
@@ -40,16 +41,12 @@ describe("Sidebar", () => {
     // open
     await user.click(studentsBtn);
 
-    expect(
-      screen.getByText(/view students/i)
-    ).toBeInTheDocument();
+    expect(screen.getByText(/view students/i)).toBeInTheDocument();
 
     // close
     await user.click(studentsBtn);
 
-    expect(
-      screen.queryByText(/view students/i)
-    ).not.toBeInTheDocument();
+    expect(screen.queryByText(/view students/i)).not.toBeInTheDocument();
   });
 
   it("should close previous menu when opening another", async () => {
@@ -58,7 +55,7 @@ describe("Sidebar", () => {
     render(
       <MemoryRouter>
         <Sidebar role="admin" />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     const studentsBtn = screen.getByRole("button", {
@@ -71,19 +68,13 @@ describe("Sidebar", () => {
 
     await user.click(studentsBtn);
 
-    expect(
-      screen.getByText(/view students/i)
-    ).toBeInTheDocument();
+    expect(screen.getByText(/view students/i)).toBeInTheDocument();
 
     await user.click(feesBtn);
 
-    expect(
-      screen.queryByText(/view students/i)
-    ).not.toBeInTheDocument();
+    expect(screen.queryByText(/view students/i)).not.toBeInTheDocument();
 
-    expect(
-      screen.getByText(/view fees/i)
-    ).toBeInTheDocument();
+    expect(screen.getByText(/view fees/i)).toBeInTheDocument();
   });
 
   it("should navigate when menu clicked", async () => {
@@ -92,34 +83,28 @@ describe("Sidebar", () => {
     render(
       <MemoryRouter>
         <Sidebar role="admin" />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     await user.click(
       screen.getByRole("button", {
         name: /students/i,
-      })
+      }),
     );
 
-    expect(mockNavigate).toHaveBeenCalledWith(
-      "/welcome/students"
-    );
+    expect(mockNavigate).toHaveBeenCalledWith("students");
   });
 
   it("should render only home for non-admin", () => {
     render(
       <MemoryRouter>
         <Sidebar role="user" />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
-    expect(
-      screen.getByText(/home/i)
-    ).toBeInTheDocument();
+    expect(screen.getByText(/home/i)).toBeInTheDocument();
 
-    expect(
-      screen.queryByText(/students/i)
-    ).not.toBeInTheDocument();
+    expect(screen.queryByText(/students/i)).not.toBeInTheDocument();
   });
 
   it("should open mobile sidebar", async () => {
@@ -128,7 +113,7 @@ describe("Sidebar", () => {
     render(
       <MemoryRouter>
         <Sidebar role="admin" />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     const hamburger = screen.getByRole("button", {
@@ -137,8 +122,6 @@ describe("Sidebar", () => {
 
     await user.click(hamburger);
 
-    expect(
-      document.querySelector(".sidebar.open")
-    ).toBeInTheDocument();
+    expect(document.querySelector(".sidebar.open")).toBeInTheDocument();
   });
 });

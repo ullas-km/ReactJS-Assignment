@@ -8,13 +8,13 @@ function ClassesSummary() {
   });
 
   useEffect(() => {
-    fetchStats();
-  }, []);
-
-  const fetchStats = async () => {
+  const loadStats = async () => {
     const data = await getClassStats();
     setStats(data);
   };
+
+  loadStats();
+}, []);
 
   return (
     <div className="students-page">
@@ -32,6 +32,6 @@ function ClassesSummary() {
   );
 }
 
-export default withLoading(
-  ClassesSummary
-);
+const ClassesSummaryWithLoading = withLoading(ClassesSummary);
+
+export default ClassesSummaryWithLoading;

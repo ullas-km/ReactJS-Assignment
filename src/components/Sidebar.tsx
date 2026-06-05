@@ -44,14 +44,10 @@ export default function Sidebar({ role }: SidebarProps) {
       {/* SIDEBAR */}
       <div className={`sidebar ${mobileOpen ? "open" : ""}`}>
         <h2 className="logo">
-  <Link
-    to="/home"
-    onClick={closeSidebar}
-    className="logo-link"
-  >
-    School App
-  </Link>
-</h2>
+          <Link to="/home" onClick={closeSidebar} className="logo-link">
+            School App
+          </Link>
+        </h2>
 
         <ul className="menu">
           {/* HOME */}
@@ -73,18 +69,13 @@ export default function Sidebar({ role }: SidebarProps) {
                 }}
               >
                 <span>Students</span>
-                <span>
-                  {openMenu === "students" ? "▲" : "▼"}
-                </span>
+                <span>{openMenu === "students" ? "▲" : "▼"}</span>
               </button>
 
               {openMenu === "students" && (
                 <ul className="dropdown-menu">
                   <li>
-                    <Link
-                      to="students/view"
-                      onClick={closeSidebar}
-                    >
+                    <Link to="students/view" onClick={closeSidebar}>
                       View Students
                     </Link>
                   </li>
@@ -105,18 +96,13 @@ export default function Sidebar({ role }: SidebarProps) {
                 }}
               >
                 <span>Fees</span>
-                <span>
-                  {openMenu === "fees" ? "▲" : "▼"}
-                </span>
+                <span>{openMenu === "fees" ? "▲" : "▼"}</span>
               </button>
 
               {openMenu === "fees" && (
                 <ul className="dropdown-menu">
                   <li>
-                    <Link
-                      to="/fees/view"
-                      onClick={closeSidebar}
-                    >
+                    <Link to="/fees/view" onClick={closeSidebar}>
                       View Fees
                     </Link>
                   </li>
@@ -137,18 +123,13 @@ export default function Sidebar({ role }: SidebarProps) {
                 }}
               >
                 <span>Classes</span>
-                <span>
-                  {openMenu === "classes" ? "▲" : "▼"}
-                </span>
+                <span>{openMenu === "classes" ? "▲" : "▼"}</span>
               </button>
 
               {openMenu === "classes" && (
                 <ul className="dropdown-menu">
                   <li>
-                    <Link
-                      to="/classes/view"
-                      onClick={closeSidebar}
-                    >
+                    <Link to="/classes/view" onClick={closeSidebar}>
                       View Classes
                     </Link>
                   </li>
@@ -169,18 +150,13 @@ export default function Sidebar({ role }: SidebarProps) {
                 }}
               >
                 <span>Sections</span>
-                <span>
-                  {openMenu === "sections" ? "▲" : "▼"}
-                </span>
+                <span>{openMenu === "sections" ? "▲" : "▼"}</span>
               </button>
 
               {openMenu === "sections" && (
                 <ul className="dropdown-menu">
                   <li>
-                    <Link
-                      to="/sections/view"
-                      onClick={closeSidebar}
-                    >
+                    <Link to="/sections/view" onClick={closeSidebar}>
                       View Sections
                     </Link>
                   </li>
@@ -201,18 +177,13 @@ export default function Sidebar({ role }: SidebarProps) {
                 }}
               >
                 <span>Teachers</span>
-                <span>
-                  {openMenu === "teachers" ? "▲" : "▼"}
-                </span>
+                <span>{openMenu === "teachers" ? "▲" : "▼"}</span>
               </button>
 
               {openMenu === "teachers" && (
                 <ul className="dropdown-menu">
                   <li>
-                    <Link
-                      to="/teachers/view"
-                      onClick={closeSidebar}
-                    >
+                    <Link to="/teachers/view" onClick={closeSidebar}>
                       View Teachers
                     </Link>
                   </li>
@@ -233,18 +204,13 @@ export default function Sidebar({ role }: SidebarProps) {
                 }}
               >
                 <span>Subjects</span>
-                <span>
-                  {openMenu === "subjects" ? "▲" : "▼"}
-                </span>
+                <span>{openMenu === "subjects" ? "▲" : "▼"}</span>
               </button>
 
               {openMenu === "subjects" && (
                 <ul className="dropdown-menu">
                   <li>
-                    <Link
-                      to="/subjects/view"
-                      onClick={closeSidebar}
-                    >
+                    <Link to="/subjects/view" onClick={closeSidebar}>
                       View Subjects
                     </Link>
                   </li>

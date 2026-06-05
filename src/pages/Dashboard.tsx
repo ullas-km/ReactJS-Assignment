@@ -9,9 +9,7 @@ type User = {
 };
 
 export default function WelcomePage() {
-  const user: User | null = JSON.parse(
-    localStorage.getItem("user") || "null"
-  );
+  const user: User | null = JSON.parse(localStorage.getItem("user") || "null");
 
   if (!user) return null;
 

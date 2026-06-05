@@ -4,10 +4,7 @@ type ProtectedRouteProps = Readonly<{
   children: React.ReactNode;
 }>;
 
-export default function ProtectedRoute({
-  children,
-}: ProtectedRouteProps) {
-
+export default function ProtectedRoute({ children }: ProtectedRouteProps) {
   const token = localStorage.getItem("token");
 
   // not logged in
@@ -17,4 +14,4 @@ export default function ProtectedRoute({
 
   // logged in
   return children;
-} 
+}

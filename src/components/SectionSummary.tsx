@@ -39,6 +39,4 @@ function SectionsSummary() {
   );
 }
 
-export default withLoading(
-  SectionsSummary
-);
+export default withLoading(SectionsSummary);

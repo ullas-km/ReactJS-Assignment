@@ -1,24 +1,14 @@
-import { useEffect, useState } from "react";
+import React from "react";
 
-export default function withLoading<
-  P extends object
->(
-  Component: React.ComponentType<P>
+type WithLoadingProps = {
+  loading: boolean;
+};
+
+export default function withLoading<P extends object>(
+  Component: React.ComponentType<P>,
 ) {
-  return function WrappedComponent(
-    props: P
-  ) {
-    const [loading, setLoading] =
-      useState(true);
-
-    useEffect(() => {
-      const timer = setTimeout(() => {
-        setLoading(false);
-      }, 500);
-
-      return () =>
-        clearTimeout(timer);
-    }, []);
+  return function WrappedComponent(props: P & WithLoadingProps) {
+    const { loading, ...rest } = props;
 
     if (loading) {
       return (
@@ -35,6 +25,6 @@ export default function withLoading<
       );
     }
 
-    return <Component {...props} />;
+    return <Component {...(rest as P)} />;
   };
 }

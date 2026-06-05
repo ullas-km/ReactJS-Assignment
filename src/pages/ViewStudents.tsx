@@ -6,57 +6,83 @@ import EditStudentModal from "../components/EditStudentModal";
 import { getClasses } from "../services/ClassesApi";
 import { getSections } from "../services/SectionApi";
 
-import {
-  getStudents,
-  deleteStudent,
-} from "../services/studentsApi";
+import { getStudents, deleteStudent } from "../services/studentsApi";
 
 import "../assets/css/viewstudents.css";
 
 export default function ViewStudents() {
-  const [students, setStudents] = useState<any[]>([]);
+  interface Student {
+    student_id: number;
+    name: string;
+    email: string;
+    phone: string;
+    class_name: string;
+    section_name: string;
+    class_id: number;
+    section_id: number;
+  }
 
-  const [showAddModal, setShowAddModal] =
-    useState(false);
+  interface Class {
+    class_id: number;
+    class_name: string;
+  }
 
-  const [editingStudent, setEditingStudent] =
-    useState<any | null>(null);
+  interface Section {
+    section_id: number;
+    section_name: string;
+    class_id: number;
+  }
+  const [students, setStudents] = useState<Student[]>([]);
 
-  const [classes, setClasses] = useState<any[]>([]);
-  const [sections, setSections] = useState<any[]>([]);
+  const [showAddModal, setShowAddModal] = useState(false);
 
-  useEffect(() => {
-    fetchStudents();
-    fetchClasses();
-    fetchSections();
-  }, []);
+  const [editingStudent, setEditingStudent] = useState<Student | null>(null);
+
+  const [classes, setClasses] = useState<Class[]>([]);
+  const [sections, setSections] = useState<Section[]>([]);
 
   const fetchStudents = async () => {
-    const data = await getStudents();
-    setStudents(data);
+    try {
+      const data = await getStudents();
+      setStudents(data);
+    } catch (error) {
+      console.error("Failed to fetch students:", error);
+    }
   };
 
-  const fetchClasses = async () => {
-    const data = await getClasses();
-    setClasses(data);
+  useEffect(() => {
+  const loadData = async () => {
+    try {
+      const [studentsRes, classesRes, sectionsRes] = await Promise.all([
+        getStudents(),
+        getClasses(),
+        getSections(),
+      ]);
+
+      setStudents(studentsRes);
+      setClasses(classesRes);
+      setSections(sectionsRes);
+    } catch (error) {
+      console.error("Failed to load data:", error);
+    }
   };
 
-  const fetchSections = async () => {
-    const data = await getSections();
-    setSections(data);
-  };
+  loadData();
+}, []);
 
   const handleDelete = async (id: number) => {
-    await deleteStudent(id);
-    fetchStudents();
+    try {
+      await deleteStudent(id);
+      fetchStudents();
+    } catch (error) {
+      console.error("Failed to delete student:", error);
+    }
   };
 
   return (
     <div className="students-page">
       <div className="students-header">
-        <h2 className="students-title">
-          Students List
-        </h2>
+        <h2 className="students-title">Students List</h2>
 
         <button
           className="header-add-btn"
@@ -93,20 +119,14 @@ export default function ViewStudents() {
                 <td className="actions">
                   <div className="modal-actions">
                     <button
-                      onClick={() =>
-                        setEditingStudent(s)
-                      }
+                      onClick={() => setEditingStudent(s)}
                       className="edit-btn"
                     >
                       Edit
                     </button>
 
                     <button
-                      onClick={() =>
-                        handleDelete(
-                          s.student_id
-                        )
-                      }
+                      onClick={() => handleDelete(s.student_id)}
                       className="delete-btn"
                     >
                       Delete
@@ -121,9 +141,7 @@ export default function ViewStudents() {
 
       {showAddModal && (
         <AddStudentModal
-          onClose={() =>
-            setShowAddModal(false)
-          }
+          onClose={() => setShowAddModal(false)}
           refreshStudents={fetchStudents}
         />
       )}
@@ -133,9 +151,7 @@ export default function ViewStudents() {
           student={editingStudent}
           classes={classes}
           sections={sections}
-          onClose={() =>
-            setEditingStudent(null)
-          }
+          onClose={() => setEditingStudent(null)}
           refreshStudents={fetchStudents}
         />
       )}

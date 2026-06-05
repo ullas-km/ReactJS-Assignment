@@ -26,9 +26,7 @@ export const updateTeacher = async (id: number, teacher_name: string) => {
 
 // DELETE teacher
 export const deleteTeacher = async (id: number) => {
-  const res = await axiosInstance.delete(
-    `/teacher/delete-teachers/${id}`
-  );
+  const res = await axiosInstance.delete(`/teacher/delete-teachers/${id}`);
 
   return res.data;
 };

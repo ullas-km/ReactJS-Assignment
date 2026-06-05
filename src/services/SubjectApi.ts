@@ -8,36 +8,25 @@ export const getSubjects = async () => {
 
 // ADD subject
 export const addSubject = async (subject_name: string) => {
-  const res = await axiosInstance.post(
-    "/subjects/post-subjects",
-    {
-      subject_name,
-    }
-  );
+  const res = await axiosInstance.post("/subjects/post-subjects", {
+    subject_name,
+  });
 
   return res.data;
 };
 
 // UPDATE subject
-export const updateSubject = async (
-  id: number,
-  subject_name: string
-) => {
-  const res = await axiosInstance.put(
-    `/subjects/put-subjects/${id}`,
-    {
-      subject_name,
-    }
-  );
+export const updateSubject = async (id: number, subject_name: string) => {
+  const res = await axiosInstance.put(`/subjects/put-subjects/${id}`, {
+    subject_name,
+  });
 
   return res.data;
 };
 
 // DELETE subject
 export const deleteSubject = async (id: number) => {
-  const res = await axiosInstance.delete(
-    `/subjects/delete-subjects/${id}`
-  );
+  const res = await axiosInstance.delete(`/subjects/delete-subjects/${id}`);
 
   return res.data;
-}; 
+};

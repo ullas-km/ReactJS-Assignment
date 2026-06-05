@@ -1,7 +1,4 @@
-import {
-  useState,
-  type ChangeEvent,
-} from "react";
+import { useState, type ChangeEvent } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { loginUser } from "../services/authApi";
 import "../assets/css/login.css";
@@ -23,37 +20,32 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
 
   const validateField = (name: string, value: string) => {
+    if (name === "email") {
+      if (!value) {
+        return "Email is required";
+      }
 
-  if (name === "email") {
+      const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[A-Za-z]{2,}$/;
 
-    if (!value) {
-      return "Email is required";
+      if (!emailRegex.test(value)) {
+        return "Invalid email format";
+      }
     }
 
-    const emailRegex =
-      /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[A-Za-z]{2,}$/;
+    if (name === "password") {
+      if (!value) {
+        return "Password is required";
+      }
 
-    if (!emailRegex.test(value)) {
-      return "Invalid email format";
-    }
-  }
-
-  if (name === "password") {
-
-    if (!value) {
-      return "Password is required";
+      if (value.length < 6) {
+        return "Minimum 6 characters required";
+      }
     }
 
-    if (value.length < 6) {
-      return "Minimum 6 characters required";
-    }
-  }
+    return "";
+  };
 
-  return "";
-};
-
-  // ---------------- HANDLE CHANGE ----------------
- const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
 
     // update form state
@@ -69,10 +61,7 @@ export default function LoginPage() {
     }));
   };
 
-  // ---------------- SUBMIT ----------------
-const handleLogin = async (
-  e: React.BaseSyntheticEvent
-): Promise<void> => {
+  const handleLogin = async (e: React.BaseSyntheticEvent): Promise<void> => {
     e.preventDefault();
     setServerError("");
 
@@ -115,7 +104,7 @@ const handleLogin = async (
           <div className="loginfields">
             <label htmlFor="email">Email</label>
             <input
-            id="email"
+              id="email"
               name="email"
               type="email"
               value={form.email}
@@ -128,7 +117,7 @@ const handleLogin = async (
           <div className="loginfields">
             <label htmlFor="password">Password</label>
             <input
-            id="password"
+              id="password"
               name="password"
               type="password"
               value={form.password}
@@ -140,8 +129,7 @@ const handleLogin = async (
           {/* SIGNUP LINK */}
           <div className="noaccount">
             <p>
-              Don't have an account?{" "}
-              <Link to="/signup">Create account</Link>
+              Don't have an account? <Link to="/signup">Create account</Link>
             </p>
           </div>
 

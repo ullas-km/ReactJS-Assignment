@@ -31,13 +31,9 @@ describe("ClassesApi", () => {
 
     const result = await getClasses();
 
-    expect(axiosInstance.get).toHaveBeenCalledWith(
-      "/classes/get-classes"
-    );
+    expect(axiosInstance.get).toHaveBeenCalledWith("/classes/get-classes");
 
-    expect(result).toEqual([
-      { class_id: 1, class_name: 10 },
-    ]);
+    expect(result).toEqual([{ class_id: 1, class_name: 10 }]);
   });
 
   it("should add class", async () => {
@@ -47,12 +43,9 @@ describe("ClassesApi", () => {
 
     const result = await addClass(10);
 
-    expect(axiosInstance.post).toHaveBeenCalledWith(
-      "/classes/post-classes",
-      {
-        class_name: 10,
-      }
-    );
+    expect(axiosInstance.post).toHaveBeenCalledWith("/classes/post-classes", {
+      class_name: 10,
+    });
 
     expect(result).toEqual({
       success: true,
@@ -66,12 +59,9 @@ describe("ClassesApi", () => {
 
     const result = await updateClass(1, "12");
 
-    expect(axiosInstance.put).toHaveBeenCalledWith(
-      "/classes/put-classes/1",
-      {
-        class_name: "12",
-      }
-    );
+    expect(axiosInstance.put).toHaveBeenCalledWith("/classes/put-classes/1", {
+      class_name: "12",
+    });
 
     expect(result).toEqual({
       success: true,
@@ -86,7 +76,7 @@ describe("ClassesApi", () => {
     const result = await deleteClass(1);
 
     expect(axiosInstance.delete).toHaveBeenCalledWith(
-      "/classes/delete-classes/1"
+      "/classes/delete-classes/1",
     );
 
     expect(result).toEqual({
@@ -103,9 +93,7 @@ describe("ClassesApi", () => {
 
     const result = await getClassStats();
 
-    expect(axiosInstance.get).toHaveBeenCalledWith(
-      "/classes/class-stats"
-    );
+    expect(axiosInstance.get).toHaveBeenCalledWith("/classes/class-stats");
 
     expect(result).toEqual({
       totalClasses: 5,

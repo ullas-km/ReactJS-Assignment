@@ -37,6 +37,4 @@ function StudentsSummary() {
   );
 }
 
-export default withLoading(
-  StudentsSummary
-);
+export default withLoading(StudentsSummary);

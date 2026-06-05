@@ -10,7 +10,12 @@ import {
 import "../assets/css/viewClasses.css";
 
 export default function ViewClasses() {
-  const [classes, setClasses] = useState<any[]>([]);
+  interface Class {
+    class_id: number;
+    class_name: string;
+  }
+
+  const [classes, setClasses] = useState<Class[]>([]);
 
   const [showModal, setShowModal] = useState(false);
 
@@ -23,25 +28,39 @@ export default function ViewClasses() {
   }, []);
 
   const fetchClasses = async () => {
-    const data = await getClasses();
-    setClasses(data);
+    try {
+      const data = await getClasses();
+      setClasses(data);
+    } catch (error) {
+      console.error("Failed to fetch classes:", error);
+    }
   };
 
   const handleAdd = async () => {
-    await addClass(Number(className));
+    if (!className.trim()) return;
 
-    setClassName("");
-    setShowModal(false);
+    try {
+      await addClass(Number(className));
 
-    fetchClasses();
+      setClassName("");
+      setShowModal(false);
+
+      fetchClasses();
+    } catch (error) {
+      console.error("Failed to add class:", error);
+    }
   };
 
   const handleDelete = async (id: number) => {
-    await deleteClass(id);
-    fetchClasses();
+    try {
+      await deleteClass(id);
+      fetchClasses();
+    } catch (error) {
+      console.error("Failed to delete class:", error);
+    }
   };
 
-  const handleEdit = (c: any) => {
+  const handleEdit = (c: Class) => {
     setEditId(c.class_id);
     setClassName(c.class_name.toString());
 
@@ -49,15 +68,19 @@ export default function ViewClasses() {
   };
 
   const handleUpdate = async () => {
-    if (!editId) return;
+    if (editId === null) return;
 
-    await updateClass(editId, className);
+    try {
+      await updateClass(editId, className);
 
-    setEditId(null);
-    setClassName("");
-    setShowModal(false);
+      setEditId(null);
+      setClassName("");
+      setShowModal(false);
 
-    fetchClasses();
+      fetchClasses();
+    } catch (error) {
+      console.error("Failed to update class:", error);
+    }
   };
 
   return (
@@ -80,21 +103,15 @@ export default function ViewClasses() {
       {showModal && (
         <div className="modal-overlay">
           <div className="modal-box">
-            <h2>
-              {editId ? "Edit Class" : "Add Class"}
-            </h2>
+            <h2>{editId ? "Edit Class" : "Add Class"}</h2>
 
             <div className="form-group">
-              <label htmlFor="className">
-                Class Name
-              </label>
+              <label htmlFor="className">Class Name</label>
 
               <input
                 id="className"
                 value={className}
-                onChange={(e) =>
-                  setClassName(e.target.value)
-                }
+                onChange={(e) => setClassName(e.target.value)}
                 placeholder="Enter class name"
               />
             </div>
@@ -102,11 +119,7 @@ export default function ViewClasses() {
             <div className="modal-actions">
               <button
                 className="modal-add-btn"
-                onClick={
-                  editId
-                    ? handleUpdate
-                    : handleAdd
-                }
+                onClick={editId ? handleUpdate : handleAdd}
               >
                 {editId ? "Update" : "Add"}
               </button>
@@ -140,18 +153,13 @@ export default function ViewClasses() {
               <td>{c.class_name}</td>
 
               <td>
-                <button
-                  className="edit-btn"
-                  onClick={() => handleEdit(c)}
-                >
+                <button className="edit-btn" onClick={() => handleEdit(c)}>
                   Edit
                 </button>
 
                 <button
                   className="delete-btn"
-                  onClick={() =>
-                    handleDelete(c.class_id)
-                  }
+                  onClick={() => handleDelete(c.class_id)}
                 >
                   Delete
                 </button>

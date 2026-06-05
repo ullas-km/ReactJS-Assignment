@@ -10,9 +10,10 @@ import * as authApi from "../services/authApi";
 const mockNavigate = vi.fn();
 
 vi.mock("react-router-dom", async () => {
-  const actual = await vi.importActual<
-    typeof import("react-router-dom")
-  >("react-router-dom");
+  const actual =
+    await vi.importActual<typeof import("react-router-dom")>(
+      "react-router-dom",
+    );
 
   return {
     ...actual,
@@ -35,20 +36,14 @@ describe("LoginPage", () => {
     render(
       <MemoryRouter>
         <LoginPage />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
-    expect(
-      screen.getByRole("heading", { name: /login/i })
-    ).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: /login/i })).toBeInTheDocument();
 
-    expect(
-      screen.getByLabelText(/email/i)
-    ).toBeInTheDocument();
+    expect(screen.getByLabelText(/email/i)).toBeInTheDocument();
 
-    expect(
-      screen.getByLabelText(/password/i)
-    ).toBeInTheDocument();
+    expect(screen.getByLabelText(/password/i)).toBeInTheDocument();
   });
 
   it("should show validation errors", async () => {
@@ -57,19 +52,15 @@ describe("LoginPage", () => {
     render(
       <MemoryRouter>
         <LoginPage />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
-    await user.click(
-      screen.getByRole("button", { name: /login/i })
-    );
+    await user.click(screen.getByRole("button", { name: /login/i }));
+
+    expect(await screen.findByText(/email is required/i)).toBeInTheDocument();
 
     expect(
-      await screen.findByText(/email is required/i)
-    ).toBeInTheDocument();
-
-    expect(
-      await screen.findByText(/password is required/i)
+      await screen.findByText(/password is required/i),
     ).toBeInTheDocument();
   });
 
@@ -87,22 +78,14 @@ describe("LoginPage", () => {
     render(
       <MemoryRouter>
         <LoginPage />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
-    await user.type(
-      screen.getByLabelText(/email/i),
-      "test@gmail.com"
-    );
+    await user.type(screen.getByLabelText(/email/i), "test@gmail.com");
 
-    await user.type(
-      screen.getByLabelText(/password/i),
-      "123456"
-    );
+    await user.type(screen.getByLabelText(/password/i), "123456");
 
-    await user.click(
-      screen.getByRole("button", { name: /login/i })
-    );
+    await user.click(screen.getByRole("button", { name: /login/i }));
 
     await waitFor(() => {
       expect(authApi.loginUser).toHaveBeenCalledWith({
@@ -110,13 +93,9 @@ describe("LoginPage", () => {
         password: "123456",
       });
 
-      expect(localStorage.getItem("token")).toBe(
-        "abc123"
-      );
+      expect(localStorage.getItem("token")).toBe("abc123");
 
-      expect(mockNavigate).toHaveBeenCalledWith(
-        "/welcome"
-      );
+      expect(mockNavigate).toHaveBeenCalledWith("/home");
     });
   });
 
@@ -124,31 +103,21 @@ describe("LoginPage", () => {
     const user = userEvent.setup();
 
     vi.mocked(authApi.loginUser).mockRejectedValue(
-      new Error("Invalid credentials")
+      new Error("Invalid credentials"),
     );
 
     render(
       <MemoryRouter>
         <LoginPage />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
-    await user.type(
-      screen.getByLabelText(/email/i),
-      "test@gmail.com"
-    );
+    await user.type(screen.getByLabelText(/email/i), "test@gmail.com");
 
-    await user.type(
-      screen.getByLabelText(/password/i),
-      "123456"
-    );
+    await user.type(screen.getByLabelText(/password/i), "123456");
 
-    await user.click(
-      screen.getByRole("button", { name: /login/i })
-    );
+    await user.click(screen.getByRole("button", { name: /login/i }));
 
-    expect(
-      await screen.findByText(/invalid credentials/i)
-    ).toBeInTheDocument();
+    expect(await screen.findByText(/invalid credentials/i)).toBeInTheDocument();
   });
 });

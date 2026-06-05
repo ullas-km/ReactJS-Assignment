@@ -35,4 +35,3 @@ export const getClassStats = async () => {
   const res = await axiosInstance.get("/classes/class-stats");
   return res.data;
 };
-

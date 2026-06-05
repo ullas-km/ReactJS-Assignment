@@ -10,13 +10,11 @@ vi.mock("../services/FeesApi", () => ({
 }));
 
 describe("FeesSummary", () => {
-
   beforeEach(() => {
     vi.clearAllMocks();
   });
 
   it("should render fees dashboard and stats", async () => {
-
     vi.mocked(feesApi.getFeeStats).mockResolvedValue({
       total: 100,
       paid: 70,
@@ -26,25 +24,15 @@ describe("FeesSummary", () => {
 
     render(<FeesSummary />);
 
-    expect(
-      screen.getByText(/fees dashboard/i)
-    ).toBeInTheDocument();
+    expect(screen.getByText(/fees dashboard/i)).toBeInTheDocument();
 
-    expect(
-      screen.getByText(/total fees/i)
-    ).toBeInTheDocument();
+    expect(screen.getByText(/total fees/i)).toBeInTheDocument();
 
-    expect(
-      screen.getByText(/paid/i)
-    ).toBeInTheDocument();
+    expect(screen.getByText(/paid/i)).toBeInTheDocument();
 
-    expect(
-      screen.getByText(/pending/i)
-    ).toBeInTheDocument();
+    expect(screen.getByText(/pending/i)).toBeInTheDocument();
 
-    expect(
-      screen.getByText(/overdue/i)
-    ).toBeInTheDocument();
+    expect(screen.getByText(/overdue/i)).toBeInTheDocument();
 
     await waitFor(() => {
       expect(screen.getByText("100")).toBeInTheDocument();
@@ -55,5 +43,4 @@ describe("FeesSummary", () => {
 
     expect(feesApi.getFeeStats).toHaveBeenCalled();
   });
-
 });

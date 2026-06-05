@@ -1,8 +1,4 @@
-import {
-  render,
-  screen,
-  waitFor,
-} from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 
 import userEvent from "@testing-library/user-event";
 
@@ -24,17 +20,14 @@ vi.mock("../services/SectionApi", () => ({
   getSections: vi.fn(),
 }));
 
-import {
-  getStudents,
-  deleteStudent,
-} from "../services/studentsApi";
+import { getStudents, deleteStudent } from "../services/studentsApi";
 
 import { getClasses } from "../services/ClassesApi";
 import { getSections } from "../services/SectionApi";
 
 describe("ViewStudents", () => {
   it("should render students", async () => {
-    (getStudents as any).mockResolvedValue([
+    vi.mocked(getStudents).mockResolvedValue([
       {
         student_id: 1,
         name: "John",
@@ -45,8 +38,8 @@ describe("ViewStudents", () => {
       },
     ]);
 
-    (getClasses as any).mockResolvedValue([]);
-    (getSections as any).mockResolvedValue([]);
+    vi.mocked(getClasses).mockResolvedValue([]);
+    vi.mocked(getSections).mockResolvedValue([]);
 
     render(<ViewStudents />);
 
@@ -56,7 +49,7 @@ describe("ViewStudents", () => {
   });
 
   it("should delete student", async () => {
-    (getStudents as any).mockResolvedValue([
+    vi.mocked(getStudents).mockResolvedValue([
       {
         student_id: 1,
         name: "John",
@@ -67,10 +60,10 @@ describe("ViewStudents", () => {
       },
     ]);
 
-    (deleteStudent as any).mockResolvedValue({});
+    vi.mocked(deleteStudent).mockResolvedValue({});
 
-    (getClasses as any).mockResolvedValue([]);
-    (getSections as any).mockResolvedValue([]);
+    vi.mocked(getClasses).mockResolvedValue([]);
+    vi.mocked(getSections).mockResolvedValue([]);
 
     render(<ViewStudents />);
 
