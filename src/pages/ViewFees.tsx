@@ -18,25 +18,21 @@ interface Fee {
 
 export default function ViewFees() {
   const [fees, setFees] = useState<Fee[]>([]);
-
   const [showAddModal, setShowAddModal] = useState(false);
-
   const [editingFee, setEditingFee] = useState<Fee | null>(null);
 
-  const fetchFees = async () => {
+  const refreshFees = async () => {
     const data = await getFees();
-
     setFees(data);
   };
 
   useEffect(() => {
-    fetchFees();
+    void refreshFees();
   }, []);
 
   const handleDelete = async (id: number) => {
     await deleteFee(id);
-
-    fetchFees();
+    await refreshFees();
   };
 
   return (
@@ -92,7 +88,7 @@ export default function ViewFees() {
       {showAddModal && (
         <AddFeeModal
           onClose={() => setShowAddModal(false)}
-          refreshFees={fetchFees}
+          refreshFees={refreshFees}
         />
       )}
 
@@ -100,7 +96,7 @@ export default function ViewFees() {
         <EditFeeModal
           fee={editingFee}
           onClose={() => setEditingFee(null)}
-          refreshFees={fetchFees}
+          refreshFees={refreshFees}
         />
       )}
     </div>

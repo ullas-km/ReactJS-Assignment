@@ -27,19 +27,19 @@ export default function AddStudentModal({ onClose, refreshStudents }: Props) {
   const [classes, setClasses] = useState<ClassItem[]>([]);
   const [sections, setSections] = useState<SectionItem[]>([]);
 
- useEffect(() => {
-  const loadData = async () => {
-    const [classesData, sectionsData] = await Promise.all([
-      getClasses(),
-      getSections(),
-    ]);
+  useEffect(() => {
+    const loadData = async () => {
+      const [classesData, sectionsData] = await Promise.all([
+        getClasses(),
+        getSections(),
+      ]);
 
-    setClasses(classesData);
-    setSections(sectionsData);
-  };
+      setClasses(classesData);
+      setSections(sectionsData);
+    };
 
-  loadData();
-}, []);
+    loadData();
+  }, []);
   const handleAddStudent = async () => {
     await addStudent(name, email, phone, Number(classId), Number(sectionId));
 

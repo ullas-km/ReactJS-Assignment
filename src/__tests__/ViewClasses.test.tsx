@@ -35,27 +35,25 @@ describe("ViewClasses", () => {
 
     render(<ViewClasses />);
 
-// Open modal first
-await userEvent.click(
-  screen.getByRole("button", {
-    name: /add class/i,
-  }),
-);
+    // Open modal first
+    await userEvent.click(
+      screen.getByRole("button", {
+        name: /add class/i,
+      }),
+    );
 
-const input = screen.getByPlaceholderText(
-  "Enter class name",
-);
+    const input = screen.getByPlaceholderText("Enter class name");
 
-await userEvent.type(input, "12");
+    await userEvent.type(input, "12");
 
-const addButton = screen.getByRole("button", {
-  name: /^add$/i,
-});
+    const addButton = screen.getByRole("button", {
+      name: /^add$/i,
+    });
 
-await userEvent.click(addButton);
+    await userEvent.click(addButton);
 
     await waitFor(() => {
-      expect(classesApi.addClass).toHaveBeenCalledWith(12);
+      expect(classesApi.addClass).toHaveBeenCalledWith("12");
     });
   });
 

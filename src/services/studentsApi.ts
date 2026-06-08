@@ -2,8 +2,13 @@ import axiosInstance from "./axiosInstance";
 
 // GET
 export const getStudents = async () => {
-  const res = await axiosInstance.get("/students/get-students");
-  return res.data;
+  try {
+    const res = await axiosInstance.get("/students/get-students");
+    return res.data;
+  } catch (error) {
+    console.error("Error fetching students:", error);
+    throw error;
+  }
 };
 
 // ADD
@@ -14,15 +19,20 @@ export const addStudent = async (
   class_id: number,
   section_id: number,
 ) => {
-  const res = await axiosInstance.post("/students/post-students", {
-    name,
-    email,
-    phone,
-    class_id,
-    section_id,
-  });
+  try {
+    const res = await axiosInstance.post("/students/post-students", {
+      name,
+      email,
+      phone,
+      class_id,
+      section_id,
+    });
 
-  return res.data;
+    return res.data;
+  } catch (error) {
+    console.error("Error adding student:", error);
+    throw error;
+  }
 };
 
 // UPDATE
@@ -34,20 +44,30 @@ export const updateStudent = async (
   email: string,
   phone: string,
 ) => {
-  const res = await axiosInstance.put(`/students/put-students/${id}`, {
-    class_id,
-    section_id,
-    name,
-    email,
-    phone,
-  });
+  try {
+    const res = await axiosInstance.put(`/students/put-students/${id}`, {
+      class_id,
+      section_id,
+      name,
+      email,
+      phone,
+    });
 
-  return res.data;
+    return res.data;
+  } catch (error) {
+    console.error("Error updating student:", error);
+    throw error;
+  }
 };
 
 // DELETE
 export const deleteStudent = async (id: number) => {
-  const res = await axiosInstance.delete(`/students/delete-students/${id}`);
+  try {
+    const res = await axiosInstance.delete(`/students/delete-students/${id}`);
 
-  return res.data;
+    return res.data;
+  } catch (error) {
+    console.error("Error deleting student:", error);
+    throw error;
+  }
 };

@@ -31,7 +31,7 @@ export default function ViewSections() {
   const [editId, setEditId] = useState<number | null>(null);
   const [showModal, setShowModal] = useState(false);
 
-   const fetchSections = async () => {
+  const fetchSections = async () => {
     try {
       const data = await getSections();
       setSections(data);
@@ -41,24 +41,22 @@ export default function ViewSections() {
   };
 
   useEffect(() => {
-  const loadData = async () => {
-    try {
-      const [sectionsRes, classesRes] = await Promise.all([
-        getSections(),
-        getClasses(),
-      ]);
+    const loadData = async () => {
+      try {
+        const [sectionsRes, classesRes] = await Promise.all([
+          getSections(),
+          getClasses(),
+        ]);
 
-      setSections(sectionsRes);
-      setClasses(classesRes);
-    } catch (error) {
-      console.error("Failed to load data:", error);
-    }
-  };
+        setSections(sectionsRes);
+        setClasses(classesRes);
+      } catch (error) {
+        console.error("Failed to load data:", error);
+      }
+    };
 
-  loadData();
-}, []);
-
- 
+    loadData();
+  }, []);
 
   const handleAdd = async () => {
     if (!sectionName || !classId) return;

@@ -3,11 +3,11 @@ import { getSections } from "../services/SectionApi";
 import withLoading from "../hoc/withLoading";
 
 function SectionsSummary() {
-  const [sections, setSections] = useState<any[]>([]);
-
-  useEffect(() => {
-    fetchSections();
-  }, []);
+  type Section = {
+    id: number;
+    name: string;
+  };
+  const [sections, setSections] = useState<Section[]>([]);
 
   const fetchSections = async () => {
     try {
@@ -17,6 +17,10 @@ function SectionsSummary() {
       console.error(error);
     }
   };
+
+  useEffect(() => {
+    fetchSections();
+  }, []);
 
   return (
     <div className="students-page">
@@ -39,4 +43,6 @@ function SectionsSummary() {
   );
 }
 
-export default withLoading(SectionsSummary);
+const SectionSummaryWithLoading = withLoading(SectionsSummary);
+
+export default SectionSummaryWithLoading;

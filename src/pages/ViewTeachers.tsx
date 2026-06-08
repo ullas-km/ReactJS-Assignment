@@ -30,17 +30,17 @@ export default function ViewTeachers() {
   };
 
   useEffect(() => {
-  const loadTeachers = async () => {
-    try {
-      const data = await getTeachers();
-      setTeachers(data);
-    } catch (error) {
-      console.error("Failed to fetch teachers:", error);
-    }
-  };
+    const loadTeachers = async () => {
+      try {
+        const data = await getTeachers();
+        setTeachers(data);
+      } catch (error) {
+        console.error("Failed to fetch teachers:", error);
+      }
+    };
 
-  loadTeachers();
-}, []);
+    loadTeachers();
+  }, []);
 
   const handleAdd = async () => {
     if (!teacherName.trim()) return;

@@ -31,17 +31,17 @@ export default function ViewSubjects() {
   };
 
   useEffect(() => {
-  const loadSubjects = async () => {
-    try {
-      const data = await getSubjects();
-      setSubjects(data);
-    } catch (error) {
-      console.error("Failed to fetch subjects:", error);
-    }
-  };
+    const loadSubjects = async () => {
+      try {
+        const data = await getSubjects();
+        setSubjects(data);
+      } catch (error) {
+        console.error("Failed to fetch subjects:", error);
+      }
+    };
 
-  loadSubjects();
-}, []);
+    loadSubjects();
+  }, []);
 
   const handleAdd = async () => {
     if (!subjectName.trim()) return;

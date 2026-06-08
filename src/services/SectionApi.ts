@@ -2,18 +2,28 @@ import axiosInstance from "./axiosInstance";
 
 // GET ALL
 export const getSections = async () => {
-  const res = await axiosInstance.get("/sections/get-sections");
-  return res.data;
+  try {
+    const res = await axiosInstance.get("/sections/get-sections");
+    return res.data;
+  } catch (error) {
+    console.error("Error fetching sections:", error);
+    throw error;
+  }
 };
 
 // ADD
 export const addSection = async (section_name: string, class_id: number) => {
-  const res = await axiosInstance.post("/sections/post-sections", {
-    section_name,
-    class_id,
-  });
+  try {
+    const res = await axiosInstance.post("/sections/post-sections", {
+      section_name,
+      class_id,
+    });
 
-  return res.data;
+    return res.data;
+  } catch (error) {
+    console.error("Error adding section:", error);
+    throw error;
+  }
 };
 
 // UPDATE
@@ -22,17 +32,27 @@ export const updateSection = async (
   section_name: string,
   class_id: number,
 ) => {
-  const res = await axiosInstance.put(`/sections/put-sections/${id}`, {
-    section_name,
-    class_id,
-  });
+  try {
+    const res = await axiosInstance.put(`/sections/put-sections/${id}`, {
+      section_name,
+      class_id,
+    });
 
-  return res.data;
+    return res.data;
+  } catch (error) {
+    console.error("Error updating section:", error);
+    throw error;
+  }
 };
 
 // DELETE
 export const deleteSection = async (id: number) => {
-  const res = await axiosInstance.delete(`/sections/delete-sections/${id}`);
+  try {
+    const res = await axiosInstance.delete(`/sections/delete-sections/${id}`);
 
-  return res.data;
+    return res.data;
+  } catch (error) {
+    console.error("Error deleting section:", error);
+    throw error;
+  }
 };

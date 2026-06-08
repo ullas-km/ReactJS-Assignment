@@ -1,9 +1,14 @@
 import axiosInstance from "./axiosInstance";
 
-// GETf
+// GET
 export const getFees = async () => {
-  const res = await axiosInstance.get("/fees/get-fees");
-  return res.data;
+  try {
+    const res = await axiosInstance.get("/fees/get-fees");
+    return res.data;
+  } catch (error) {
+    console.error("Error fetching fees:", error);
+    throw error;
+  }
 };
 
 // ADD
@@ -13,14 +18,19 @@ export const addFee = async (
   due_date: string,
   status: string,
 ) => {
-  const res = await axiosInstance.post("/fees/post-fees", {
-    student_id,
-    amount,
-    due_date,
-    status,
-  });
+  try {
+    const res = await axiosInstance.post("/fees/post-fees", {
+      student_id,
+      amount,
+      due_date,
+      status,
+    });
 
-  return res.data;
+    return res.data;
+  } catch (error) {
+    console.error("Error adding fee:", error);
+    throw error;
+  }
 };
 
 // UPDATE
@@ -31,23 +41,39 @@ export const updateFee = async (
   due_date: string,
   status: string,
 ) => {
-  const res = await axiosInstance.put(`/fees/put-fees/${id}`, {
-    student_id,
-    amount,
-    due_date,
-    status,
-  });
+  try {
+    const res = await axiosInstance.put(`/fees/put-fees/${id}`, {
+      student_id,
+      amount,
+      due_date,
+      status,
+    });
 
-  return res.data;
+    return res.data;
+  } catch (error) {
+    console.error("Error updating fee:", error);
+    throw error;
+  }
 };
 
 // DELETE
 export const deleteFee = async (id: number) => {
-  const res = await axiosInstance.delete(`/fees/delete-fees/${id}`);
-  return res.data;
+  try {
+    const res = await axiosInstance.delete(`/fees/delete-fees/${id}`);
+    return res.data;
+  } catch (error) {
+    console.error("Error deleting fee:", error);
+    throw error;
+  }
 };
 
+// GET STATS
 export const getFeeStats = async () => {
-  const res = await axiosInstance.get("/fees/fee-stats");
-  return res.data;
+  try {
+    const res = await axiosInstance.get("/fees/fee-stats");
+    return res.data;
+  } catch (error) {
+    console.error("Error fetching fee stats:", error);
+    throw error;
+  }
 };

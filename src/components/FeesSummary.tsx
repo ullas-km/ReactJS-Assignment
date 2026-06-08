@@ -12,13 +12,22 @@ function FeesSummary() {
     overdue: 0,
   });
 
-  const fetchStats = async () => {
-    const data = await getFeeStats();
-    setStats(data);
-  };
-
   useEffect(() => {
+    let mounted = true;
+
+    const fetchStats = async () => {
+      const data = await getFeeStats();
+
+      if (mounted) {
+        setStats(data);
+      }
+    };
+
     fetchStats();
+
+    return () => {
+      mounted = false;
+    };
   }, []);
 
   return (
@@ -52,4 +61,6 @@ function FeesSummary() {
   );
 }
 
-export default withLoading(FeesSummary);
+const FeesSummaryWithLoading = withLoading(FeesSummary);
+
+export default FeesSummaryWithLoading;

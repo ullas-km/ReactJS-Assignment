@@ -3,11 +3,15 @@ import { getStudents } from "../services/studentsApi";
 import withLoading from "../hoc/withLoading";
 
 function StudentsSummary() {
-  const [students, setStudents] = useState<any[]>([]);
-
-  useEffect(() => {
-    fetchStudents();
-  }, []);
+  type Student = {
+    id: number;
+    name: string;
+    email: string;
+    phone: string;
+    class_id: number;
+    section_id: number;
+  };
+  const [students, setStudents] = useState<Student[]>([]);
 
   const fetchStudents = async () => {
     try {
@@ -17,6 +21,10 @@ function StudentsSummary() {
       console.error(error);
     }
   };
+
+  useEffect(() => {
+    fetchStudents();
+  }, []);
 
   return (
     <div>
@@ -37,4 +45,6 @@ function StudentsSummary() {
   );
 }
 
-export default withLoading(StudentsSummary);
+const StudentsSummaryWithLoading = withLoading(StudentsSummary);
+
+export default StudentsSummaryWithLoading;

@@ -51,24 +51,24 @@ export default function ViewStudents() {
   };
 
   useEffect(() => {
-  const loadData = async () => {
-    try {
-      const [studentsRes, classesRes, sectionsRes] = await Promise.all([
-        getStudents(),
-        getClasses(),
-        getSections(),
-      ]);
+    const loadData = async () => {
+      try {
+        const [studentsRes, classesRes, sectionsRes] = await Promise.all([
+          getStudents(),
+          getClasses(),
+          getSections(),
+        ]);
 
-      setStudents(studentsRes);
-      setClasses(classesRes);
-      setSections(sectionsRes);
-    } catch (error) {
-      console.error("Failed to load data:", error);
-    }
-  };
+        setStudents(studentsRes);
+        setClasses(classesRes);
+        setSections(sectionsRes);
+      } catch (error) {
+        console.error("Failed to load data:", error);
+      }
+    };
 
-  loadData();
-}, []);
+    loadData();
+  }, []);
 
   const handleDelete = async (id: number) => {
     try {
@@ -107,7 +107,7 @@ export default function ViewStudents() {
           </thead>
 
           <tbody>
-            {students.map((s: any) => (
+            {students.map((s: Student) => (
               <tr key={s.student_id}>
                 <td>{s.student_id}</td>
                 <td>{s.name}</td>

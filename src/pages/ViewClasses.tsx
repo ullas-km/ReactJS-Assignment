@@ -23,10 +23,6 @@ export default function ViewClasses() {
 
   const [editId, setEditId] = useState<number | null>(null);
 
-  useEffect(() => {
-    fetchClasses();
-  }, []);
-
   const fetchClasses = async () => {
     try {
       const data = await getClasses();
@@ -36,11 +32,15 @@ export default function ViewClasses() {
     }
   };
 
+  useEffect(() => {
+    fetchClasses();
+  }, []);
+
   const handleAdd = async () => {
     if (!className.trim()) return;
 
     try {
-      await addClass(Number(className));
+      await addClass(className);
 
       setClassName("");
       setShowModal(false);

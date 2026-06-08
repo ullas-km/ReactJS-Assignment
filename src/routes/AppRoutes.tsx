@@ -26,81 +26,116 @@ export default function AppRoutes() {
       <Route path="/" element={<LoginPage />} />
 
       <Route
-  element={
-    <ProtectedRoute>
-      <WelcomePage />
-    </ProtectedRoute>
-  }
->
-  <Route path="/home" element={<Home />} />
+        element={
+          <ProtectedRoute>
+            <WelcomePage />
+          </ProtectedRoute>
+        }
+      >
+        <Route path="/home" element={<Home />} />
 
-  <Route path="/students"  element={
-    <RoleRoute allowedRoles={["admin"]}>
-      <StudentsSummary loading={false} />
-    </RoleRoute>
-  } />
-  <Route path="/students/view" element={
-    <RoleRoute allowedRoles={["admin"]}>
-      <ViewStudents />
-    </RoleRoute>
-  } />
+        <Route
+          path="/students"
+          element={
+            <RoleRoute allowedRoles={["admin"]}>
+              <StudentsSummary loading={false} />
+            </RoleRoute>
+          }
+        />
+        <Route
+          path="/students/view"
+          element={
+            <RoleRoute allowedRoles={["admin"]}>
+              <ViewStudents />
+            </RoleRoute>
+          }
+        />
 
-  <Route path="/fees" element={
-    <RoleRoute allowedRoles={["admin"]}>
-      <FeesSummary loading={false} />
-    </RoleRoute>
-  } />
-  <Route path="/fees/view" element={
-    <RoleRoute allowedRoles={["admin"]}>
-      <ViewFees />
-    </RoleRoute>
-  } />
+        <Route
+          path="/fees"
+          element={
+            <RoleRoute allowedRoles={["admin"]}>
+              <FeesSummary loading={false} />
+            </RoleRoute>
+          }
+        />
+        <Route
+          path="/fees/view"
+          element={
+            <RoleRoute allowedRoles={["admin"]}>
+              <ViewFees />
+            </RoleRoute>
+          }
+        />
 
-  <Route path="/classes" element={
-    <RoleRoute allowedRoles={["admin"]}>
-      <ClassesSummary loading={false} />
-    </RoleRoute>
-  } />
-  <Route path="/classes/view" element={
-    <RoleRoute allowedRoles={["admin"]}>
-      <ViewClasses />
-    </RoleRoute>
-  } />
+        <Route
+          path="/classes"
+          element={
+            <RoleRoute allowedRoles={["admin"]}>
+              <ClassesSummary loading={false} />
+            </RoleRoute>
+          }
+        />
+        <Route
+          path="/classes/view"
+          element={
+            <RoleRoute allowedRoles={["admin"]}>
+              <ViewClasses />
+            </RoleRoute>
+          }
+        />
 
-  <Route path="/teachers" element={
-    <RoleRoute allowedRoles={["admin"]}>
-      <TeachersSummary loading={false} />
-    </RoleRoute>
-  } />
-  <Route path="/teachers/view" element={
-    <RoleRoute allowedRoles={["admin"]}>
-      <ViewTeachers />
-    </RoleRoute>
-  } />
+        <Route
+          path="/teachers"
+          element={
+            <RoleRoute allowedRoles={["admin"]}>
+              <TeachersSummary loading={false} />
+            </RoleRoute>
+          }
+        />
+        <Route
+          path="/teachers/view"
+          element={
+            <RoleRoute allowedRoles={["admin"]}>
+              <ViewTeachers />
+            </RoleRoute>
+          }
+        />
 
-  <Route path="/sections" element={
-    <RoleRoute allowedRoles={["admin"]}>
-      <SectionsSummary loading={false} />
-    </RoleRoute>
-  } />
-  <Route path="/sections/view" element={
-    <RoleRoute allowedRoles={["admin"]}>
-      <ViewSections />
-    </RoleRoute>
-  } />
+        <Route
+          path="/sections"
+          element={
+            <RoleRoute allowedRoles={["admin"]}>
+              <SectionsSummary loading={false} />
+            </RoleRoute>
+          }
+        />
+        <Route
+          path="/sections/view"
+          element={
+            <RoleRoute allowedRoles={["admin"]}>
+              <ViewSections />
+            </RoleRoute>
+          }
+        />
 
-  <Route path="/subjects" element={
-    <RoleRoute allowedRoles={["admin"]}>
-      <SubjectsSummary loading={false} />
-    </RoleRoute>
-  } />
-  <Route path="/subjects/view" element={
-    <RoleRoute allowedRoles={["admin"]}>
-      <ViewSubjects />
-    </RoleRoute>
-  } />
-</Route>
-      
+        <Route
+          path="/subjects"
+          element={
+            <RoleRoute allowedRoles={["admin"]}>
+              <SubjectsSummary loading={false} />
+            </RoleRoute>
+          }
+        />
+        <Route
+          path="/subjects/view"
+          element={
+            <RoleRoute allowedRoles={["admin"]}>
+              <ViewSubjects />
+            </RoleRoute>
+          }
+        />
+      </Route>
 
       <Route path="*" element={<NotFound />} />
     </Routes>

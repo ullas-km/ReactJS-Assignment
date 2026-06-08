@@ -9,13 +9,13 @@ function TeachersSummary() {
   });
 
   useEffect(() => {
-    fetchStats();
-  }, []);
+    async function loadStats() {
+      const data = await getTeacherStats();
+      setStats(data);
+    }
 
-  const fetchStats = async () => {
-    const data = await getTeacherStats();
-    setStats(data);
-  };
+    void loadStats();
+  }, []);
 
   return (
     <div className="students-page">
@@ -38,4 +38,6 @@ function TeachersSummary() {
   );
 }
 
-export default withLoading(TeachersSummary);
+const TeachersSummaryWithLoading = withLoading(TeachersSummary);
+
+export default TeachersSummaryWithLoading;

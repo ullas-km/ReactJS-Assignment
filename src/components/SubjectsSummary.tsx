@@ -4,17 +4,21 @@ import withLoading from "../hoc/withLoading";
 import { getSubjects } from "../services/SubjectApi";
 
 function SubjectsSummary() {
-  const [subjects, setSubjects] = useState<any[]>([]);
-
-  useEffect(() => {
-    fetchSubjects();
-  }, []);
+  type Subject = {
+    id: number;
+    subject_name: string;
+  };
+  const [subjects, setSubjects] = useState<Subject[]>([]);
 
   const fetchSubjects = async () => {
     const data = await getSubjects();
 
     setSubjects(data);
   };
+
+  useEffect(() => {
+    fetchSubjects();
+  }, []);
 
   return (
     <div className="students-page">
@@ -33,4 +37,6 @@ function SubjectsSummary() {
   );
 }
 
-export default withLoading(SubjectsSummary);
+const SubjectsSummaryWithLoading = withLoading(SubjectsSummary);
+
+export default SubjectsSummaryWithLoading;
