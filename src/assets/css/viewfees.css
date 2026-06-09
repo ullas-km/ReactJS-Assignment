@@ -38,3 +38,9 @@
   background: #b91c1c;
   transform: translateY(-1px);
 }
+.loading-cell {
+  text-align: center;
+  padding: 30px;
+  font-size: 16px;
+  font-weight: 500;
+}

@@ -11,6 +11,7 @@ import { getStudents, deleteStudent } from "../services/studentsApi";
 import "../assets/css/viewstudents.css";
 
 export default function ViewStudents() {
+  const [loading, setLoading] = useState(true);
   interface Student {
     student_id: number;
     name: string;
@@ -53,6 +54,8 @@ export default function ViewStudents() {
   useEffect(() => {
     const loadData = async () => {
       try {
+        setLoading(true);
+
         const [studentsRes, classesRes, sectionsRes] = await Promise.all([
           getStudents(),
           getClasses(),
@@ -64,6 +67,8 @@ export default function ViewStudents() {
         setSections(sectionsRes);
       } catch (error) {
         console.error("Failed to load data:", error);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -107,34 +112,42 @@ export default function ViewStudents() {
           </thead>
 
           <tbody>
-            {students.map((s: Student) => (
-              <tr key={s.student_id}>
-                <td>{s.student_id}</td>
-                <td>{s.name}</td>
-                <td>{s.email}</td>
-                <td>{s.phone}</td>
-                <td>{s.class_name}</td>
-                <td>{s.section_name}</td>
-
-                <td className="actions">
-                  <div className="modal-actions">
-                    <button
-                      onClick={() => setEditingStudent(s)}
-                      className="edit-btn"
-                    >
-                      Edit
-                    </button>
-
-                    <button
-                      onClick={() => handleDelete(s.student_id)}
-                      className="delete-btn"
-                    >
-                      Delete
-                    </button>
-                  </div>
+            {loading ? (
+              <tr>
+                <td colSpan={7} className="loading-cell">
+                  Loading students...
                 </td>
               </tr>
-            ))}
+            ) : (
+              students.map((s: Student) => (
+                <tr key={s.student_id}>
+                  <td>{s.student_id}</td>
+                  <td>{s.name}</td>
+                  <td>{s.email}</td>
+                  <td>{s.phone}</td>
+                  <td>{s.class_name}</td>
+                  <td>{s.section_name}</td>
+
+                  <td className="actions">
+                    <div className="modal-actions">
+                      <button
+                        onClick={() => setEditingStudent(s)}
+                        className="edit-btn"
+                      >
+                        Edit
+                      </button>
+
+                      <button
+                        onClick={() => handleDelete(s.student_id)}
+                        className="delete-btn"
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))
+            )}
           </tbody>
         </table>
       </div>

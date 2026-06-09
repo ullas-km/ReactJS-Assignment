@@ -10,6 +10,7 @@ import {
 import "../assets/css/viewTeachers.css";
 
 export default function ViewTeachers() {
+  const [loading, setLoading] = useState(true);
   interface Teacher {
     teacher_id: number;
     teacher_name: string;
@@ -27,10 +28,14 @@ export default function ViewTeachers() {
 
   const fetchTeachers = async () => {
     try {
+      setLoading(true);
+
       const data = await getTeachers();
       setTeachers(data);
     } catch (error) {
       console.error("Failed to fetch teachers:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -186,26 +191,34 @@ export default function ViewTeachers() {
         </thead>
 
         <tbody>
-          {teachers.map((t) => (
-            <tr key={t.teacher_id}>
-              <td>{t.teacher_name}</td>
-              <td>{t.email}</td>
-              <td>{t.phone}</td>
-
-              <td>
-                <button className="edit-btn" onClick={() => handleEdit(t)}>
-                  Edit
-                </button>
-
-                <button
-                  className="delete-btn"
-                  onClick={() => handleDelete(t.teacher_id)}
-                >
-                  Delete
-                </button>
+          {loading ? (
+            <tr>
+              <td colSpan={4} className="loading-cell">
+                Loading teachers...
               </td>
             </tr>
-          ))}
+          ) : (
+            teachers.map((t) => (
+              <tr key={t.teacher_id}>
+                <td>{t.teacher_name}</td>
+                <td>{t.email}</td>
+                <td>{t.phone}</td>
+
+                <td>
+                  <button className="edit-btn" onClick={() => handleEdit(t)}>
+                    Edit
+                  </button>
+
+                  <button
+                    className="delete-btn"
+                    onClick={() => handleDelete(t.teacher_id)}
+                  >
+                    Delete
+                  </button>
+                </td>
+              </tr>
+            ))
+          )}
         </tbody>
       </table>
     </div>

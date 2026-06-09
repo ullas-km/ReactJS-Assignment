@@ -20,10 +20,19 @@ export default function ViewFees() {
   const [fees, setFees] = useState<Fee[]>([]);
   const [showAddModal, setShowAddModal] = useState(false);
   const [editingFee, setEditingFee] = useState<Fee | null>(null);
+  const [loading, setLoading] = useState(true);
 
   const refreshFees = async () => {
-    const data = await getFees();
-    setFees(data);
+    try {
+      setLoading(true);
+
+      const data = await getFees();
+      setFees(data);
+    } catch (error) {
+      console.error("Failed to fetch fees:", error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -59,28 +68,39 @@ export default function ViewFees() {
           </thead>
 
           <tbody>
-            {fees.map((f) => (
-              <tr key={f.id}>
-                <td>{f.id}</td>
-                <td>{f.student_id}</td>
-                <td>{f.amount}</td>
-                <td>{new Date(f.due_date).toLocaleDateString()}</td>
-                <td>{f.status}</td>
-
-                <td className="actions">
-                  <button className="edit-btn" onClick={() => setEditingFee(f)}>
-                    Edit
-                  </button>
-
-                  <button
-                    className="delete-btn"
-                    onClick={() => handleDelete(f.id)}
-                  >
-                    Delete
-                  </button>
+            {loading ? (
+              <tr>
+                <td colSpan={6} className="loading-cell">
+                  Loading fees...
                 </td>
               </tr>
-            ))}
+            ) : (
+              fees.map((f) => (
+                <tr key={f.id}>
+                  <td>{f.id}</td>
+                  <td>{f.student_id}</td>
+                  <td>{f.amount}</td>
+                  <td>{new Date(f.due_date).toLocaleDateString()}</td>
+                  <td>{f.status}</td>
+
+                  <td className="actions">
+                    <button
+                      className="edit-btn"
+                      onClick={() => setEditingFee(f)}
+                    >
+                      Edit
+                    </button>
+
+                    <button
+                      className="delete-btn"
+                      onClick={() => handleDelete(f.id)}
+                    >
+                      Delete
+                    </button>
+                  </td>
+                </tr>
+              ))
+            )}
           </tbody>
         </table>
       </div>

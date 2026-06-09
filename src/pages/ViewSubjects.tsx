@@ -8,6 +8,7 @@ import {
 } from "../services/SubjectApi";
 
 export default function ViewSubjects() {
+  const [loading, setLoading] = useState(true);
   interface Subject {
     sub_id: number;
     subject_name: string;
@@ -23,10 +24,14 @@ export default function ViewSubjects() {
 
   const fetchSubjects = async () => {
     try {
+      setLoading(true);
+
       const data = await getSubjects();
       setSubjects(data);
     } catch (error) {
       console.error("Failed to fetch subjects:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -144,24 +149,32 @@ export default function ViewSubjects() {
         </thead>
 
         <tbody>
-          {subjects.map((s) => (
-            <tr key={s.sub_id}>
-              <td>{s.subject_name}</td>
-
-              <td>
-                <button className="edit-btn" onClick={() => handleEdit(s)}>
-                  Edit
-                </button>
-
-                <button
-                  className="delete-btn"
-                  onClick={() => handleDelete(s.sub_id)}
-                >
-                  Delete
-                </button>
+          {loading ? (
+            <tr>
+              <td colSpan={2} className="loading-cell">
+                Loading subjects...
               </td>
             </tr>
-          ))}
+          ) : (
+            subjects.map((s) => (
+              <tr key={s.sub_id}>
+                <td>{s.subject_name}</td>
+
+                <td>
+                  <button className="edit-btn" onClick={() => handleEdit(s)}>
+                    Edit
+                  </button>
+
+                  <button
+                    className="delete-btn"
+                    onClick={() => handleDelete(s.sub_id)}
+                  >
+                    Delete
+                  </button>
+                </td>
+              </tr>
+            ))
+          )}
         </tbody>
       </table>
     </div>

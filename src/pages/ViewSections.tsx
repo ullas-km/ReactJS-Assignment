@@ -12,6 +12,7 @@ import { getClasses } from "../services/ClassesApi";
 import "../assets/css/viewSections.css";
 
 export default function ViewSections() {
+  const [loading, setLoading] = useState(true);
   interface Section {
     section_id: number;
     section_name: string;
@@ -33,16 +34,22 @@ export default function ViewSections() {
 
   const fetchSections = async () => {
     try {
+      setLoading(true);
+
       const data = await getSections();
       setSections(data);
     } catch (error) {
       console.error("Failed to fetch sections:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
   useEffect(() => {
     const loadData = async () => {
       try {
+        setLoading(true);
+
         const [sectionsRes, classesRes] = await Promise.all([
           getSections(),
           getClasses(),
@@ -52,6 +59,8 @@ export default function ViewSections() {
         setClasses(classesRes);
       } catch (error) {
         console.error("Failed to load data:", error);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -192,28 +201,36 @@ export default function ViewSections() {
         </thead>
 
         <tbody>
-          {sections.map((s) => (
-            <tr key={s.section_id}>
-              <td>{s.section_name}</td>
-
-              <td>
-                {classes.find((c) => c.class_id === s.class_id)?.class_name}
-              </td>
-
-              <td>
-                <button className="edit-btn" onClick={() => handleEdit(s)}>
-                  Edit
-                </button>
-
-                <button
-                  className="delete-btn"
-                  onClick={() => handleDelete(s.section_id)}
-                >
-                  Delete
-                </button>
+          {loading ? (
+            <tr>
+              <td colSpan={3} className="loading-cell">
+                Loading sections...
               </td>
             </tr>
-          ))}
+          ) : (
+            sections.map((s) => (
+              <tr key={s.section_id}>
+                <td>{s.section_name}</td>
+
+                <td>
+                  {classes.find((c) => c.class_id === s.class_id)?.class_name}
+                </td>
+
+                <td>
+                  <button className="edit-btn" onClick={() => handleEdit(s)}>
+                    Edit
+                  </button>
+
+                  <button
+                    className="delete-btn"
+                    onClick={() => handleDelete(s.section_id)}
+                  >
+                    Delete
+                  </button>
+                </td>
+              </tr>
+            ))
+          )}
         </tbody>
       </table>
     </div>

@@ -282,6 +282,12 @@
   background: #b91c1c;
 }
 
+.loading-cell {
+  text-align: center;
+  padding: 30px;
+  font-size: 16px;
+}
+
 /* MOBILE */
 @media (max-width: 768px) {
 

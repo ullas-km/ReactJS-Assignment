@@ -88,3 +88,9 @@
     width: 100%;
   }
 }
+.loading-cell {
+  text-align: center;
+  padding: 30px;
+  font-size: 16px;
+  font-weight: 500;
+}

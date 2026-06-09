@@ -10,6 +10,7 @@ import {
 import "../assets/css/viewClasses.css";
 
 export default function ViewClasses() {
+  const [loading, setLoading] = useState(true);
   interface Class {
     class_id: number;
     class_name: string;
@@ -25,10 +26,14 @@ export default function ViewClasses() {
 
   const fetchClasses = async () => {
     try {
+      setLoading(true);
+
       const data = await getClasses();
       setClasses(data);
     } catch (error) {
       console.error("Failed to fetch classes:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -148,24 +153,32 @@ export default function ViewClasses() {
         </thead>
 
         <tbody>
-          {classes.map((c) => (
-            <tr key={c.class_id}>
-              <td>{c.class_name}</td>
-
-              <td>
-                <button className="edit-btn" onClick={() => handleEdit(c)}>
-                  Edit
-                </button>
-
-                <button
-                  className="delete-btn"
-                  onClick={() => handleDelete(c.class_id)}
-                >
-                  Delete
-                </button>
+          {loading ? (
+            <tr>
+              <td colSpan={2} className="loading-cell">
+                Loading classes...
               </td>
             </tr>
-          ))}
+          ) : (
+            classes.map((c) => (
+              <tr key={c.class_id}>
+                <td>{c.class_name}</td>
+
+                <td>
+                  <button className="edit-btn" onClick={() => handleEdit(c)}>
+                    Edit
+                  </button>
+
+                  <button
+                    className="delete-btn"
+                    onClick={() => handleDelete(c.class_id)}
+                  >
+                    Delete
+                  </button>
+                </td>
+              </tr>
+            ))
+          )}
         </tbody>
       </table>
     </div>
