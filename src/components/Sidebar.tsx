@@ -1,6 +1,9 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import "../assets/css/sidebar.css";
+import { useNavigate } from "react-router-dom";
+import { useAppDispatch } from "../app/hooks";
+import { logout } from "../features/auth/authSlice";
 
 type SidebarProps = Readonly<{
   role: string;
@@ -8,19 +11,17 @@ type SidebarProps = Readonly<{
 
 export default function Sidebar({ role }: SidebarProps) {
   const [mobileOpen, setMobileOpen] = useState(false);
-
-  const [openMenu, setOpenMenu] = useState<string | null>(null);
-
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
   const closeSidebar = () => setMobileOpen(false);
 
-  const toggleMenu = (menu: string) => {
-    setOpenMenu((prev) => (prev === menu ? null : menu));
-  };
+  const getLinkClass = ({ isActive }: { isActive: boolean }) =>
+    isActive ? "menu-link active" : "menu-link";
 
   return (
     <>
+      {/* MOBILE HEADER */}
       <div className="mobile-header">
         <button
           className="hamburger"
@@ -28,205 +29,90 @@ export default function Sidebar({ role }: SidebarProps) {
         >
           ☰
         </button>
-
         <h2>School App</h2>
       </div>
 
+      {/* OVERLAY */}
       {mobileOpen && (
         <button
-          type="button"
           className="sidebar-overlay"
-          aria-label="Close sidebar overlay"
           onClick={() => setMobileOpen(false)}
         />
       )}
 
       {/* SIDEBAR */}
       <div className={`sidebar ${mobileOpen ? "open" : ""}`}>
-        <h2 className="logo">
-          <Link to="/home" onClick={closeSidebar} className="logo-link">
-            School App
-          </Link>
-        </h2>
+        <div className="logo">School App</div>
 
-        <ul className="menu">
+        <div className="menu">
           {/* HOME */}
-          <li>
-            <Link to="/home" onClick={closeSidebar}>
-              Home
-            </Link>
-          </li>
+          <NavLink to="/home" className={getLinkClass} onClick={closeSidebar}>
+            Home
+          </NavLink>
 
-          {/* STUDENTS */}
           {role === "admin" && (
-            <li>
-              <button
-                className="menu-btn"
-                onClick={() => {
-                  toggleMenu("students");
-                  navigate("students");
-                  closeSidebar();
-                }}
+            <>
+              <NavLink
+                to="/students"
+                className={getLinkClass}
+                onClick={closeSidebar}
               >
-                <span>Students</span>
-                <span>{openMenu === "students" ? "▲" : "▼"}</span>
-              </button>
+                Students
+              </NavLink>
 
-              {openMenu === "students" && (
-                <ul className="dropdown-menu">
-                  <li>
-                    <Link to="students/view" onClick={closeSidebar}>
-                      View Students
-                    </Link>
-                  </li>
-                </ul>
-              )}
-            </li>
-          )}
-
-          {/* FEES */}
-          {role === "admin" && (
-            <li>
-              <button
-                className="menu-btn"
-                onClick={() => {
-                  toggleMenu("fees");
-                  navigate("/fees");
-                  closeSidebar();
-                }}
+              <NavLink
+                to="/fees"
+                className={getLinkClass}
+                onClick={closeSidebar}
               >
-                <span>Fees</span>
-                <span>{openMenu === "fees" ? "▲" : "▼"}</span>
-              </button>
+                Fees
+              </NavLink>
 
-              {openMenu === "fees" && (
-                <ul className="dropdown-menu">
-                  <li>
-                    <Link to="/fees/view" onClick={closeSidebar}>
-                      View Fees
-                    </Link>
-                  </li>
-                </ul>
-              )}
-            </li>
-          )}
-
-          {/* CLASSES */}
-          {role === "admin" && (
-            <li>
-              <button
-                className="menu-btn"
-                onClick={() => {
-                  toggleMenu("classes");
-                  navigate("/classes");
-                  closeSidebar();
-                }}
+              <NavLink
+                to="/classes"
+                className={getLinkClass}
+                onClick={closeSidebar}
               >
-                <span>Classes</span>
-                <span>{openMenu === "classes" ? "▲" : "▼"}</span>
-              </button>
+                Classes
+              </NavLink>
 
-              {openMenu === "classes" && (
-                <ul className="dropdown-menu">
-                  <li>
-                    <Link to="/classes/view" onClick={closeSidebar}>
-                      View Classes
-                    </Link>
-                  </li>
-                </ul>
-              )}
-            </li>
-          )}
-
-          {/* SECTIONS */}
-          {role === "admin" && (
-            <li>
-              <button
-                className="menu-btn"
-                onClick={() => {
-                  toggleMenu("sections");
-                  navigate("/sections");
-                  closeSidebar();
-                }}
+              <NavLink
+                to="/sections"
+                className={getLinkClass}
+                onClick={closeSidebar}
               >
-                <span>Sections</span>
-                <span>{openMenu === "sections" ? "▲" : "▼"}</span>
-              </button>
+                Sections
+              </NavLink>
 
-              {openMenu === "sections" && (
-                <ul className="dropdown-menu">
-                  <li>
-                    <Link to="/sections/view" onClick={closeSidebar}>
-                      View Sections
-                    </Link>
-                  </li>
-                </ul>
-              )}
-            </li>
-          )}
-
-          {/* TEACHERS */}
-          {role === "admin" && (
-            <li>
-              <button
-                className="menu-btn"
-                onClick={() => {
-                  toggleMenu("teachers");
-                  navigate("/teachers");
-                  closeSidebar();
-                }}
+              <NavLink
+                to="/teachers"
+                className={getLinkClass}
+                onClick={closeSidebar}
               >
-                <span>Teachers</span>
-                <span>{openMenu === "teachers" ? "▲" : "▼"}</span>
-              </button>
+                Teachers
+              </NavLink>
 
-              {openMenu === "teachers" && (
-                <ul className="dropdown-menu">
-                  <li>
-                    <Link to="/teachers/view" onClick={closeSidebar}>
-                      View Teachers
-                    </Link>
-                  </li>
-                </ul>
-              )}
-            </li>
-          )}
-
-          {/* SUBJECTS */}
-          {role === "admin" && (
-            <li>
-              <button
-                className="menu-btn"
-                onClick={() => {
-                  toggleMenu("subjects");
-                  navigate("/subjects");
-                  closeSidebar();
-                }}
+              <NavLink
+                to="/subjects"
+                className={getLinkClass}
+                onClick={closeSidebar}
               >
-                <span>Subjects</span>
-                <span>{openMenu === "subjects" ? "▲" : "▼"}</span>
-              </button>
-
-              {openMenu === "subjects" && (
-                <ul className="dropdown-menu">
-                  <li>
-                    <Link to="/subjects/view" onClick={closeSidebar}>
-                      View Subjects
-                    </Link>
-                  </li>
-                </ul>
-              )}
-            </li>
+                Subjects
+              </NavLink>
+            </>
           )}
-        </ul>
+        </div>
 
         {/* LOGOUT */}
         <div className="logout-section">
           <button
             onClick={() => {
+              dispatch(logout());
+
               localStorage.removeItem("token");
               localStorage.removeItem("user");
-              globalThis.location.href = "/";
+
+              navigate("/");
             }}
           >
             Logout

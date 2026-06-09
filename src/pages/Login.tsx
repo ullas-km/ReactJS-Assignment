@@ -1,10 +1,13 @@
 import { useState, type ChangeEvent } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { loginUser } from "../services/authApi";
 import "../assets/css/login.css";
+import { useAppDispatch } from "../app/hooks";
+import { loginSuccess } from "../features/auth/authSlice";
 
 export default function LoginPage() {
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
 
   const [form, setForm] = useState({
     email: "",
@@ -81,6 +84,13 @@ export default function LoginPage() {
 
       const data = await loginUser(form);
 
+      dispatch(
+        loginSuccess({
+          token: data.token,
+          user: data.user,
+        }),
+      );
+
       localStorage.setItem("token", data.token);
       localStorage.setItem("user", JSON.stringify(data.user));
 
@@ -125,13 +135,6 @@ export default function LoginPage() {
             />
           </div>
           {errors.password && <p className="field-error">{errors.password}</p>}
-
-          {/* SIGNUP LINK */}
-          <div className="noaccount">
-            <p>
-              Don't have an account? <Link to="/signup">Create account</Link>
-            </p>
-          </div>
 
           {/* BUTTON */}
           <button type="submit" className="loginbtn" disabled={loading}>

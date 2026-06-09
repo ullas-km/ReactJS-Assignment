@@ -31,16 +31,7 @@ export default function ViewSubjects() {
   };
 
   useEffect(() => {
-    const loadSubjects = async () => {
-      try {
-        const data = await getSubjects();
-        setSubjects(data);
-      } catch (error) {
-        console.error("Failed to fetch subjects:", error);
-      }
-    };
-
-    loadSubjects();
+    void fetchSubjects();
   }, []);
 
   const handleAdd = async () => {

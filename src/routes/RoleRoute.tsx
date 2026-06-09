@@ -1,4 +1,5 @@
 import { Navigate } from "react-router-dom";
+import { useAppSelector } from "../app/hooks";
 
 type RoleRouteProps = {
   allowedRoles: string[];
@@ -9,7 +10,7 @@ export default function RoleRoute({
   allowedRoles,
   children,
 }: Readonly<RoleRouteProps>) {
-  const user = JSON.parse(localStorage.getItem("user") || "null");
+  const user = useAppSelector((state) => state.auth.user);
 
   if (!user) {
     return <Navigate to="/" replace />;

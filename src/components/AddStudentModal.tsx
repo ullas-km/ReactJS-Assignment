@@ -26,6 +26,7 @@ export default function AddStudentModal({ onClose, refreshStudents }: Props) {
   const [sectionId, setSectionId] = useState("");
   const [classes, setClasses] = useState<ClassItem[]>([]);
   const [sections, setSections] = useState<SectionItem[]>([]);
+  const [password, setPassword] = useState("");
 
   useEffect(() => {
     const loadData = async () => {
@@ -41,7 +42,14 @@ export default function AddStudentModal({ onClose, refreshStudents }: Props) {
     loadData();
   }, []);
   const handleAddStudent = async () => {
-    await addStudent(name, email, phone, Number(classId), Number(sectionId));
+    await addStudent(
+      name,
+      email,
+      phone,
+      Number(classId),
+      Number(sectionId),
+      password,
+    );
 
     refreshStudents();
 
@@ -72,6 +80,15 @@ export default function AddStudentModal({ onClose, refreshStudents }: Props) {
         </div>
 
         <div className="form-group">
+          <label>Password</label>
+          <input
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+        </div>
+
+        <div className="form-group">
           <label htmlFor="phone">Phone</label>
           <input
             id="phone"
@@ -81,7 +98,7 @@ export default function AddStudentModal({ onClose, refreshStudents }: Props) {
         </div>
 
         <div className="form-group">
-          <label htmlFor="classId">Class ID</label>
+          <label htmlFor="classId">Class</label>
 
           <select
             id="classId"
@@ -99,7 +116,7 @@ export default function AddStudentModal({ onClose, refreshStudents }: Props) {
         </div>
 
         <div className="form-group">
-          <label htmlFor="sectionId">Section ID</label>
+          <label htmlFor="sectionId">Section</label>
 
           <select
             id="sectionId"

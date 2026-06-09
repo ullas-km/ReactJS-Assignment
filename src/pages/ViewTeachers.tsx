@@ -13,9 +13,14 @@ export default function ViewTeachers() {
   interface Teacher {
     teacher_id: number;
     teacher_name: string;
+    email: string;
+    phone: number;
   }
   const [teachers, setTeachers] = useState<Teacher[]>([]);
   const [teacherName, setTeacherName] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
+  const [password, setPassword] = useState("");
 
   const [editId, setEditId] = useState<number | null>(null);
   const [showModal, setShowModal] = useState(false);
@@ -30,23 +35,14 @@ export default function ViewTeachers() {
   };
 
   useEffect(() => {
-    const loadTeachers = async () => {
-      try {
-        const data = await getTeachers();
-        setTeachers(data);
-      } catch (error) {
-        console.error("Failed to fetch teachers:", error);
-      }
-    };
-
-    loadTeachers();
+    void fetchTeachers();
   }, []);
 
   const handleAdd = async () => {
     if (!teacherName.trim()) return;
 
     try {
-      await addTeacher(teacherName);
+      await addTeacher(teacherName, email, phone, password);
 
       setTeacherName("");
       setShowModal(false);
@@ -68,7 +64,11 @@ export default function ViewTeachers() {
 
   const handleEdit = (t: Teacher) => {
     setEditId(t.teacher_id);
+
     setTeacherName(t.teacher_name);
+    setEmail(t.email || "");
+    setPhone(t.phone ? String(t.phone) : "");
+
     setShowModal(true);
   };
 
@@ -76,10 +76,12 @@ export default function ViewTeachers() {
     if (editId === null) return;
 
     try {
-      await updateTeacher(editId, teacherName);
+      await updateTeacher(editId, teacherName, email, phone);
 
       setEditId(null);
       setTeacherName("");
+      setEmail("");
+      setPhone("");
       setShowModal(false);
 
       fetchTeachers();
@@ -120,6 +122,36 @@ export default function ViewTeachers() {
               />
             </div>
 
+            <div className="form-group">
+              <label>Email</label>
+              <input
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Email"
+              />
+            </div>
+
+            <div className="form-group">
+              <label>Phone</label>
+              <input
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+                placeholder="Phone"
+              />
+            </div>
+
+            {editId === null && (
+              <div className="form-group">
+                <label>Password</label>
+                <input
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="Password"
+                />
+              </div>
+            )}
+
             <div className="modal-actions">
               <button
                 className="modal-add-btn"
@@ -147,6 +179,8 @@ export default function ViewTeachers() {
         <thead>
           <tr>
             <th>Teacher Name</th>
+            <th>Email</th>
+            <th>Phone</th>
             <th>Actions</th>
           </tr>
         </thead>
@@ -155,6 +189,8 @@ export default function ViewTeachers() {
           {teachers.map((t) => (
             <tr key={t.teacher_id}>
               <td>{t.teacher_name}</td>
+              <td>{t.email}</td>
+              <td>{t.phone}</td>
 
               <td>
                 <button className="edit-btn" onClick={() => handleEdit(t)}>

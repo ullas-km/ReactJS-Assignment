@@ -18,6 +18,7 @@ export const addStudent = async (
   phone: string,
   class_id: number,
   section_id: number,
+  password: string
 ) => {
   try {
     const res = await axiosInstance.post("/students/post-students", {
@@ -26,6 +27,7 @@ export const addStudent = async (
       phone,
       class_id,
       section_id,
+      password
     });
 
     return res.data;

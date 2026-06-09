@@ -12,31 +12,36 @@ export const getTeachers = async () => {
 };
 
 // ADD teacher
-export const addTeacher = async (teacher_name: string) => {
-  try {
-    const res = await axiosInstance.post("/teacher/post-teachers", {
-      teacher_name,
-    });
+export const addTeacher = async (
+  teacher_name: string,
+  email: string,
+  phone: string,
+  password: string
+) => {
+  const res = await axiosInstance.post("/teacher/post-teachers", {
+    teacher_name,
+    email,
+    phone,
+    password,
+  });
 
-    return res.data;
-  } catch (error) {
-    console.error("Error adding teacher:", error);
-    throw error;
-  }
+  return res.data;
 };
 
 // UPDATE teacher
-export const updateTeacher = async (id: number, teacher_name: string) => {
-  try {
-    const res = await axiosInstance.put(`/teacher/put-teachers/${id}`, {
-      teacher_name,
-    });
+export const updateTeacher = async (
+  id: number,
+  teacher_name: string,
+  email: string,
+  phone: string
+) => {
+  const res = await axiosInstance.put(`/teacher/put-teachers/${id}`, {
+    teacher_name,
+    email,
+    phone,
+  });
 
-    return res.data;
-  } catch (error) {
-    console.error("Error updating teacher:", error);
-    throw error;
-  }
+  return res.data;
 };
 
 // DELETE teacher
