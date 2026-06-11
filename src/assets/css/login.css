@@ -105,3 +105,18 @@
   border-color: #2f80ed;
   box-shadow: 0 0 0 3px rgba(47, 128, 237, 0.15);
 }
+.back-home {
+  margin-top: 15px;
+  text-align: center;
+}
+
+.home-link {
+  text-decoration: none;
+  color: #1d4ed8;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.home-link:hover {
+  text-decoration: underline;
+}

@@ -29,39 +29,6 @@ export default function Profile() {
             <span>Role</span>
             <strong>{user.role}</strong>
           </div>
-
-          {user.role === "student" && (
-            <>
-              <div className="info-row">
-                <span>Admission No</span>
-                <strong>{user.admission_no}</strong>
-              </div>
-
-              <div className="info-row">
-                <span>Class</span>
-                <strong>{user.class_name}</strong>
-              </div>
-
-              <div className="info-row">
-                <span>Section</span>
-                <strong>{user.section_name}</strong>
-              </div>
-            </>
-          )}
-
-          {user.role === "teacher" && (
-            <>
-              <div className="info-row">
-                <span>Teacher ID</span>
-                <strong>{user.teacher_id}</strong>
-              </div>
-
-              <div className="info-row">
-                <span>Subject</span>
-                <strong>{user.subject_name}</strong>
-              </div>
-            </>
-          )}
         </div>
       </div>
     </div>

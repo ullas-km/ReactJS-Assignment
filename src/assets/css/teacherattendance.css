@@ -1,122 +1,121 @@
 /* PAGE */
 .attendance-page {
-  padding: 24px;
-  min-height: 100vh;
+  padding: 20px;
   background: #f8fafc;
+  min-height: 100vh;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
 
+/* HEADER */
 .attendance-page h2 {
-  font-size: 28px;
-  font-weight: 700;
-  color: #0f172a;
-  margin-bottom: 24px;
+  font-size: 24px;
+  font-weight: bold;
+  color: #111827;
+  margin-bottom: 15px;
 }
 
-/* FORM */
+/* FORM WRAPPER */
 .attendance-page form {
   background: #ffffff;
-  padding: 24px;
-  border-radius: 18px;
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
 
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   gap: 16px;
 
-  margin-bottom: 24px;
+  margin-bottom: 20px;
 }
 
+/* INPUTS */
 .attendance-page select,
 .attendance-page input[type="date"] {
-  width: 100%;
-  padding: 12px 14px;
-  border: 1px solid #cbd5e1;
-  border-radius: 10px;
+  padding: 10px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
   outline: none;
   font-size: 14px;
-  background: white;
-  transition: all 0.2s ease;
 }
 
 .attendance-page select:focus,
 .attendance-page input[type="date"]:focus {
-  border-color: #6366f1;
-  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+  border-color: #1d4ed8;
 }
 
+/* BUTTON */
 .attendance-page button {
+  padding: 10px 16px;
   border: none;
-  border-radius: 10px;
-  background: #6366f1;
+  border-radius: 8px;
+  background-color: #15803d;
   color: white;
-  font-weight: 600;
-  padding: 12px 18px;
+  font-weight: bold;
   cursor: pointer;
-  transition: 0.2s ease;
+  transition: 0.2s;
 }
 
 .attendance-page button:hover {
-  background: #4f46e5;
-  transform: translateY(-1px);
+  background-color: #166534;
 }
 
-/* TABLE CARD */
+/* TABLE WRAPPER STYLE (same as students) */
 .attendance-page table {
   width: 100%;
   border-collapse: collapse;
   background: white;
-  border-radius: 18px;
+  border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
 }
 
 /* HEADER */
 .attendance-page thead {
-  background: #0f172a;
+  background-color: #1e3a8a;
+  color: #ffffff;
 }
 
-.attendance-page th {
-  color: white;
-  padding: 16px;
-  text-align: left;
-  font-size: 14px;
-  font-weight: 600;
+.attendance-page th,
+.attendance-page td {
+  text-align: center;
+  padding: 12px;
 }
 
 /* ROWS */
 .attendance-page td {
-  padding: 16px;
-  border-bottom: 1px solid #e2e8f0;
-  color: #334155;
-  font-size: 14px;
-}
-
-.attendance-page tbody tr {
-  transition: background 0.2s ease;
+  border-bottom: 1px solid #eee;
 }
 
 .attendance-page tbody tr:hover {
-  background: #f8fafc;
+  background-color: #f3f6ff;
+  transition: 0.2s;
 }
 
-/* STATUS */
-.attendance-page td:last-child {
+/* STATUS COLORS */
+.status {
   font-weight: 600;
   text-transform: capitalize;
 }
 
-.attendance-page tr td:last-child {
+.status.present {
   color: #16a34a;
+}
+
+.status.absent {
+  color: #dc2626;
+}
+
+/* LOADING */
+.loading-cell {
+  text-align: center;
+  padding: 30px;
+  font-size: 16px;
 }
 
 /* RESPONSIVE */
 @media (max-width: 768px) {
   .attendance-page {
-    padding: 15px;
-  }
-
-  .attendance-page form {
-    grid-template-columns: 1fr;
+    padding: 14px;
   }
 
   .attendance-page table {

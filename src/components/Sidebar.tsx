@@ -187,7 +187,7 @@ export default function Sidebar({ role }: SidebarProps) {
               localStorage.removeItem("token");
               localStorage.removeItem("user");
 
-              navigate("/");
+              navigate("/login");
             }}
           >
             Logout

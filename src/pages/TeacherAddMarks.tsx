@@ -1,6 +1,10 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { addMarks } from "../services/marksApi";
+import {
+  addMarks,
+  updateMarks,
+  deleteMarks,
+} from "../services/marksApi";
 import { getStudents, getSubjects, getExams } from "../services/dropdownsApi";
 import "../assets/css/teachermarks.css";
 
@@ -13,6 +17,7 @@ export default function TeacherAddMarks() {
   const [subjects, setSubjects] = useState<any[]>([]);
   const [exams, setExams] = useState<any[]>([]);
   const [marksList, setMarksList] = useState<any[]>([]);
+  const [editingId, setEditingId] = useState<number | null>(null);
 
   const [form, setForm] = useState({
     exam_id: "",
@@ -50,45 +55,84 @@ export default function TeacherAddMarks() {
       console.log(err);
     }
   };
+  const handleEdit = (mark: any) => {
+  setEditingId(mark.id);
+
+  setForm({
+    exam_id: String(mark.exam_id),
+    subject_id: String(mark.subject_id),
+    student_id: String(mark.student_id),
+    marks: String(mark.marks),
+  });
+
+  setStep(1);
+};
+const handleDelete = async (id: number) => {
+  const confirmDelete = window.confirm(
+    "Are you sure you want to delete this mark?"
+  );
+
+  if (!confirmDelete) return;
+
+  try {
+    await deleteMarks(id);
+
+    alert("Marks deleted");
+
+    fetchMarks();
+  } catch (err) {
+    console.log(err);
+    alert("Failed to delete marks");
+  }
+};
 
   const handleChange = (e: any) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = async () => {
-    try {
-      if (
-        !form.exam_id ||
-        !form.subject_id ||
-        !form.student_id ||
-        !form.marks
-      ) {
-        alert("Fill all fields");
-        return;
-      }
-
-      await addMarks({
-        exam_id: Number(form.exam_id),
-        subject_id: Number(form.subject_id),
-        student_id: Number(form.student_id),
-        marks: Number(form.marks),
-      });
-
-      alert("Marks added!");
-
-      setForm({
-        exam_id: "",
-        subject_id: "",
-        student_id: "",
-        marks: "",
-      });
-
-      setStep(1);
-      fetchMarks(); // refresh table
-    } catch (err: any) {
-      alert(err?.response?.data || "Error adding marks");
+ const handleSubmit = async () => {
+  try {
+    if (
+      !form.exam_id ||
+      !form.subject_id ||
+      !form.student_id ||
+      !form.marks
+    ) {
+      alert("Fill all fields");
+      return;
     }
-  };
+
+    const payload = {
+      exam_id: Number(form.exam_id),
+      subject_id: Number(form.subject_id),
+      student_id: Number(form.student_id),
+      marks: Number(form.marks),
+    };
+
+    if (editingId) {
+      await updateMarks(editingId, payload);
+      alert("Marks updated");
+    } else {
+      await addMarks(payload);
+      alert("Marks added");
+    }
+
+    setEditingId(null);
+
+    setForm({
+      exam_id: "",
+      subject_id: "",
+      student_id: "",
+      marks: "",
+    });
+
+    setStep(1);
+
+    fetchMarks();
+  } catch (err: any) {
+    alert(err?.response?.data || "Error");
+  }
+};
 
   return (
     <div className="marks-page">
@@ -210,8 +254,8 @@ export default function TeacherAddMarks() {
                 </button>
 
                 <button className="submit-btn" onClick={handleSubmit}>
-                  Save Marks
-                </button>
+  {editingId ? "Update Marks" : "Save Marks"}
+</button>
               </div>
             </div>
           )}
@@ -234,16 +278,32 @@ export default function TeacherAddMarks() {
                 </thead>
 
             <tbody>
-              {marksList.map((m: any) => (
-                <tr key={m.id}>
-                  <td>{m.id}</td>
-                  <td>{m.student_name}</td>
-                  <td>{m.subject_name}</td>
-                  <td>{m.exam_name}</td>
-                  <td>{m.marks}</td>
-                </tr>
-              ))}
-            </tbody>
+  {marksList.map((m: any) => (
+    <tr key={m.id}>
+      <td>{m.id}</td>
+      <td>{m.student_name}</td>
+      <td>{m.subject_name}</td>
+      <td>{m.exam_name}</td>
+      <td>{m.marks}</td>
+
+      <td>
+        <button
+          className="edit-btn"
+          onClick={() => handleEdit(m)}
+        >
+          Edit
+        </button>
+
+        <button
+          className="delete-btn"
+          onClick={() => handleDelete(m.id)}
+        >
+          Delete
+        </button>
+      </td>
+    </tr>
+  ))}
+</tbody>
           </table>
         </div>
       </div>

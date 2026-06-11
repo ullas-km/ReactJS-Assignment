@@ -1,0 +1,139 @@
+/* PAGE */
+.marks-wrapper {
+  padding: 20px;
+  background: #f8fafc;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+}
+
+/* CARD */
+.marks-card {
+  width: 100%;
+  max-width: 1000px;
+  background: #ffffff;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  overflow-x: auto;
+}
+
+/* HEADER (same as students page vibe) */
+.marks-header {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 15px;
+}
+
+.marks-header h2 {
+  font-size: 24px;
+  font-weight: bold;
+  color: #111827;
+}
+
+.marks-header p {
+  background: #e0e7ff;
+  color: #1e40af;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: bold;
+  width: fit-content;
+}
+
+/* FILTER */
+.filter-box {
+  margin: 10px 0 15px;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.filter-box label {
+  font-weight: 600;
+  color: #374151;
+}
+
+.filter-box select {
+  padding: 8px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  outline: none;
+}
+
+.filter-box select:focus {
+  border-color: #1d4ed8;
+}
+
+/* TABLE */
+.marks-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 15px;
+}
+
+/* HEADER */
+.marks-table thead {
+  background-color: #1e3a8a;
+  color: #ffffff;
+}
+
+.marks-table th,
+.marks-table td {
+  text-align: center;
+  padding: 12px;
+}
+
+/* ROWS */
+.marks-table td {
+  border-bottom: 1px solid #eee;
+}
+
+.marks-table tbody tr:hover {
+  background-color: #f3f6ff;
+  transition: 0.2s;
+}
+
+/* BADGES */
+.badge {
+  padding: 5px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.pass {
+  background: #dcfce7;
+  color: #16a34a;
+}
+
+.fail {
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+/* LOADING */
+.loading,
+.empty {
+  text-align: center;
+  padding: 30px;
+  font-size: 16px;
+  color: #6b7280;
+}
+
+/* MOBILE */
+@media (max-width: 768px) {
+  .marks-card {
+    padding: 15px;
+  }
+
+  .marks-table {
+    min-width: 600px;
+  }
+
+  .filter-box {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

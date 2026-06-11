@@ -1,30 +1,24 @@
 import { useEffect, useState } from "react";
 
-import {
-  getAttendance,
-  addAttendance,
-} from "../services/attendanceApi";
-
+import { getAttendance, addAttendance } from "../services/attendanceApi";
+import "../assets/css/teacherattendance.css";
 import { getStudents } from "../services/studentsApi";
 
 export default function TeacherAttendance() {
   const [attendance, setAttendance] = useState([]);
   const [students, setStudents] = useState([]);
 
-  const [studentId, setStudentId] =
-    useState("");
+  const [studentId, setStudentId] = useState("");
 
   const [date, setDate] = useState("");
 
-  const [status, setStatus] =
-    useState("present");
+  const [status, setStatus] = useState("present");
+  const [selectedDate, setSelectedDate] = useState("");
 
   const loadData = async () => {
-    const attendanceData =
-      await getAttendance();
+    const attendanceData = await getAttendance();
 
-    const studentsData =
-      await getStudents();
+    const studentsData = await getStudents();
 
     setAttendance(attendanceData);
     setStudents(studentsData);
@@ -34,9 +28,7 @@ export default function TeacherAttendance() {
     loadData();
   }, []);
 
-  const handleSubmit = async (
-    e: React.FormEvent
-  ) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     await addAttendance({
@@ -59,19 +51,12 @@ export default function TeacherAttendance() {
       <form onSubmit={handleSubmit}>
         <select
           value={studentId}
-          onChange={(e) =>
-            setStudentId(e.target.value)
-          }
+          onChange={(e) => setStudentId(e.target.value)}
         >
-          <option value="">
-            Select Student
-          </option>
+          <option value="">Select Student</option>
 
           {students.map((s: any) => (
-            <option
-              key={s.student_id}
-              value={s.student_id}
-            >
+            <option key={s.student_id} value={s.student_id}>
               {s.name}
             </option>
           ))}
@@ -80,29 +65,16 @@ export default function TeacherAttendance() {
         <input
           type="date"
           value={date}
-          onChange={(e) =>
-            setDate(e.target.value)
-          }
+          onChange={(e) => setDate(e.target.value)}
         />
 
-        <select
-          value={status}
-          onChange={(e) =>
-            setStatus(e.target.value)
-          }
-        >
-          <option value="present">
-            Present
-          </option>
+        <select value={status} onChange={(e) => setStatus(e.target.value)}>
+          <option value="present">Present</option>
 
-          <option value="absent">
-            Absent
-          </option>
+          <option value="absent">Absent</option>
         </select>
 
-        <button type="submit">
-          Mark Attendance
-        </button>
+        <button type="submit">Mark Attendance</button>
       </form>
 
       <table>
@@ -117,9 +89,15 @@ export default function TeacherAttendance() {
         <tbody>
           {attendance.map((a: any) => (
             <tr key={a.id}>
-              <td>{a.student_id}</td>
-              <td>{a.date}</td>
-              <td>{a.status}</td>
+              <td>{a.student_name}</td>
+              <td>{new Date(a.date).toLocaleDateString()}</td>
+              <td
+                className={
+                  a.status === "absent" ? "status absent" : "status present"
+                }
+              >
+                {a.status}
+              </td>
             </tr>
           ))}
         </tbody>

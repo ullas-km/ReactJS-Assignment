@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { getFees } from "../services/FeesApi";
-import { makePayment } from "../services/PaymentsApi"
+import { makePayment } from "../services/PaymentsApi";
+import "../assets/css/studentPayments.css";
 
 interface Fee {
   id: number;
@@ -12,83 +13,104 @@ interface Fee {
 
 export default function StudentPayments() {
   const [fees, setFees] = useState<Fee[]>([]);
+  const [loading, setLoading] = useState(true);
 
   const user = JSON.parse(localStorage.getItem("user") || "null");
 
-   const handlePay = async (fee: Fee) => {
-  try {
-    await makePayment(
-      user.student_id,
-      fee.id,
-      fee.amount
-    );
+  const handlePay = async (fee: Fee) => {
+    try {
+      await makePayment(user.student_id, fee.id, fee.amount);
 
-    setFees((prev) =>
-      prev.map((f) =>
-        f.id === fee.id
-          ? { ...f, status: "paid" }
-          : f
-      )
-    );
+      setFees((prev) =>
+        prev.map((f) =>
+          f.id === fee.id ? { ...f, status: "paid" } : f
+        )
+      );
 
-    alert("Payment successful");
-  } catch (error: any) {
-  console.error("PAYMENT ERROR:", error);
-
-  console.log(error.response?.data);
-
-  alert(error.response?.data || "Payment failed");
-}
-};
+      alert("Payment successful");
+    } catch (error: any) {
+      console.error("PAYMENT ERROR:", error);
+      alert(error.response?.data || "Payment failed");
+    }
+  };
 
   useEffect(() => {
     const loadFees = async () => {
       const data = await getFees();
 
       const myFees = data.filter(
-        (fee: Fee) => fee.student_id === user.student_id,
+        (fee: Fee) => fee.student_id === user.student_id
       );
 
       setFees(myFees);
+      setLoading(false);
     };
 
-    void loadFees();
+    loadFees();
   }, []);
 
   return (
-    <div className="students-page">
-      <h2>My Fees</h2>
+    <div className="payment-wrapper">
+  <div className="payment-header">
+    <h2>My Fees</h2>
+    <p>Fee payment details</p>
+  </div>
 
-      <table className="students-table">
-        <thead>
-          <tr>
-            <th>Fee ID</th>
-            <th>Amount</th>
-            <th>Due Date</th>
-            <th>Status</th>
-            <th>Action</th>
-          </tr>
-        </thead>
+  {loading ? (
+    <div className="loading">Loading fees...</div>
+  ) : (
+    <div className="table-container">
+            <table className="payment-table">
+              <thead>
+                <tr>
+                  <th>Fee ID</th>
+                  <th>Amount</th>
+                  <th>Due Date</th>
+                  <th>Status</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
 
-        <tbody>
-          {fees.map((fee) => (
-            <tr key={fee.id}>
-              <td>{fee.id}</td>
-              <td>₹{fee.amount}</td>
-              <td>{new Date(fee.due_date).toLocaleDateString()}</td>
-              <td>{fee.status}</td>
+              <tbody>
+                {fees.map((fee) => (
+                  <tr key={fee.id}>
+                    <td>{fee.id}</td>
+                    <td>₹{fee.amount}</td>
+                    <td>
+                      {new Date(fee.due_date).toLocaleDateString()}
+                    </td>
 
-<td>
-  {fee.status === "pending" && (
-    <button onClick={() => handlePay(fee)}>
-  Pay Now
-</button>
-  )}
-</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
+                    <td>
+                      <span
+                        className={`badge ${
+                          fee.status === "paid" ? "paid" : "pending"
+                        }`}
+                      >
+                        {fee.status}
+                      </span>
+                    </td>
+
+                    <td>
+                      {fee.status === "pending" ? (
+                        <button
+                          className="pay-btn"
+                          onClick={() => handlePay(fee)}
+                        >
+                          Pay Now
+                        </button>
+                      ) : (
+                        <button className="paid-btn" disabled>
+                          Paid
+                        </button>
+                      )}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </div>
+
   );
 }

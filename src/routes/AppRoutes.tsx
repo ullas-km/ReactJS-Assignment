@@ -22,6 +22,7 @@ const TeacherTimetable = lazy(() => import("../pages/TeacherTimetable"));
 const Profile = lazy(() => import("../pages/Profile"));
 const TeacherStudents = lazy(() => import("../pages/TeacherStudents"));
 const TeacherAttendance = lazy(() => import("../pages/TeacherAttendance"));
+const LandingPage = lazy(() => import("../pages/Homepage"));
 
 export default function AppRoutes() {
   return (
@@ -40,7 +41,8 @@ export default function AppRoutes() {
       }
     >
       <Routes>
-        <Route path="/" element={<LoginPage />} />
+        <Route path="/" element={<LandingPage />} />
+<Route path="/login" element={<LoginPage />} />
 
         <Route
           element={

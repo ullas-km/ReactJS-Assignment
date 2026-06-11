@@ -1,0 +1,109 @@
+/* PAGE (same as students-page) */
+.payment-wrapper {
+  padding: 20px;
+  background: #f8fafc;
+  min-height: 100vh;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+/* HEADER (same style as students-header) */
+.payment-header {
+  margin-bottom: 15px;
+}
+
+.payment-header h2 {
+  font-size: 24px;
+  font-weight: bold;
+  color: #111827;
+}
+
+.payment-header p {
+  font-size: 14px;
+  color: #6b7280;
+}
+
+/* TABLE WRAPPER (same as students table-wrapper) */
+.table-container {
+  background: #ffffff;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  overflow-x: auto;
+}
+
+/* TABLE */
+.payment-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 15px;
+}
+
+/* HEADER */
+.payment-table thead {
+  background-color: #1e3a8a;
+  color: #ffffff;
+}
+
+.payment-table th,
+.payment-table td {
+  text-align: center;
+  padding: 12px;
+}
+
+/* ROWS */
+.payment-table td {
+  border-bottom: 1px solid #eee;
+}
+
+.payment-table tbody tr:hover {
+  background-color: #f3f6ff;
+  transition: 0.2s;
+}
+
+/* BADGES */
+.badge {
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: bold;
+}
+
+.paid {
+  background: #dcfce7;
+  color: #16a34a;
+}
+
+.pending {
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+/* BUTTONS (same style system as students page) */
+.pay-btn {
+  padding: 6px 12px;
+  background: #1d4ed8;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.pay-btn:hover {
+  background: #1e40af;
+}
+
+.paid-btn {
+  padding: 6px 12px;
+  background: #e5e7eb;
+  color: #6b7280;
+  border: none;
+  border-radius: 6px;
+  cursor: not-allowed;
+}
+
+/* LOADING */
+.loading {
+  text-align: center;
+  padding: 30px;
+  font-size: 16px;
+}

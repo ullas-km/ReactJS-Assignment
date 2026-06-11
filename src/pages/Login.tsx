@@ -4,6 +4,7 @@ import { loginUser } from "../services/authApi";
 import "../assets/css/login.css";
 import { useAppDispatch } from "../app/hooks";
 import { loginSuccess } from "../features/auth/authSlice";
+import { Link } from "react-router-dom";
 
 export default function LoginPage() {
   const navigate = useNavigate();
@@ -141,6 +142,12 @@ export default function LoginPage() {
           <button type="submit" className="loginbtn" disabled={loading}>
             {loading ? "Logging in..." : "Login"}
           </button>
+          {/* BACK TO HOME */}
+          <div className="back-home">
+            <Link to="/" className="home-link">
+              ← Back to Home
+            </Link>
+          </div>
         </form>
       </div>
     </div>
