@@ -83,6 +83,7 @@ export default function LoginPage() {
       setLoading(true);
 
       const data = await loginUser(form);
+      console.log("USER DATA:", data.user);
 
       dispatch(
         loginSuccess({

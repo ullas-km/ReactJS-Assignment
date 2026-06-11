@@ -15,6 +15,7 @@ export default function Sidebar({ role }: SidebarProps) {
   const navigate = useNavigate();
 
   const closeSidebar = () => setMobileOpen(false);
+  const user = JSON.parse(localStorage.getItem("user") || "null");
 
   const getLinkClass = ({ isActive }: { isActive: boolean }) =>
     isActive ? "menu-link active" : "menu-link";
@@ -101,8 +102,82 @@ export default function Sidebar({ role }: SidebarProps) {
               </NavLink>
             </>
           )}
-        </div>
+          {role === "student" && (
+            <>
+              <NavLink
+                to="/payments"
+                className={getLinkClass}
+                onClick={closeSidebar}
+              >
+                Payments
+              </NavLink>
 
+              <NavLink
+                to="/marks"
+                className={getLinkClass}
+                onClick={closeSidebar}
+              >
+                Marks
+              </NavLink>
+
+              <NavLink
+                to="/timetable"
+                className={getLinkClass}
+                onClick={closeSidebar}
+              >
+                Timetable
+              </NavLink>
+            </>
+          )}
+          {role === "teacher" && (
+            <>
+            <NavLink
+      to="/teacher-students"
+      className={getLinkClass}
+      onClick={closeSidebar}
+    >
+      Students
+    </NavLink>
+    <NavLink
+  to="/teacher-attendance"
+  className={getLinkClass}
+  onClick={closeSidebar}
+>
+  Attendance
+</NavLink>
+              <NavLink
+                to="/teacher-timetable"
+                className={getLinkClass}
+                onClick={closeSidebar}
+              >
+                Add Timetable
+              </NavLink>
+
+              <NavLink
+                to="/teacher-marks"
+                className={getLinkClass}
+                onClick={closeSidebar}
+              >
+                Add Marks
+              </NavLink>
+            </>
+          )}
+        </div>
+        {/* PROFILE SECTION */}
+        <NavLink
+          to="/profile"
+          className="profile-section"
+          onClick={closeSidebar}
+        >
+          <div className="profile-avatar">
+            {user?.name?.charAt(0).toUpperCase()}
+          </div>
+
+          <div className="profile-info">
+            <span className="profile-name">{user?.name}</span>
+            <span className="profile-role">{user?.role}</span>
+          </div>
+        </NavLink>
         {/* LOGOUT */}
         <div className="logout-section">
           <button

@@ -1,13 +1,20 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import { addFee } from "../services/FeesApi";
+import { getStudents } from "../services/studentsApi";
 
 type Props = Readonly<{
   onClose: () => void;
   refreshFees: () => void;
 }>;
 
+ interface Student {
+  student_id: number;
+  name: string;
+}
+
 export default function AddFeeModal({ onClose, refreshFees }: Props) {
+ 
   const [studentId, setStudentId] = useState("");
 
   const [amount, setAmount] = useState("");
@@ -15,6 +22,7 @@ export default function AddFeeModal({ onClose, refreshFees }: Props) {
   const [dueDate, setDueDate] = useState("");
 
   const [status, setStatus] = useState("pending");
+  const [students, setStudents] = useState<Student[]>([]);
 
   const handleAddFee = async () => {
     await addFee(Number(studentId), Number(amount), dueDate, status);
@@ -23,13 +31,27 @@ export default function AddFeeModal({ onClose, refreshFees }: Props) {
 
     onClose();
   };
+  useEffect(() => {
+  const fetchStudents = async () => {
+    try {
+      const data = await getStudents();
+      setStudents(data);
+    } catch (error) {
+      console.error("Failed to load students", error);
+    }
+  };
+
+  void fetchStudents();
+}, []);
+
 
   return (
+    
     <div className="modal-overlay">
       <div className="modal-box">
         <h2>Add Fee</h2>
 
-        <div className="form-group">
+        {/* <div className="form-group">
           <label htmlFor="studentId">Student ID</label>
 
           <input
@@ -37,7 +59,27 @@ export default function AddFeeModal({ onClose, refreshFees }: Props) {
             value={studentId}
             onChange={(e) => setStudentId(e.target.value)}
           />
-        </div>
+        </div> */}
+       <div className="form-group">
+  <label htmlFor="studentId">Student</label>
+
+  <select
+    id="studentId"
+    value={studentId}
+    onChange={(e) => setStudentId(e.target.value)}
+  >
+    <option value="">Select Student</option>
+
+    {students.map((student) => (
+      <option
+        key={student.student_id}
+        value={student.student_id}
+      >
+        {student.name} (ID: {student.student_id})
+      </option>
+    ))}
+  </select>
+</div>
 
         <div className="form-group">
           <label htmlFor="amount">Amount</label>

@@ -5,6 +5,7 @@ import ProtectedRoute from "./ProtectedRoute";
 import RoleRoute from "./RoleRoute";
 
 import LoginPage from "../pages/Login";
+import TeacherAddMarks from "../pages/TeacherAddMarks";
 const WelcomePage = lazy(() => import("../pages/Dashboard"));
 const ViewStudents = lazy(() => import("../pages/ViewStudents"));
 const NotFound = lazy(() => import("../pages/NotFound"));
@@ -14,6 +15,13 @@ const ViewSections = lazy(() => import("../pages/ViewSections"));
 const ViewTeachers = lazy(() => import("../pages/ViewTeachers"));
 const ViewSubjects = lazy(() => import("../pages/ViewSubjects"));
 const Home = lazy(() => import("../pages/Home"));
+const StudentPayments = lazy(() => import("../pages/StudentPayments"));
+const StudentMarks = lazy(() => import("../pages/StudentMarks"));
+const StudentTimetable = lazy(() => import("../pages/StudentTimetable"));
+const TeacherTimetable = lazy(() => import("../pages/TeacherTimetable"));
+const Profile = lazy(() => import("../pages/Profile"));
+const TeacherStudents = lazy(() => import("../pages/TeacherStudents"));
+const TeacherAttendance = lazy(() => import("../pages/TeacherAttendance"));
 
 export default function AppRoutes() {
   return (
@@ -42,6 +50,7 @@ export default function AppRoutes() {
           }
         >
           <Route path="/home" element={<Home />} />
+          <Route path="/profile" element={<Profile />} />
 
           <Route
             path="/students"
@@ -93,6 +102,64 @@ export default function AppRoutes() {
             element={
               <RoleRoute allowedRoles={["admin"]}>
                 <ViewSubjects />
+              </RoleRoute>
+            }
+          />
+          <Route
+            path="/payments"
+            element={
+              <RoleRoute allowedRoles={["student"]}>
+                <StudentPayments />
+              </RoleRoute>
+            }
+          />
+
+          <Route
+            path="/marks"
+            element={
+              <RoleRoute allowedRoles={["student"]}>
+                <StudentMarks />
+              </RoleRoute>
+            }
+          />
+
+          <Route
+            path="/timetable"
+            element={
+              <RoleRoute allowedRoles={["student"]}>
+                <StudentTimetable />
+              </RoleRoute>
+            }
+          />
+          <Route
+            path="/teacher-timetable"
+            element={
+              <RoleRoute allowedRoles={["teacher"]}>
+                <TeacherTimetable />
+              </RoleRoute>
+            }
+          />
+          <Route
+            path="/teacher-marks"
+            element={
+              <RoleRoute allowedRoles={["teacher"]}>
+                <TeacherAddMarks />
+              </RoleRoute>
+            }
+          />
+          <Route
+            path="/teacher-students"
+            element={
+              <RoleRoute allowedRoles={["teacher"]}>
+                <TeacherStudents />
+              </RoleRoute>
+            }
+          />
+          <Route
+            path="/teacher-attendance"
+            element={
+              <RoleRoute allowedRoles={["teacher"]}>
+                <TeacherAttendance />
               </RoleRoute>
             }
           />
