@@ -102,6 +102,13 @@ export default function Sidebar({ role }: SidebarProps) {
               >
                 Subjects
               </NavLink>
+              <NavLink
+                to="/teacher-timetable"
+                className={getLinkClass}
+                onClick={closeSidebar}
+              >
+                Add Timetable
+              </NavLink>
             </>
           )}
           {role === "student" && (
@@ -175,12 +182,19 @@ export default function Sidebar({ role }: SidebarProps) {
                   </div>
                 )}
               </div>
-              <NavLink
+              {/* <NavLink
                 to="/teacher-timetable"
                 className={getLinkClass}
                 onClick={closeSidebar}
               >
                 Add Timetable
+              </NavLink> */}
+              <NavLink
+                to="/teacher-my-timetable"
+                className={getLinkClass}
+                onClick={closeSidebar}
+              >
+                My Timetable
               </NavLink>
 
               <NavLink

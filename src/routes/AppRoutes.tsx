@@ -24,6 +24,9 @@ const Profile = lazy(() => import("../pages/Profile"));
 const TeacherStudents = lazy(() => import("../pages/TeacherStudents"));
 const TeacherAttendance = lazy(() => import("../pages/TeacherAttendance"));
 const LandingPage = lazy(() => import("../pages/Homepage"));
+const TeacherTimetableView = lazy(
+  () => import("../pages/TeacherTimetableView"),
+);
 
 export default function AppRoutes() {
   return (
@@ -137,8 +140,16 @@ export default function AppRoutes() {
           <Route
             path="/teacher-timetable"
             element={
-              <RoleRoute allowedRoles={["teacher"]}>
+              <RoleRoute allowedRoles={["admin", "teacher"]}>
                 <TeacherTimetable />
+              </RoleRoute>
+            }
+          />
+          <Route
+            path="/teacher-my-timetable"
+            element={
+              <RoleRoute allowedRoles={["teacher"]}>
+                <TeacherTimetableView />
               </RoleRoute>
             }
           />
@@ -167,13 +178,13 @@ export default function AppRoutes() {
             }
           />
           <Route
-  path="/teacher-view-attendance"
-  element={
-    <RoleRoute allowedRoles={["teacher"]}>
-      <TeacherViewAttendance />
-    </RoleRoute>
-  }
-/>
+            path="/teacher-view-attendance"
+            element={
+              <RoleRoute allowedRoles={["teacher"]}>
+                <TeacherViewAttendance />
+              </RoleRoute>
+            }
+          />
         </Route>
 
         <Route path="*" element={<NotFound />} />
