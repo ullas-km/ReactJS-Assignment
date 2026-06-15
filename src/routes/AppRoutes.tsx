@@ -6,6 +6,7 @@ import RoleRoute from "./RoleRoute";
 
 import LoginPage from "../pages/Login";
 import TeacherAddMarks from "../pages/TeacherAddMarks";
+import TeacherViewAttendance from "../pages/TeacherViewAttendance";
 const WelcomePage = lazy(() => import("../pages/Dashboard"));
 const ViewStudents = lazy(() => import("../pages/ViewStudents"));
 const NotFound = lazy(() => import("../pages/NotFound"));
@@ -42,7 +43,7 @@ export default function AppRoutes() {
     >
       <Routes>
         <Route path="/" element={<LandingPage />} />
-<Route path="/login" element={<LoginPage />} />
+        <Route path="/login" element={<LoginPage />} />
 
         <Route
           element={
@@ -165,6 +166,14 @@ export default function AppRoutes() {
               </RoleRoute>
             }
           />
+          <Route
+  path="/teacher-view-attendance"
+  element={
+    <RoleRoute allowedRoles={["teacher"]}>
+      <TeacherViewAttendance />
+    </RoleRoute>
+  }
+/>
         </Route>
 
         <Route path="*" element={<NotFound />} />

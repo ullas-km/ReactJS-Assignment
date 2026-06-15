@@ -73,3 +73,8 @@ export const deleteStudent = async (id: number) => {
     throw error;
   }
 };
+
+export const getStudentsByClassSection = async (classId: number, sectionId: number) => {
+  const res = await axiosInstance.get(`/students/get-students?class_id=${classId}&section_id=${sectionId}`);
+  return res.data;
+};

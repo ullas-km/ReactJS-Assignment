@@ -15,3 +15,19 @@ export const createTimetable = async (data: {
 
   return res.data;
 };
+
+export const getTimetableByClassSection = async (
+  classId: number,
+  sectionId: number
+) => {
+  const res = await axiosInstance.get(
+    `/timetable/get-by-class-section/${classId}/${sectionId}`
+  );
+
+  return res.data;
+};
+
+export const getAllTimetablesGrouped = async () => {
+  const res = await axiosInstance.get("/timetable/get-all-grouped");
+  return res.data;
+};

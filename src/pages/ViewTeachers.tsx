@@ -6,16 +6,29 @@ import {
   updateTeacher,
   deleteTeacher,
 } from "../services/TeacherApi";
+import { getSubjects } from "../services/SubjectApi";
 
 import "../assets/css/viewTeachers.css";
+interface Teacher {
+  teacher_id: number;
+  teacher_name: string;
+  email: string;
+  phone: number;
+  subjects: string;
+}
 
 export default function ViewTeachers() {
   const [loading, setLoading] = useState(true);
   interface Teacher {
+    subjects: string;
     teacher_id: number;
     teacher_name: string;
     email: string;
     phone: number;
+  }
+  interface Subject {
+    sub_id: number;
+    subject_name: string;
   }
   const [teachers, setTeachers] = useState<Teacher[]>([]);
   const [teacherName, setTeacherName] = useState("");
@@ -25,6 +38,8 @@ export default function ViewTeachers() {
 
   const [editId, setEditId] = useState<number | null>(null);
   const [showModal, setShowModal] = useState(false);
+  const [subjectIds, setSubjectIds] = useState<number[]>([]);
+  const [subjects, setSubjects] = useState<Subject[]>([]);
 
   const fetchTeachers = async () => {
     try {
@@ -41,13 +56,24 @@ export default function ViewTeachers() {
 
   useEffect(() => {
     void fetchTeachers();
+
+    const loadSubjects = async () => {
+      try {
+        const data = await getSubjects();
+        setSubjects(data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    void loadSubjects();
   }, []);
 
   const handleAdd = async () => {
     if (!teacherName.trim()) return;
 
     try {
-      await addTeacher(teacherName, email, phone, password);
+      await addTeacher(teacherName, email, phone, password, subjectIds);
 
       setTeacherName("");
       setShowModal(false);
@@ -66,6 +92,23 @@ export default function ViewTeachers() {
       console.error("Failed to delete teacher:", error);
     }
   };
+  const handleSubjectSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const selectedIds = Array.from(e.target.selectedOptions, (option) =>
+      Number(option.value),
+    );
+
+    setSubjectIds(selectedIds);
+  };
+
+  const handleSubjectChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const id = Number(e.target.value);
+
+    if (e.target.checked) {
+      setSubjectIds((prev) => [...prev, id]);
+    } else {
+      setSubjectIds((prev) => prev.filter((subjectId) => subjectId !== id));
+    }
+  };
 
   const handleEdit = (t: Teacher) => {
     setEditId(t.teacher_id);
@@ -81,7 +124,7 @@ export default function ViewTeachers() {
     if (editId === null) return;
 
     try {
-      await updateTeacher(editId, teacherName, email, phone);
+      await updateTeacher(editId, teacherName, email, phone, subjectIds);
 
       setEditId(null);
       setTeacherName("");
@@ -156,6 +199,26 @@ export default function ViewTeachers() {
                 />
               </div>
             )}
+            <div className="form-group">
+              <label>Subjects</label>
+
+              <select
+                multiple
+                value={subjectIds.map(String)}
+                onChange={handleSubjectSelect}
+                className="subject-select"
+              >
+                {subjects.map((subject) => (
+                  <option key={subject.sub_id} value={subject.sub_id}>
+                    {subject.subject_name}
+                  </option>
+                ))}
+              </select>
+
+              <small>
+                Hold Ctrl (Windows) or Cmd (Mac) to select multiple subjects
+              </small>
+            </div>
 
             <div className="modal-actions">
               <button
@@ -186,6 +249,7 @@ export default function ViewTeachers() {
             <th>Teacher Name</th>
             <th>Email</th>
             <th>Phone</th>
+            <th>Subjects</th>
             <th>Actions</th>
           </tr>
         </thead>
@@ -203,6 +267,7 @@ export default function ViewTeachers() {
                 <td>{t.teacher_name}</td>
                 <td>{t.email}</td>
                 <td>{t.phone}</td>
+                <td>{t.subjects || "No Subjects"}</td>
 
                 <td>
                   <button className="edit-btn" onClick={() => handleEdit(t)}>

@@ -17,6 +17,8 @@ export default function Sidebar({ role }: SidebarProps) {
   const closeSidebar = () => setMobileOpen(false);
   const user = JSON.parse(localStorage.getItem("user") || "null");
 
+  const [attendanceOpen, setAttendanceOpen] = useState(false);
+
   const getLinkClass = ({ isActive }: { isActive: boolean }) =>
     isActive ? "menu-link active" : "menu-link";
 
@@ -131,20 +133,48 @@ export default function Sidebar({ role }: SidebarProps) {
           )}
           {role === "teacher" && (
             <>
-            <NavLink
-      to="/teacher-students"
-      className={getLinkClass}
-      onClick={closeSidebar}
-    >
-      Students
-    </NavLink>
-    <NavLink
-  to="/teacher-attendance"
-  className={getLinkClass}
-  onClick={closeSidebar}
->
-  Attendance
-</NavLink>
+              <NavLink
+                to="/teacher-students"
+                className={getLinkClass}
+                onClick={closeSidebar}
+              >
+                Students
+              </NavLink>
+              {/* <NavLink
+                to="/teacher-attendance"
+                className={getLinkClass}
+                onClick={closeSidebar}
+              >
+                Attendance
+              </NavLink> */}
+              <div className="menu-dropdown">
+                <div
+                  className="menu-link dropdown-btn attendance"
+                  onClick={() => setAttendanceOpen(!attendanceOpen)}
+                >
+                  Attendance {attendanceOpen ? "▲" : "▼"}
+                </div>
+
+                {attendanceOpen && (
+                  <div className="submenu">
+                    <NavLink
+                      to="/teacher-attendance"
+                      className={getLinkClass}
+                      onClick={closeSidebar}
+                    >
+                      Add Attendance
+                    </NavLink>
+
+                    <NavLink
+                      to="/teacher-view-attendance"
+                      className={getLinkClass}
+                      onClick={closeSidebar}
+                    >
+                      View Attendance
+                    </NavLink>
+                  </div>
+                )}
+              </div>
               <NavLink
                 to="/teacher-timetable"
                 className={getLinkClass}

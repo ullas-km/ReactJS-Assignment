@@ -25,6 +25,19 @@ export const addSection = async (section_name: string, class_id: number) => {
     throw error;
   }
 };
+// GET SECTIONS BY CLASS
+export const getSectionsByClass = async (classId: number) => {
+  try {
+    const res = await axiosInstance.get(
+      `/sections/get-classes/${classId}/sections`
+    );
+
+    return res.data;
+  } catch (error) {
+    console.error("Error fetching sections by class:", error);
+    throw error;
+  }
+};
 
 // UPDATE
 export const updateSection = async (

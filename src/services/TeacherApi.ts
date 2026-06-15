@@ -12,34 +12,77 @@ export const getTeachers = async () => {
 };
 
 // ADD teacher
+// ADD teacher
 export const addTeacher = async (
   teacher_name: string,
   email: string,
   phone: string,
-  password: string
+  password: string,
+  subjectIds: number[]
 ) => {
   const res = await axiosInstance.post("/teacher/post-teachers", {
     teacher_name,
     email,
     phone,
     password,
+    subject_ids: subjectIds,
   });
 
   return res.data;
 };
 
 // UPDATE teacher
+// export const updateTeacher = async (
+//   id: number,
+//   teacher_name: string,
+//   email: string,
+//   phone: string
+// ) => {
+//   const res = await axiosInstance.put(`/teacher/put-teachers/${id}`, {
+//     teacher_name,
+//     email,
+//     phone,
+//   });
+
+//   return res.data;
+// };
+
+// export const updateTeacher = async (
+//   id: number,
+//   teacher_name: string,
+//   email: string,
+//   phone: string,
+//   subjectIds: number[]
+// ) => {
+//   const res = await axiosInstance.put(
+//     `/teacher/put-teachers/${id}`,
+//     {
+//       teacher_name,
+//       email,
+//       phone,
+//       subject_ids: subjectIds,
+//     }
+//   );
+
+//   return res.data;
+// };
+
 export const updateTeacher = async (
   id: number,
   teacher_name: string,
   email: string,
-  phone: string
+  phone: string,
+  subjectIds: number[]
 ) => {
-  const res = await axiosInstance.put(`/teacher/put-teachers/${id}`, {
-    teacher_name,
-    email,
-    phone,
-  });
+  const res = await axiosInstance.put(
+    `/teacher/put-teachers/${id}`,
+    {
+      teacher_name,
+      email,
+      phone,
+      subject_ids: subjectIds,
+    }
+  );
 
   return res.data;
 };

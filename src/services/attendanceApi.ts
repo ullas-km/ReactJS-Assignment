@@ -1,19 +1,7 @@
-import axios from "axios";
-
-const API = "http://localhost:3000/attendance";
+import api from "./axiosInstance";
 
 export const getAttendance = async () => {
-  const token = localStorage.getItem("token");
-
-  const res = await axios.get(
-    `${API}/get-attendance`,
-    {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    }
-  );
-
+  const res = await api.get("/attendance/get-attendance");
   return res.data;
 };
 
@@ -24,14 +12,37 @@ export const addAttendance = async (
     status: string;
   }
 ) => {
-  const token = localStorage.getItem("token");
+  const res = await api.post(
+    "/attendance/post-attendance",
+    attendanceData
+  );
 
-  const res = await axios.post(
-    `${API}/post-attendance`,
-    attendanceData,
+  return res.data;
+};
+
+export const bulkAddAttendance = async (
+  records: any[]
+) => {
+  const res = await api.post(
+    "/attendance/bulk-post-attendance",
+    records
+  );
+
+  return res.data;
+};
+
+export const getAttendanceByFilters = async (
+  classId: number,
+  sectionId: number,
+  date: string
+) => {
+  const res = await api.get(
+    "/attendance/view-attendance",
     {
-      headers: {
-        Authorization: `Bearer ${token}`,
+      params: {
+        class_id: classId,
+        section_id: sectionId,
+        date,
       },
     }
   );

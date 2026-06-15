@@ -1,39 +1,16 @@
-import axios from "axios";
+import api from "./axiosInstance";
 
-const API = "http://localhost:3000";
-
-const getAuthHeader = () => {
-  const token = localStorage.getItem("token");
-  return {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  };
-};
-
-// STUDENTS
 export const getStudents = async () => {
-  const res = await axios.get(
-    `${API}/students/get-students`,
-    getAuthHeader()
-  );
+  const res = await api.get("/students/get-students");
   return res.data;
 };
 
-// SUBJECTS
 export const getSubjects = async () => {
-  const res = await axios.get(
-    `${API}/subjects/get-subjects`,
-    getAuthHeader()
-  );
+  const res = await api.get("/subjects/get-subjects");
   return res.data;
 };
 
-// EXAMS
 export const getExams = async () => {
-  const res = await axios.get(
-    `${API}/exam/get-exams`,
-    getAuthHeader()
-  );
+  const res = await api.get("/exam/get-exams");
   return res.data;
 };
