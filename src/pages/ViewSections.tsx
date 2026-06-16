@@ -32,6 +32,9 @@ export default function ViewSections() {
   const [editId, setEditId] = useState<number | null>(null);
   const [showModal, setShowModal] = useState(false);
 
+  const [currentPage, setCurrentPage] = useState(1);
+  const rowsPerPage = 10;
+
   const fetchSections = async () => {
     try {
       setLoading(true);
@@ -123,6 +126,13 @@ export default function ViewSections() {
     setShowModal(true);
   };
 
+  const indexOfLastRow = currentPage * rowsPerPage;
+  const indexOfFirstRow = indexOfLastRow - rowsPerPage;
+
+  const currentSections = sections.slice(indexOfFirstRow, indexOfLastRow);
+
+  const totalPages = Math.ceil(sections.length / rowsPerPage);
+
   return (
     <div className="students-page">
       <div className="students-header">
@@ -208,7 +218,7 @@ export default function ViewSections() {
               </td>
             </tr>
           ) : (
-            sections.map((s) => (
+            currentSections.map((s) => (
               <tr key={s.section_id}>
                 <td>{s.section_name}</td>
 
@@ -233,6 +243,33 @@ export default function ViewSections() {
           )}
         </tbody>
       </table>
+      {!loading && sections.length > rowsPerPage && (
+        <div className="pagination">
+          <button
+            disabled={currentPage === 1}
+            onClick={() => setCurrentPage(currentPage - 1)}
+          >
+            Prev
+          </button>
+
+          {Array.from({ length: totalPages }, (_, i) => (
+            <button
+              key={i + 1}
+              className={currentPage === i + 1 ? "active-page" : ""}
+              onClick={() => setCurrentPage(i + 1)}
+            >
+              {i + 1}
+            </button>
+          ))}
+
+          <button
+            disabled={currentPage === totalPages}
+            onClick={() => setCurrentPage(currentPage + 1)}
+          >
+            Next
+          </button>
+        </div>
+      )}
     </div>
   );
 }

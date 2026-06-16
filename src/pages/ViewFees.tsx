@@ -21,6 +21,8 @@ export default function ViewFees() {
   const [showAddModal, setShowAddModal] = useState(false);
   const [editingFee, setEditingFee] = useState<Fee | null>(null);
   const [loading, setLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
+  const rowsPerPage = 10;
 
   const refreshFees = async () => {
     try {
@@ -43,6 +45,13 @@ export default function ViewFees() {
     await deleteFee(id);
     await refreshFees();
   };
+
+  const indexOfLastRow = currentPage * rowsPerPage;
+  const indexOfFirstRow = indexOfLastRow - rowsPerPage;
+
+  const currentFees = fees.slice(indexOfFirstRow, indexOfLastRow);
+
+  const totalPages = Math.ceil(fees.length / rowsPerPage);
 
   return (
     <div className="students-page">
@@ -75,7 +84,7 @@ export default function ViewFees() {
                 </td>
               </tr>
             ) : (
-              fees.map((f) => (
+              currentFees.map((f) => (
                 <tr key={f.id}>
                   <td>{f.id}</td>
                   <td>{f.student_id}</td>
@@ -104,6 +113,33 @@ export default function ViewFees() {
           </tbody>
         </table>
       </div>
+      {!loading && fees.length > rowsPerPage && (
+        <div className="pagination">
+          <button
+            disabled={currentPage === 1}
+            onClick={() => setCurrentPage(currentPage - 1)}
+          >
+            Prev
+          </button>
+
+          {Array.from({ length: totalPages }, (_, i) => (
+            <button
+              key={i + 1}
+              className={currentPage === i + 1 ? "active-page" : ""}
+              onClick={() => setCurrentPage(i + 1)}
+            >
+              {i + 1}
+            </button>
+          ))}
+
+          <button
+            disabled={currentPage === totalPages}
+            onClick={() => setCurrentPage(currentPage + 1)}
+          >
+            Next
+          </button>
+        </div>
+      )}
 
       {showAddModal && (
         <AddFeeModal

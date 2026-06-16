@@ -7,6 +7,8 @@ import {
   deleteSubject,
 } from "../services/SubjectApi";
 
+import "../assets/css/viewsubjects.css"
+
 export default function ViewSubjects() {
   const [loading, setLoading] = useState(true);
   interface Subject {
@@ -21,6 +23,9 @@ export default function ViewSubjects() {
   const [editId, setEditId] = useState<number | null>(null);
 
   const [showModal, setShowModal] = useState(false);
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const rowsPerPage = 10;
 
   const fetchSubjects = async () => {
     try {
@@ -91,6 +96,13 @@ export default function ViewSubjects() {
     setShowModal(true);
   };
 
+  const indexOfLastRow = currentPage * rowsPerPage;
+  const indexOfFirstRow = indexOfLastRow - rowsPerPage;
+
+  const currentSubjects = subjects.slice(indexOfFirstRow, indexOfLastRow);
+
+  const totalPages = Math.ceil(subjects.length / rowsPerPage);
+
   return (
     <div className="students-page">
       <div className="students-header">
@@ -156,7 +168,7 @@ export default function ViewSubjects() {
               </td>
             </tr>
           ) : (
-            subjects.map((s) => (
+            currentSubjects.map((s) => (
               <tr key={s.sub_id}>
                 <td>{s.subject_name}</td>
 
@@ -177,6 +189,33 @@ export default function ViewSubjects() {
           )}
         </tbody>
       </table>
+      {!loading && subjects.length > rowsPerPage && (
+        <div className="pagination">
+          <button
+            disabled={currentPage === 1}
+            onClick={() => setCurrentPage(currentPage - 1)}
+          >
+            Prev
+          </button>
+
+          {Array.from({ length: totalPages }, (_, i) => (
+            <button
+              key={i + 1}
+              className={currentPage === i + 1 ? "active-page" : ""}
+              onClick={() => setCurrentPage(i + 1)}
+            >
+              {i + 1}
+            </button>
+          ))}
+
+          <button
+            disabled={currentPage === totalPages}
+            onClick={() => setCurrentPage(currentPage + 1)}
+          >
+            Next
+          </button>
+        </div>
+      )}
     </div>
   );
 }

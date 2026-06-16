@@ -19,7 +19,7 @@ const Home = lazy(() => import("../pages/Home"));
 const StudentPayments = lazy(() => import("../pages/StudentPayments"));
 const StudentMarks = lazy(() => import("../pages/StudentMarks"));
 const StudentTimetable = lazy(() => import("../pages/StudentTimetable"));
-const TeacherTimetable = lazy(() => import("../pages/TeacherTimetable"));
+const TeacherTimetable = lazy(() => import("../pages/AddTimetable"));
 const Profile = lazy(() => import("../pages/Profile"));
 const TeacherStudents = lazy(() => import("../pages/TeacherStudents"));
 const TeacherAttendance = lazy(() => import("../pages/TeacherAttendance"));

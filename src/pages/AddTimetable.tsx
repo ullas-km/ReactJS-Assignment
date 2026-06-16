@@ -306,7 +306,8 @@ export default function TeacherTimetable() {
   useEffect(() => {
     loadTeachers();
     loadClasses();
-    getSubjects().then(setSubjects).catch(console.error);  // ✅ 
+    getSubjects().then(setSubjects).catch(console.error);  // ✅
+    loadAllTimetables(); // important 
   }, []);
 
   const loadTeachers = async () => {
@@ -376,6 +377,24 @@ const loadExistingTimetable = async (classId: string, sectionId: string) => {
 
     const key = `${day}-${period}`;
     const existingCell = timetable[key];
+    // Check if teacher is already assigned elsewhere
+const teacherConflict = allTimetables.find(
+  (row) =>
+    row.teacher_id === Number(teacherId) &&
+    row.day === day &&
+    row.period === period &&
+    !(
+      row.class_id === Number(selectedClass) &&
+      row.section_id === Number(selectedSection)
+    )
+);
+
+if (teacherConflict) {
+  alert(
+    `${teacher.teacher_name} is already assigned to ${teacherConflict.class_name} - ${teacherConflict.section_name} on ${day} Period ${period}`
+  );
+  return;
+}
 
     const countForDay = Object.entries(timetable).filter(
       ([k, v]) =>
@@ -486,6 +505,7 @@ const loadExistingTimetable = async (classId: string, sectionId: string) => {
     try {
       await axiosInstance.post("/timetable/bulk-post-timetables", payload);
       alert("Timetable saved successfully");
+      await loadAllTimetables();
       // Reload to get timetable_ids for newly saved entries
       await loadExistingTimetable(selectedClass, selectedSection);
     } catch (err) {
@@ -644,16 +664,6 @@ const loadExistingTimetable = async (classId: string, sectionId: string) => {
 
             {selectedClass && selectedSection && (
               <>
-                <p
-                  style={{
-                    fontSize: 12,
-                    color: "#6b7280",
-                    marginBottom: "1rem",
-                  }}
-                >
-                  💡 Changing a teacher on an existing entry auto-saves. Use ×
-                  to remove a period.
-                </p>
                 <div style={{ overflowX: "auto" }}>
                   <table
                     style={{

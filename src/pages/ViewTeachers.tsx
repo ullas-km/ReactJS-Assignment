@@ -42,6 +42,8 @@ export default function ViewTeachers() {
   const [showModal, setShowModal] = useState(false);
   const [subjectIds, setSubjectIds] = useState<number[]>([]);
   const [subjects, setSubjects] = useState<Subject[]>([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const rowsPerPage = 10;
 
   const fetchTeachers = async () => {
     try {
@@ -49,6 +51,12 @@ export default function ViewTeachers() {
 
       const data = await getTeachers();
       setTeachers(data);
+
+      const pages = Math.ceil(data.length / rowsPerPage);
+
+      if (currentPage > pages && pages > 0) {
+        setCurrentPage(pages);
+      }
     } catch (error) {
       console.error("Failed to fetch teachers:", error);
     } finally {
@@ -123,29 +131,29 @@ export default function ViewTeachers() {
   // };
 
   const handleEdit = async (t: Teacher) => {
-  setEditId(t.teacher_id);
-  setTeacherName(t.teacher_name);
-  setEmail(t.email || "");
-  setPhone(t.phone ? String(t.phone) : "");
+    setEditId(t.teacher_id);
+    setTeacherName(t.teacher_name);
+    setEmail(t.email || "");
+    setPhone(t.phone ? String(t.phone) : "");
 
-  try {
-    const teacherData = await getTeacherById(t.teacher_id);
-    if (teacherData.subject_ids) {
-      const ids = teacherData.subject_ids
-        .split(",")
-        .map((id: string) => Number(id.trim()))
-        .filter((id: number) => !isNaN(id));
-      setSubjectIds(ids);
-    } else {
+    try {
+      const teacherData = await getTeacherById(t.teacher_id);
+      if (teacherData.subject_ids) {
+        const ids = teacherData.subject_ids
+          .split(",")
+          .map((id: string) => Number(id.trim()))
+          .filter((id: number) => !isNaN(id));
+        setSubjectIds(ids);
+      } else {
+        setSubjectIds([]);
+      }
+    } catch (error) {
+      console.error("Failed to fetch teacher subjects:", error);
       setSubjectIds([]);
     }
-  } catch (error) {
-    console.error("Failed to fetch teacher subjects:", error);
-    setSubjectIds([]);
-  }
 
-  setShowModal(true);
-};
+    setShowModal(true);
+  };
 
   const handleUpdate = async () => {
     if (editId === null) return;
@@ -170,6 +178,13 @@ export default function ViewTeachers() {
     setTeacherName("");
     setShowModal(true);
   };
+
+  const indexOfLastRow = currentPage * rowsPerPage;
+  const indexOfFirstRow = indexOfLastRow - rowsPerPage;
+
+  const currentTeachers = teachers.slice(indexOfFirstRow, indexOfLastRow);
+
+  const totalPages = Math.ceil(teachers.length / rowsPerPage);
 
   return (
     <div className="students-page">
@@ -289,7 +304,7 @@ export default function ViewTeachers() {
               </td>
             </tr>
           ) : (
-            teachers.map((t) => (
+            currentTeachers.map((t) => (
               <tr key={t.teacher_id}>
                 <td>{t.teacher_name}</td>
                 <td>{t.email}</td>
@@ -313,6 +328,33 @@ export default function ViewTeachers() {
           )}
         </tbody>
       </table>
+      {!loading && teachers.length > rowsPerPage && (
+        <div className="pagination">
+          <button
+            disabled={currentPage === 1}
+            onClick={() => setCurrentPage(currentPage - 1)}
+          >
+            Prev
+          </button>
+
+          {Array.from({ length: totalPages }, (_, i) => (
+            <button
+              key={i + 1}
+              className={currentPage === i + 1 ? "active-page" : ""}
+              onClick={() => setCurrentPage(i + 1)}
+            >
+              {i + 1}
+            </button>
+          ))}
+
+          <button
+            disabled={currentPage === totalPages}
+            onClick={() => setCurrentPage(currentPage + 1)}
+          >
+            Next
+          </button>
+        </div>
+      )}
     </div>
   );
 }

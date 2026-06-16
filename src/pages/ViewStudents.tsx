@@ -42,14 +42,23 @@ export default function ViewStudents() {
   const [classes, setClasses] = useState<Class[]>([]);
   const [sections, setSections] = useState<Section[]>([]);
 
+  const [currentPage, setCurrentPage] = useState(1);
+  const rowsPerPage = 10;
+
   const fetchStudents = async () => {
-    try {
-      const data = await getStudents();
-      setStudents(data);
-    } catch (error) {
-      console.error("Failed to fetch students:", error);
+  try {
+    const data = await getStudents();
+    setStudents(data);
+
+    const pages = Math.ceil(data.length / rowsPerPage);
+
+    if (currentPage > pages && pages > 0) {
+      setCurrentPage(pages);
     }
-  };
+  } catch (error) {
+    console.error("Failed to fetch students:", error);
+  }
+};
 
   useEffect(() => {
     const loadData = async () => {
@@ -83,6 +92,13 @@ export default function ViewStudents() {
       console.error("Failed to delete student:", error);
     }
   };
+
+  const indexOfLastRow = currentPage * rowsPerPage;
+  const indexOfFirstRow = indexOfLastRow - rowsPerPage;
+
+  const currentStudents = students.slice(indexOfFirstRow, indexOfLastRow);
+
+  const totalPages = Math.ceil(students.length / rowsPerPage);
 
   return (
     <div className="students-page">
@@ -119,7 +135,7 @@ export default function ViewStudents() {
                 </td>
               </tr>
             ) : (
-              students.map((s: Student) => (
+              currentStudents.map((s: Student) => (
                 <tr key={s.student_id}>
                   <td>{s.student_id}</td>
                   <td>{s.name}</td>
@@ -151,6 +167,33 @@ export default function ViewStudents() {
           </tbody>
         </table>
       </div>
+      {!loading && students.length > rowsPerPage && (
+        <div className="pagination">
+          <button
+            disabled={currentPage === 1}
+            onClick={() => setCurrentPage(currentPage - 1)}
+          >
+            Prev
+          </button>
+
+          {Array.from({ length: totalPages }, (_, i) => (
+            <button
+              key={i + 1}
+              className={currentPage === i + 1 ? "active-page" : ""}
+              onClick={() => setCurrentPage(i + 1)}
+            >
+              {i + 1}
+            </button>
+          ))}
+
+          <button
+            disabled={currentPage === totalPages}
+            onClick={() => setCurrentPage(currentPage + 1)}
+          >
+            Next
+          </button>
+        </div>
+      )}
 
       {showAddModal && (
         <AddStudentModal

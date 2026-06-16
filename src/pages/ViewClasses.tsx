@@ -23,6 +23,8 @@ export default function ViewClasses() {
   const [className, setClassName] = useState("");
 
   const [editId, setEditId] = useState<number | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const rowsPerPage = 10;
 
   const fetchClasses = async () => {
     try {
@@ -87,6 +89,13 @@ export default function ViewClasses() {
       console.error("Failed to update class:", error);
     }
   };
+
+  const indexOfLastRow = currentPage * rowsPerPage;
+  const indexOfFirstRow = indexOfLastRow - rowsPerPage;
+
+  const currentClasses = classes.slice(indexOfFirstRow, indexOfLastRow);
+
+  const totalPages = Math.ceil(classes.length / rowsPerPage);
 
   return (
     <div className="students-page">
@@ -160,7 +169,7 @@ export default function ViewClasses() {
               </td>
             </tr>
           ) : (
-            classes.map((c) => (
+            currentClasses.map((c) => (
               <tr key={c.class_id}>
                 <td>{c.class_name}</td>
 
@@ -181,6 +190,33 @@ export default function ViewClasses() {
           )}
         </tbody>
       </table>
+      {!loading && classes.length > rowsPerPage && (
+        <div className="pagination">
+          <button
+            disabled={currentPage === 1}
+            onClick={() => setCurrentPage(currentPage - 1)}
+          >
+            Prev
+          </button>
+
+          {Array.from({ length: totalPages }, (_, i) => (
+            <button
+              key={i + 1}
+              className={currentPage === i + 1 ? "active-page" : ""}
+              onClick={() => setCurrentPage(i + 1)}
+            >
+              {i + 1}
+            </button>
+          ))}
+
+          <button
+            disabled={currentPage === totalPages}
+            onClick={() => setCurrentPage(currentPage + 1)}
+          >
+            Next
+          </button>
+        </div>
+      )}
     </div>
   );
 }
