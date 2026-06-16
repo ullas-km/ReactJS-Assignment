@@ -109,3 +109,8 @@ export const getTeacherStats = async () => {
     throw error;
   }
 };
+
+export const getTeacherById = async (id: number) => {
+  const res = await axiosInstance.get(`/teacher/get-teachers/${id}`);
+  return res.data;
+};

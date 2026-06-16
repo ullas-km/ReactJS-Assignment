@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
+import api from "../services/axiosInstance";
 
 import {
   getTeachers,
   addTeacher,
   updateTeacher,
   deleteTeacher,
+  getTeacherById,
 } from "../services/TeacherApi";
 import { getSubjects } from "../services/SubjectApi";
 
@@ -110,15 +112,40 @@ export default function ViewTeachers() {
     }
   };
 
-  const handleEdit = (t: Teacher) => {
-    setEditId(t.teacher_id);
+  // const handleEdit = (t: Teacher) => {
+  //   setEditId(t.teacher_id);
 
-    setTeacherName(t.teacher_name);
-    setEmail(t.email || "");
-    setPhone(t.phone ? String(t.phone) : "");
+  //   setTeacherName(t.teacher_name);
+  //   setEmail(t.email || "");
+  //   setPhone(t.phone ? String(t.phone) : "");
 
-    setShowModal(true);
-  };
+  //   setShowModal(true);
+  // };
+
+  const handleEdit = async (t: Teacher) => {
+  setEditId(t.teacher_id);
+  setTeacherName(t.teacher_name);
+  setEmail(t.email || "");
+  setPhone(t.phone ? String(t.phone) : "");
+
+  try {
+    const teacherData = await getTeacherById(t.teacher_id);
+    if (teacherData.subject_ids) {
+      const ids = teacherData.subject_ids
+        .split(",")
+        .map((id: string) => Number(id.trim()))
+        .filter((id: number) => !isNaN(id));
+      setSubjectIds(ids);
+    } else {
+      setSubjectIds([]);
+    }
+  } catch (error) {
+    console.error("Failed to fetch teacher subjects:", error);
+    setSubjectIds([]);
+  }
+
+  setShowModal(true);
+};
 
   const handleUpdate = async () => {
     if (editId === null) return;

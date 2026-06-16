@@ -31,3 +31,44 @@ export const getAllTimetablesGrouped = async () => {
   const res = await axiosInstance.get("/timetable/get-all-grouped");
   return res.data;
 };
+
+export const updateTimetableEntry = async (
+  timetableId: number,
+  teacherId: number
+) => {
+  const res = await axiosInstance.put(`/timetable/put-timetable/${timetableId}`, {
+    teacher_id: teacherId,
+  });
+  return res.data;
+};
+
+export const deleteTimetableEntry = async (timetableId: number) => {
+  const res = await axiosInstance.delete(`/timetable/delete-timetable/${timetableId}`);
+  return res.data;
+};
+
+export const deleteTimetableByClassSection = async (
+  classId: number,
+  sectionId: number
+) => {
+  const res = await axiosInstance.delete(
+    `/timetable/delete-by-class-section/${classId}/${sectionId}`
+  );
+  return res.data;
+};
+
+export const getSubjectsByTeacher = async (teacherId: number) => {
+  const res = await axiosInstance.get(`/teacher/get-teachers/${teacherId}`);
+  // your getTeacherById already returns subject_ids as "1,3,2"
+  // but you need names too — better to use the subjects endpoint
+  return res.data;
+};
+
+export const getTeacherSubjects = async (teacherId: number) => {
+  const res = await axiosInstance.get(`/teacher/get-teachers/${teacherId}`);
+  // returns { subject_ids: "1,3", ... }
+  const ids = res.data.subject_ids
+    ? res.data.subject_ids.split(",").map(Number)
+    : [];
+  return ids;
+};

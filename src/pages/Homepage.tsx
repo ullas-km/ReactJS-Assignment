@@ -348,7 +348,7 @@ export default function LandingPage() {
           <div style={{ width: 32, height: 32, background: "#2563eb", borderRadius: 8, display: "flex", alignItems: "center", justifyContent: "center" }}>
             <span style={{ color: "#fff", fontWeight: 700, fontSize: 16 }}>S</span>
           </div>
-          <span style={{ fontWeight: 600, fontSize: 15, color: "#0f172a" }}>SchoolMS</span>
+          <span style={{ fontWeight: 600, fontSize: 15, color: "#0f172a" }}>School Management System</span>
         </div>
         <button
           onClick={() => navigate("/login")}
