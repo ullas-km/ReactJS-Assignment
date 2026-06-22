@@ -1,9 +1,9 @@
 import { useState } from "react";
-import { NavLink } from "react-router-dom";
-import "../assets/css/sidebar.css";
-import { useNavigate } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { useAppDispatch } from "../app/hooks";
 import { logout } from "../features/auth/authSlice";
+
+import "../assets/css/sidebar.css";
 
 type SidebarProps = Readonly<{
   role: string;
@@ -147,20 +147,16 @@ export default function Sidebar({ role }: SidebarProps) {
               >
                 Students
               </NavLink>
-              {/* <NavLink
-                to="/teacher-attendance"
-                className={getLinkClass}
-                onClick={closeSidebar}
-              >
-                Attendance
-              </NavLink> */}
               <div className="menu-dropdown">
-                <div
-                  className="menu-link dropdown-btn attendance"
-                  onClick={() => setAttendanceOpen(!attendanceOpen)}
+                <button
+                  type="button"
+                  className={`menu-link dropdown-btn attendance ${
+                    attendanceOpen ? "active" : ""
+                  }`}
+                  onClick={() => setAttendanceOpen((prev) => !prev)}
                 >
                   Attendance {attendanceOpen ? "▲" : "▼"}
-                </div>
+                </button>
 
                 {attendanceOpen && (
                   <div className="submenu">

@@ -26,9 +26,8 @@
   align-items: center;
   justify-content: center;
 
-  background: linear-gradient(135deg, #6366f1, #8b5cf6);
-
-  color: white;
+  background: linear-gradient(135deg, #4338ca, #6d28d9);
+  color: #ffffff;
   font-size: 32px;
   font-weight: 700;
 }
@@ -107,7 +106,7 @@
 
 .modal-error {
   background: #fef2f2;
-  color: #dc2626;
+  color: #991b1b;
   border: 1px solid #fecaca;
   border-radius: 6px;
   padding: 10px 14px;
@@ -117,7 +116,7 @@
 
 .modal-success {
   background: #f0fdf4;
-  color: #16a34a;
+  color: #166534;
   border: 1px solid #bbf7d0;
   border-radius: 6px;
   padding: 10px 14px;

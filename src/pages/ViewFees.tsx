@@ -5,7 +5,6 @@ import EditFeeModal from "../components/EditFeeModal";
 
 import { getFees, deleteFee } from "../services/FeesApi";
 
-import "../assets/css/viewstudents.css";
 import "../assets/css/viewfees.css";
 
 interface Fee {

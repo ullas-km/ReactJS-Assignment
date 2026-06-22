@@ -20,25 +20,26 @@
   margin-bottom: 15px;
 }
 
-.students-header h2 {
+.students-title {
+  color: #111827;
   font-size: 24px;
   font-weight: bold;
-  color: #111827; /* darker for contrast */
 }
 
-.students-header p {
-  background: #e0e7ff;
-  color: #1e40af; /* improved contrast */
-  padding: 6px 12px;
-  border-radius: 20px;
-  font-size: 14px;
+/* ADD BUTTON */
+.header-add-btn {
+  padding: 10px 18px;
+  border: none;
+  border-radius: 8px;
+  background-color: #15803d;
+  color: #ffffff;
+  cursor: pointer;
   font-weight: bold;
+  transition: 0.2s;
 }
 
-/* TITLE */
-.students-title {
-  margin-bottom: 15px;
-  color: #111827;
+.header-add-btn:hover {
+  background-color: #166534;
 }
 
 /* TABLE WRAPPER */
@@ -46,7 +47,7 @@
   background: #ffffff;
   padding: 20px;
   border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
   overflow-x: auto;
 }
 
@@ -57,9 +58,8 @@
   font-size: 15px;
 }
 
-/* HEADER */
 .students-table thead {
-  background-color: #1e3a8a; /* darker blue = better contrast */
+  background-color: #1e3a8a;
   color: #ffffff;
 }
 
@@ -69,7 +69,6 @@
   padding: 12px;
 }
 
-/* ROWS */
 .students-table td {
   border-bottom: 1px solid #eee;
 }
@@ -86,7 +85,12 @@
   gap: 10px;
 }
 
-/* BUTTONS */
+.modal-actions {
+  display: flex;
+  gap: 10px;
+}
+
+/* EDIT BUTTON */
 .edit-btn {
   padding: 6px 12px;
   background: #1d4ed8;
@@ -100,9 +104,9 @@
 
 .edit-btn:hover {
   background: #1e40af;
-  transform: translateY(-1px);
 }
 
+/* DELETE BUTTON */
 .delete-btn {
   padding: 6px 12px;
   background: #dc2626;
@@ -116,211 +120,16 @@
 
 .delete-btn:hover {
   background: #b91c1c;
-  transform: translateY(-1px);
 }
 
-/* ADD BUTTON */
-
-
-/* MODAL OVERLAY */
-.modal-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
-}
-
-/* MODAL BOX */
-.modal-box {
-  width: 400px;
-  background: white;
-  padding: 20px;
-  border-radius: 12px;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.2);
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-}
-
-/* INPUTS */
-.modal-box input,
-.modal-box select {
-  padding: 10px;
-  border: 1px solid #d1d5db;
-  border-radius: 8px;
-  outline: none;
-}
-
-.modal-box input:focus,
-.modal-box select:focus {
-  border-color: #1d4ed8;
-}
-
-/* MODAL ACTIONS */
-.modal-actions {
-  display: flex;
-  gap: 10px;
-}
-
-/* BUTTONS */
-/* HEADER + ADD BUTTON */
-.add-btn,
-.header-add-btn {
-  padding: 10px 18px;
-  border: none;
-  border-radius: 8px;
-  background-color: #15803d; /* darker green */
-  color: #ffffff;
-  cursor: pointer;
-  font-weight: bold;
-  transition: 0.2s;
-}
-
-.add-btn:hover,
-.header-add-btn:hover {
-  background-color: #166534; /* even darker */
-}
-
-/* MODAL ADD BUTTON */
-.modal-add-btn {
-  flex: 1;
-  padding: 10px;
-  background: #15803d; /* FIXED */
-  color: white;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-}
-
-.modal-add-btn:hover {
-  background: #166534;
-}
-
-.modal-cancel-btn {
-  flex: 1;
-  padding: 10px;
-  background: #dc2626;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-}
-
-.modal-cancel-btn:hover {
-  background: #b91c1c;
-}
-
-/* FORM GROUP */
-.form-group {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.form-group label {
-  font-size: 14px;
-  font-weight: 600;
-  color: #374151;
-}
-
-/* EDIT BOX */
-.edit-box {
-  width: 100%;
-  padding: 20px;
-  margin-bottom: 20px;
-  background: #ffffff;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-/* EDIT FORM INPUTS */
-.edit-box input,
-.edit-box select {
-  width: 100%;
-  padding: 10px;
-  border: 1px solid #d1d5db;
-  border-radius: 8px;
-  outline: none;
-  font-size: 14px;
-}
-
-.edit-box input:focus,
-.edit-box select:focus {
-  border-color: #1d4ed8;
-}
-
-/* EDIT BUTTONS */
-.edit-box button {
-  padding: 10px 16px;
-  border: none;
-  border-radius: 8px;
-  color: white;
-  cursor: pointer;
-  font-weight: 600;
-}
-
-/* UPDATE BUTTON */
-.edit-box .modal-actions button:first-child {
-  background: #15803d;
-}
-
-.edit-box .modal-actions button:first-child:hover {
-  background: #166534;
-}
-
-/* CANCEL BUTTON */
-.edit-box .modal-actions button:last-child {
-  background: #dc2626;
-}
-
-.edit-box .modal-actions button:last-child:hover {
-  background: #b91c1c;
-}
-
+/* LOADING */
 .loading-cell {
   text-align: center;
   padding: 30px;
   font-size: 16px;
 }
 
-/* MOBILE */
-@media (max-width: 768px) {
-
-  .students-page {
-    padding: 14px;
-  }
-
-  .students-header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 10px;
-  }
-
-  .students-table {
-    font-size: 13px;
-    min-width: 600px;
-  }
-
-  .actions {
-    flex-direction: column;
-    gap: 6px;
-  }
-
-  .edit-btn,
-  .delete-btn {
-    width: 100%;
-  }
-
-  .modal-box {
-    width: 90%;
-  }
-}
-
+/* PAGINATION */
 .pagination {
   display: flex;
   justify-content: center;
@@ -336,7 +145,6 @@
   background: white;
   border-radius: 6px;
   cursor: pointer;
-  transition: 0.2s;
 }
 
 .pagination button:hover:not(:disabled) {
@@ -352,4 +160,45 @@
   background: #2563eb !important;
   color: white;
   border-color: #2563eb !important;
+}
+
+/* MOBILE */
+@media (max-width: 768px) {
+  .students-page {
+    padding: 14px;
+  }
+
+  .students-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .students-table {
+    min-width: 600px;
+    font-size: 13px;
+  }
+
+  .actions {
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .edit-btn,
+  .delete-btn {
+    width: 100%;
+  }
+}
+
+.search-container {
+  margin-bottom: 15px;
+}
+
+.search-container input {
+  width: 300px;
+  max-width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 14px;
 }

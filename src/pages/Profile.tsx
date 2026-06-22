@@ -1,40 +1,3 @@
-// import "../assets/css/profile.css";
-
-// export default function Profile() {
-//   const user = JSON.parse(localStorage.getItem("user") || "null");
-
-//   if (!user) return null;
-
-//   return (
-//     <div className="profile-container">
-//       <div className="profile-card">
-//         <div className="profile-page-avatar">
-//           {user.name?.charAt(0).toUpperCase()}
-//         </div>
-
-//         <h2>{user.name}</h2>
-
-//         <div className="profile-page-info">
-//           <div className="info-row">
-//             <span>Name</span>
-//             <strong>{user.name}</strong>
-//           </div>
-
-//           <div className="info-row">
-//             <span>Email</span>
-//             <strong>{user.email}</strong>
-//           </div>
-
-//           <div className="info-row">
-//             <span>Role</span>
-//             <strong>{user.role}</strong>
-//           </div>
-//         </div>
-//       </div>
-//     </div>
-//   );
-// }
-
 import { useState } from "react";
 import { changePassword } from "../services/userApi";
 import "../assets/css/profile.css";
@@ -144,8 +107,9 @@ export default function Profile() {
             {success && <div className="modal-success">{success}</div>}
 
             <div className="form-group">
-              <label>Current Password</label>
+              <label htmlFor="currpass">Current Password</label>
               <input
+                id="currpass"
                 type="password"
                 value={currentPassword}
                 onChange={(e) => setCurrentPassword(e.target.value)}
@@ -154,8 +118,9 @@ export default function Profile() {
             </div>
 
             <div className="form-group">
-              <label>New Password</label>
+              <label htmlFor="newpass">New Password</label>
               <input
+                id="newpass"
                 type="password"
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
@@ -164,8 +129,9 @@ export default function Profile() {
             </div>
 
             <div className="form-group">
-              <label>Confirm New Password</label>
+              <label htmlFor="cnewpass">Confirm New Password</label>
               <input
+                id="cnewpass"
                 type="password"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}

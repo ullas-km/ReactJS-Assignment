@@ -5,13 +5,13 @@ import { MemoryRouter } from "react-router-dom";
 
 import Sidebar from "../components/Sidebar";
 
-// mock navigate
 const mockNavigate = vi.fn();
+const mockDispatch = vi.fn();
 
 vi.mock("react-router-dom", async () => {
   const actual =
     await vi.importActual<typeof import("react-router-dom")>(
-      "react-router-dom",
+      "react-router-dom"
     );
 
   return {
@@ -20,100 +20,111 @@ vi.mock("react-router-dom", async () => {
   };
 });
 
+vi.mock("../app/hooks", () => ({
+  useAppDispatch: () => mockDispatch,
+}));
+
+vi.mock("../features/auth/authSlice", () => ({
+  logout: vi.fn(() => ({
+    type: "auth/logout",
+  })),
+}));
+
 describe("Sidebar", () => {
   beforeEach(() => {
     vi.clearAllMocks();
+
+    localStorage.setItem(
+      "user",
+      JSON.stringify({
+        name: "John",
+        role: "admin",
+      })
+    );
+
+    localStorage.setItem("token", "123");
   });
 
-  it("should open and close students dropdown", async () => {
+  it("renders home link", () => {
+    render(
+      <MemoryRouter>
+        <Sidebar role="admin" />
+      </MemoryRouter>
+    );
+
+    expect(screen.getByText("Home")).toBeInTheDocument();
+  });
+
+  it("renders admin menu items", () => {
+    render(
+      <MemoryRouter>
+        <Sidebar role="admin" />
+      </MemoryRouter>
+    );
+
+    expect(screen.getByText("Students")).toBeInTheDocument();
+    expect(screen.getByText("Fees")).toBeInTheDocument();
+    expect(screen.getByText("Classes")).toBeInTheDocument();
+    expect(screen.getByText("Sections")).toBeInTheDocument();
+    expect(screen.getByText("Teachers")).toBeInTheDocument();
+    expect(screen.getByText("Subjects")).toBeInTheDocument();
+    expect(screen.getByText("Add Timetable")).toBeInTheDocument();
+  });
+
+  it("renders student menu items", () => {
+    render(
+      <MemoryRouter>
+        <Sidebar role="student" />
+      </MemoryRouter>
+    );
+
+    expect(screen.getByText("Payments")).toBeInTheDocument();
+    expect(screen.getByText("Marks")).toBeInTheDocument();
+    expect(screen.getByText("Timetable")).toBeInTheDocument();
+
+    expect(screen.queryByText("Students")).not.toBeInTheDocument();
+  });
+
+  it("renders teacher menu items", () => {
+    render(
+      <MemoryRouter>
+        <Sidebar role="teacher" />
+      </MemoryRouter>
+    );
+
+    expect(screen.getByText("Students")).toBeInTheDocument();
+    expect(screen.getByText("Attendance ▼")).toBeInTheDocument();
+    expect(screen.getByText("My Timetable")).toBeInTheDocument();
+    expect(screen.getByText("Add Marks")).toBeInTheDocument();
+  });
+
+  it("opens attendance submenu", async () => {
+    const user = userEvent.setup();
+
+    render(
+      <MemoryRouter>
+        <Sidebar role="teacher" />
+      </MemoryRouter>
+    );
+
+    await user.click(screen.getByText(/Attendance/i));
+
+    expect(
+      screen.getByText("Add Attendance")
+    ).toBeInTheDocument();
+
+    expect(
+      screen.getByText("View Attendance")
+    ).toBeInTheDocument();
+  });
+
+  it("opens mobile sidebar", async () => {
     const user = userEvent.setup();
 
     render(
       <MemoryRouter>
         <Sidebar role="admin" />
-      </MemoryRouter>,
-    );
-
-    const studentsBtn = screen.getByRole("button", {
-      name: /students/i,
-    });
-
-    // open
-    await user.click(studentsBtn);
-
-    expect(screen.getByText(/view students/i)).toBeInTheDocument();
-
-    // close
-    await user.click(studentsBtn);
-
-    expect(screen.queryByText(/view students/i)).not.toBeInTheDocument();
-  });
-
-  it("should close previous menu when opening another", async () => {
-    const user = userEvent.setup();
-
-    render(
-      <MemoryRouter>
-        <Sidebar role="admin" />
-      </MemoryRouter>,
-    );
-
-    const studentsBtn = screen.getByRole("button", {
-      name: /students/i,
-    });
-
-    const feesBtn = screen.getByRole("button", {
-      name: /fees/i,
-    });
-
-    await user.click(studentsBtn);
-
-    expect(screen.getByText(/view students/i)).toBeInTheDocument();
-
-    await user.click(feesBtn);
-
-    expect(screen.queryByText(/view students/i)).not.toBeInTheDocument();
-
-    expect(screen.getByText(/view fees/i)).toBeInTheDocument();
-  });
-
-  it("should navigate when menu clicked", async () => {
-    const user = userEvent.setup();
-
-    render(
-      <MemoryRouter>
-        <Sidebar role="admin" />
-      </MemoryRouter>,
-    );
-
-    await user.click(
-      screen.getByRole("button", {
-        name: /students/i,
-      }),
-    );
-
-    expect(mockNavigate).toHaveBeenCalledWith("students");
-  });
-
-  it("should render only home for non-admin", () => {
-    render(
-      <MemoryRouter>
-        <Sidebar role="user" />
-      </MemoryRouter>,
-    );
-
-    expect(screen.getByText(/home/i)).toBeInTheDocument();
-
-    expect(screen.queryByText(/students/i)).not.toBeInTheDocument();
-  });
-
-  it("should open mobile sidebar", async () => {
-    const user = userEvent.setup();
-
-    render(
-      <MemoryRouter>
-        <Sidebar role="admin" />
-      </MemoryRouter>,
+      </MemoryRouter>
     );
 
     const hamburger = screen.getByRole("button", {
@@ -122,6 +133,70 @@ describe("Sidebar", () => {
 
     await user.click(hamburger);
 
-    expect(document.querySelector(".sidebar.open")).toBeInTheDocument();
+    expect(
+      document.querySelector(".sidebar.open")
+    ).toBeInTheDocument();
+  });
+
+  it("closes mobile sidebar when overlay clicked", async () => {
+    const user = userEvent.setup();
+
+    render(
+      <MemoryRouter>
+        <Sidebar role="admin" />
+      </MemoryRouter>
+    );
+
+    await user.click(
+      screen.getByRole("button", {
+        name: "☰",
+      })
+    );
+
+    const overlay = document.querySelector(
+      ".sidebar-overlay"
+    ) as HTMLElement;
+
+    await user.click(overlay);
+
+    expect(
+      document.querySelector(".sidebar.open")
+    ).not.toBeInTheDocument();
+  });
+
+  it("shows user profile information", () => {
+    render(
+      <MemoryRouter>
+        <Sidebar role="admin" />
+      </MemoryRouter>
+    );
+
+    expect(screen.getByText("John")).toBeInTheDocument();
+    expect(screen.getByText("admin")).toBeInTheDocument();
+  });
+
+  it("logs out user", async () => {
+    const user = userEvent.setup();
+
+    render(
+      <MemoryRouter>
+        <Sidebar role="admin" />
+      </MemoryRouter>
+    );
+
+    await user.click(
+      screen.getByRole("button", {
+        name: /logout/i,
+      })
+    );
+
+    expect(mockDispatch).toHaveBeenCalled();
+
+    expect(localStorage.getItem("token")).toBeNull();
+    expect(localStorage.getItem("user")).toBeNull();
+
+    expect(mockNavigate).toHaveBeenCalledWith(
+      "/login"
+    );
   });
 });

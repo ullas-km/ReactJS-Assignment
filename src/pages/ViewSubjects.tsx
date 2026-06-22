@@ -7,7 +7,8 @@ import {
   deleteSubject,
 } from "../services/SubjectApi";
 
-import "../assets/css/viewsubjects.css"
+import "../assets/css/viewsubjects.css";
+import Pagination from "../components/Pagination";
 
 export default function ViewSubjects() {
   const [loading, setLoading] = useState(true);
@@ -190,31 +191,11 @@ export default function ViewSubjects() {
         </tbody>
       </table>
       {!loading && subjects.length > rowsPerPage && (
-        <div className="pagination">
-          <button
-            disabled={currentPage === 1}
-            onClick={() => setCurrentPage(currentPage - 1)}
-          >
-            Prev
-          </button>
-
-          {Array.from({ length: totalPages }, (_, i) => (
-            <button
-              key={i + 1}
-              className={currentPage === i + 1 ? "active-page" : ""}
-              onClick={() => setCurrentPage(i + 1)}
-            >
-              {i + 1}
-            </button>
-          ))}
-
-          <button
-            disabled={currentPage === totalPages}
-            onClick={() => setCurrentPage(currentPage + 1)}
-          >
-            Next
-          </button>
-        </div>
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={setCurrentPage}
+        />
       )}
     </div>
   );

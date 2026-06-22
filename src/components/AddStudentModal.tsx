@@ -80,8 +80,9 @@ export default function AddStudentModal({ onClose, refreshStudents }: Props) {
         </div>
 
         <div className="form-group">
-          <label>Password</label>
+          <label htmlFor="password">Password</label>
           <input
+            id="password"
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}

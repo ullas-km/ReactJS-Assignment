@@ -1,9 +1,6 @@
 import { useEffect, useState } from "react";
 
-import { getClasses } from "../services/ClassesApi";
-import { getSections } from "../services/SectionApi";
-
-import { getStudents, deleteStudent } from "../services/studentsApi";
+import { getStudents } from "../services/studentsApi";
 
 import "../assets/css/viewstudents.css";
 
@@ -20,44 +17,15 @@ export default function ViewStudents() {
     section_id: number;
   }
 
-  interface Class {
-    class_id: number;
-    class_name: string;
-  }
-
-  interface Section {
-    section_id: number;
-    section_name: string;
-    class_id: number;
-  }
   const [students, setStudents] = useState<Student[]>([]);
-
-  const [classes, setClasses] = useState<Class[]>([]);
-  const [sections, setSections] = useState<Section[]>([]);
-
-  const fetchStudents = async () => {
-    try {
-      const data = await getStudents();
-      setStudents(data);
-    } catch (error) {
-      console.error("Failed to fetch students:", error);
-    }
-  };
 
   useEffect(() => {
     const loadData = async () => {
       try {
         setLoading(true);
 
-        const [studentsRes, classesRes, sectionsRes] = await Promise.all([
-          getStudents(),
-          getClasses(),
-          getSections(),
-        ]);
-
-        setStudents(studentsRes);
-        setClasses(classesRes);
-        setSections(sectionsRes);
+        const studentsRes = await getStudents();
+        setStudents(studentsRes); 
       } catch (error) {
         console.error("Failed to load data:", error);
       } finally {
@@ -112,4 +80,3 @@ export default function ViewStudents() {
     </div>
   );
 }
- 

@@ -68,7 +68,7 @@ export default function TeacherAddMarks() {
   setStep(1);
 };
 const handleDelete = async (id: number) => {
-  const confirmDelete = window.confirm(
+  const confirmDelete = globalThis.confirm(
     "Are you sure you want to delete this mark?"
   );
 
@@ -153,9 +153,10 @@ const handleDelete = async (id: number) => {
 
           {step === 1 && (
             <div className="form-step">
-              <label>Select Exam</label>
+              <label htmlFor="selectexam">Select Exam</label>
 
               <select
+              id="selectexam"
                 className="marks-select"
                 name="exam_id"
                 value={form.exam_id}
@@ -177,9 +178,10 @@ const handleDelete = async (id: number) => {
 
           {step === 2 && (
             <div className="form-step">
-              <label>Select Subject</label>
+              <label htmlFor="selectsub">Select Subject</label>
 
               <select
+              id="selectsub"
                 className="marks-select"
                 name="subject_id"
                 value={form.subject_id}
@@ -207,9 +209,10 @@ const handleDelete = async (id: number) => {
 
           {step === 3 && (
             <div className="form-step">
-              <label>Select Student</label>
+              <label htmlFor="selectstudent">Select Student</label>
 
-              <select
+              <select 
+              id="selectstudent"
                 className="marks-select"
                 name="student_id"
                 value={form.student_id}
@@ -237,9 +240,10 @@ const handleDelete = async (id: number) => {
 
           {step === 4 && (
             <div className="form-step">
-              <label>Enter Marks</label>
+              <label htmlFor="entermarks">Enter Marks</label>
 
               <input
+              id="entermarks"
                 className="marks-input"
                 type="number"
                 name="marks"

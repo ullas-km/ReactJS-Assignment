@@ -9,6 +9,7 @@ import { getSections } from "../services/SectionApi";
 import { getStudents, deleteStudent } from "../services/studentsApi";
 
 import "../assets/css/viewstudents.css";
+import Pagination from "../components/Pagination";
 
 export default function ViewStudents() {
   const [loading, setLoading] = useState(true);
@@ -41,24 +42,25 @@ export default function ViewStudents() {
 
   const [classes, setClasses] = useState<Class[]>([]);
   const [sections, setSections] = useState<Section[]>([]);
+  const [searchTerm, setSearchTerm] = useState("");
 
   const [currentPage, setCurrentPage] = useState(1);
   const rowsPerPage = 10;
 
   const fetchStudents = async () => {
-  try {
-    const data = await getStudents();
-    setStudents(data);
+    try {
+      const data = await getStudents();
+      setStudents(data);
 
-    const pages = Math.ceil(data.length / rowsPerPage);
+      const pages = Math.ceil(data.length / rowsPerPage);
 
-    if (currentPage > pages && pages > 0) {
-      setCurrentPage(pages);
+      if (currentPage > pages && pages > 0) {
+        setCurrentPage(pages);
+      }
+    } catch (error) {
+      console.error("Failed to fetch students:", error);
     }
-  } catch (error) {
-    console.error("Failed to fetch students:", error);
-  }
-};
+  };
 
   useEffect(() => {
     const loadData = async () => {
@@ -96,9 +98,63 @@ export default function ViewStudents() {
   const indexOfLastRow = currentPage * rowsPerPage;
   const indexOfFirstRow = indexOfLastRow - rowsPerPage;
 
-  const currentStudents = students.slice(indexOfFirstRow, indexOfLastRow);
+  const filteredStudents = students.filter((student) =>
+    student.name.toLowerCase().includes(searchTerm.toLowerCase()),
+  );
 
-  const totalPages = Math.ceil(students.length / rowsPerPage);
+  const totalPages = Math.ceil(filteredStudents.length / rowsPerPage);
+
+  const currentStudents = filteredStudents.slice(
+    indexOfFirstRow,
+    indexOfLastRow,
+  );
+
+  let tableContent;
+
+  if (loading) {
+    tableContent = (
+      <tr>
+        <td colSpan={7} className="loading-cell">
+          Loading students...
+        </td>
+      </tr>
+    );
+  } else if (currentStudents.length > 0) {
+    tableContent = currentStudents.map((s: Student) => (
+      <tr key={s.student_id}>
+        <td>{s.student_id}</td>
+        <td>{s.name}</td>
+        <td>{s.email}</td>
+        <td>{s.phone}</td>
+        <td>{s.class_name}</td>
+        <td>{s.section_name}</td>
+
+        <td className="actions">
+          <div className="modal-actions">
+            <button onClick={() => setEditingStudent(s)} className="edit-btn">
+              Edit
+            </button>
+
+            <button
+              onClick={() => handleDelete(s.student_id)}
+              className="delete-btn"
+            >
+              Delete
+            </button>
+          </div>
+        </td>
+      </tr>
+    ));
+  } else {
+    tableContent = (
+      <tr>
+        <td colSpan={7} className="loading-cell">
+          No students found
+          {searchTerm && ` for "${searchTerm}"`}
+        </td>
+      </tr>
+    );
+  }
 
   return (
     <div className="students-page">
@@ -111,6 +167,18 @@ export default function ViewStudents() {
         >
           Add Student
         </button>
+      </div>
+
+      <div className="search-container">
+        <input
+          type="text"
+          placeholder="Search student by name..."
+          value={searchTerm}
+          onChange={(e) => {
+            setSearchTerm(e.target.value);
+            setCurrentPage(1);
+          }}
+        />
       </div>
 
       <div className="table-wrapper">
@@ -127,72 +195,15 @@ export default function ViewStudents() {
             </tr>
           </thead>
 
-          <tbody>
-            {loading ? (
-              <tr>
-                <td colSpan={7} className="loading-cell">
-                  Loading students...
-                </td>
-              </tr>
-            ) : (
-              currentStudents.map((s: Student) => (
-                <tr key={s.student_id}>
-                  <td>{s.student_id}</td>
-                  <td>{s.name}</td>
-                  <td>{s.email}</td>
-                  <td>{s.phone}</td>
-                  <td>{s.class_name}</td>
-                  <td>{s.section_name}</td>
-
-                  <td className="actions">
-                    <div className="modal-actions">
-                      <button
-                        onClick={() => setEditingStudent(s)}
-                        className="edit-btn"
-                      >
-                        Edit
-                      </button>
-
-                      <button
-                        onClick={() => handleDelete(s.student_id)}
-                        className="delete-btn"
-                      >
-                        Delete
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              ))
-            )}
-          </tbody>
+          <tbody>{tableContent}</tbody>
         </table>
       </div>
-      {!loading && students.length > rowsPerPage && (
-        <div className="pagination">
-          <button
-            disabled={currentPage === 1}
-            onClick={() => setCurrentPage(currentPage - 1)}
-          >
-            Prev
-          </button>
-
-          {Array.from({ length: totalPages }, (_, i) => (
-            <button
-              key={i + 1}
-              className={currentPage === i + 1 ? "active-page" : ""}
-              onClick={() => setCurrentPage(i + 1)}
-            >
-              {i + 1}
-            </button>
-          ))}
-
-          <button
-            disabled={currentPage === totalPages}
-            onClick={() => setCurrentPage(currentPage + 1)}
-          >
-            Next
-          </button>
-        </div>
+      {!loading && filteredStudents.length > rowsPerPage && (
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={setCurrentPage}
+        />
       )}
 
       {showAddModal && (

@@ -1,34 +1,55 @@
 import { render, screen } from "@testing-library/react";
 import { MemoryRouter, Routes, Route } from "react-router-dom";
-import { describe, it, expect, beforeEach } from "vitest";
+import { describe, it, expect, vi, beforeEach } from "vitest";
 
 import ProtectedRoute from "../routes/ProtectedRoute";
+import { useAppSelector } from "../app/hooks";
+
+vi.mock("../app/hooks", () => ({
+  useAppSelector: vi.fn(),
+}));
 
 describe("ProtectedRoute", () => {
   beforeEach(() => {
-    localStorage.clear();
+    vi.clearAllMocks();
   });
 
-  it("should render children when token exists", () => {
-    localStorage.setItem("token", "fake-token");
+  it("renders children when token exists", () => {
+    vi.mocked(useAppSelector).mockImplementation((selector: any) =>
+      selector({
+        auth: {
+          token: "fake-token",
+        },
+      })
+    );
 
     render(
       <MemoryRouter>
         <ProtectedRoute>
           <h1>Dashboard Page</h1>
         </ProtectedRoute>
-      </MemoryRouter>,
+      </MemoryRouter>
     );
 
-    expect(screen.getByText(/dashboard page/i)).toBeInTheDocument();
+    expect(
+      screen.getByText(/dashboard page/i)
+    ).toBeInTheDocument();
   });
 
-  it("should redirect to login when token does not exist", () => {
+  it("redirects to login when token does not exist", () => {
+    vi.mocked(useAppSelector).mockImplementation((selector: any) =>
+      selector({
+        auth: {
+          token: null,
+        },
+      })
+    );
+
     render(
-      <MemoryRouter initialEntries={["/welcome"]}>
+      <MemoryRouter initialEntries={["/protected"]}>
         <Routes>
           <Route
-            path="/welcome"
+            path="/protected"
             element={
               <ProtectedRoute>
                 <h1>Dashboard Page</h1>
@@ -36,11 +57,20 @@ describe("ProtectedRoute", () => {
             }
           />
 
-          <Route path="/" element={<h1>Login Page</h1>} />
+          <Route
+            path="/login"
+            element={<h1>Login Page</h1>}
+          />
         </Routes>
-      </MemoryRouter>,
+      </MemoryRouter>
     );
 
-    expect(screen.getByText(/login page/i)).toBeInTheDocument();
+    expect(
+      screen.getByText(/login page/i)
+    ).toBeInTheDocument();
+
+    expect(
+      screen.queryByText(/dashboard page/i)
+    ).not.toBeInTheDocument();
   });
 });

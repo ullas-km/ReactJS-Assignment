@@ -47,9 +47,10 @@ export default function StudentMarks() {
           <>
             {/* FILTER */}
             <div className="filter-box">
-              <label>Filter by Exam:</label>
+              <label htmlFor="filterbyexam">Filter by Exam:</label>
 
               <select
+              id="filterbyexam"
                 value={selectedExam}
                 onChange={(e) => setSelectedExam(e.target.value)}
               >

@@ -1,113 +1,5 @@
-// import { useEffect, useState } from "react";
-
-// import { getAttendance, addAttendance } from "../services/attendanceApi";
-// import "../assets/css/teacherattendance.css";
-// import { getStudents } from "../services/studentsApi";
-
-// export default function TeacherAttendance() {
-//   const [attendance, setAttendance] = useState([]);
-//   const [students, setStudents] = useState([]);
-
-//   const [studentId, setStudentId] = useState("");
-
-//   const [date, setDate] = useState("");
-
-//   const [status, setStatus] = useState("present");
-//   const [selectedDate, setSelectedDate] = useState("");
-
-//   const loadData = async () => {
-//     const attendanceData = await getAttendance();
-
-//     const studentsData = await getStudents();
-
-//     setAttendance(attendanceData);
-//     setStudents(studentsData);
-//   };
-
-//   useEffect(() => {
-//     loadData();
-//   }, []);
-
-//   const handleSubmit = async (e: React.FormEvent) => {
-//     e.preventDefault();
-
-//     await addAttendance({
-//       student_id: Number(studentId),
-//       date,
-//       status,
-//     });
-
-//     setStudentId("");
-//     setDate("");
-//     setStatus("present");
-
-//     loadData();
-//   };
-
-//   return (
-//     <div className="attendance-page">
-//       <h2>Attendance</h2>
-
-//       <form onSubmit={handleSubmit}>
-//         <select
-//           value={studentId}
-//           onChange={(e) => setStudentId(e.target.value)}
-//         >
-//           <option value="">Select Student</option>
-
-//           {students.map((s: any) => (
-//             <option key={s.student_id} value={s.student_id}>
-//               {s.name}
-//             </option>
-//           ))}
-//         </select>
-
-//         <input
-//           type="date"
-//           value={date}
-//           onChange={(e) => setDate(e.target.value)}
-//         />
-
-//         <select value={status} onChange={(e) => setStatus(e.target.value)}>
-//           <option value="present">Present</option>
-
-//           <option value="absent">Absent</option>
-//         </select>
-
-//         <button type="submit">Mark Attendance</button>
-//       </form>
-
-//       <table>
-//         <thead>
-//           <tr>
-//             <th>Student</th>
-//             <th>Date</th>
-//             <th>Status</th>
-//           </tr>
-//         </thead>
-
-//         <tbody>
-//           {attendance.map((a: any) => (
-//             <tr key={a.id}>
-//               <td>{a.student_name}</td>
-//               <td>{new Date(a.date).toLocaleDateString()}</td>
-//               <td
-//                 className={
-//                   a.status === "absent" ? "status absent" : "status present"
-//                 }
-//               >
-//                 {a.status}
-//               </td>
-//             </tr>
-//           ))}
-//         </tbody>
-//       </table>
-//     </div>
-//   );
-// }
-
 import { useEffect, useState } from "react";
-import { getAttendance, bulkAddAttendance } from "../services/attendanceApi";
+import { bulkAddAttendance } from "../services/attendanceApi";
 import { getClasses } from "../services/ClassesApi";
 import { getSectionsByClass } from "../services/SectionApi";
 import { getStudentsByClassSection } from "../services/studentsApi";
@@ -187,23 +79,23 @@ export default function TeacherAttendance() {
         {/* FILTERS */}
         <div style={{ background: "#fff", borderRadius: 12, border: "1px solid #dbeafe", padding: "1.25rem", marginBottom: "1.25rem", display: "flex", gap: 12, flexWrap: "wrap" }}>
           <div style={{ flex: 1, minWidth: 140 }}>
-            <label style={{ fontSize: 12, color: "#6b7280", display: "block", marginBottom: 4 }}>Class</label>
-            <select style={selectStyle} value={selectedClass} onChange={(e) => handleClassChange(e.target.value)}>
+            <label style={{ fontSize: 12, color: "#6b7280", display: "block", marginBottom: 4 }} htmlFor="class">Class</label>
+            <select style={selectStyle} value={selectedClass} onChange={(e) => handleClassChange(e.target.value)} id="class">
               <option value="">Select Class</option>
               {classes.map((c) => <option key={c.class_id} value={c.class_id}>{c.class_name}</option>)}
             </select>
           </div>
           <div style={{ flex: 1, minWidth: 140 }}>
-            <label style={{ fontSize: 12, color: "#6b7280", display: "block", marginBottom: 4 }}>Section</label>
-            <select style={selectStyle} value={selectedSection} onChange={(e) => handleSectionChange(e.target.value)} disabled={!selectedClass}>
+            <label style={{ fontSize: 12, color: "#6b7280", display: "block", marginBottom: 4 }} htmlFor="section">Section</label>
+            <select style={selectStyle} value={selectedSection} onChange={(e) => handleSectionChange(e.target.value)} disabled={!selectedClass} id="section">
               <option value="">Select Section</option>
               {sections.map((s) => <option key={s.section_id} value={s.section_id}>{s.section_name}</option>)}
             </select>
           </div>
           <div style={{ flex: 1, minWidth: 140 }}>
-            <label style={{ fontSize: 12, color: "#6b7280", display: "block", marginBottom: 4 }}>Date</label>
+            <label style={{ fontSize: 12, color: "#6b7280", display: "block", marginBottom: 4 }} htmlFor="date">Date</label>
             <input type="date" value={date} onChange={(e) => setDate(e.target.value)}
-              style={{ ...selectStyle, fontFamily: "inherit" }} />
+              style={{ ...selectStyle, fontFamily: "inherit" }} id="date" />
           </div>
         </div>
 
@@ -229,7 +121,7 @@ export default function TeacherAttendance() {
             {students.map((s, i) => {
               const status = attendance[s.student_id] || "present";
               return (
-                <div key={s.student_id} onClick={() => toggle(s.student_id)}
+                <button key={s.student_id} onClick={() => toggle(s.student_id)}
                   style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "0.9rem 1.25rem",
                     borderBottom: i < students.length - 1 ? "1px solid #e0eeff" : "none",
                     background: i % 2 === 0 ? "#fff" : "#f8faff", cursor: "pointer" }}>
@@ -244,7 +136,7 @@ export default function TeacherAttendance() {
                     color: status === "present" ? "#16a34a" : "#dc2626" }}>
                     {status === "present" ? "Present" : "Absent"}
                   </div>
-                </div>
+                </button>
               );
             })}
 

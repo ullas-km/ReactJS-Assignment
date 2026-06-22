@@ -34,10 +34,12 @@ export const getAllTimetablesGrouped = async () => {
 
 export const updateTimetableEntry = async (
   timetableId: number,
-  teacherId: number
+  teacherId: number,
+  subjectId: number  // add this
 ) => {
   const res = await axiosInstance.put(`/timetable/put-timetable/${timetableId}`, {
     teacher_id: teacherId,
+    subject_id: subjectId,  // send it
   });
   return res.data;
 };
@@ -59,14 +61,11 @@ export const deleteTimetableByClassSection = async (
 
 export const getSubjectsByTeacher = async (teacherId: number) => {
   const res = await axiosInstance.get(`/teacher/get-teachers/${teacherId}`);
-  // your getTeacherById already returns subject_ids as "1,3,2"
-  // but you need names too — better to use the subjects endpoint
   return res.data;
 };
 
 export const getTeacherSubjects = async (teacherId: number) => {
   const res = await axiosInstance.get(`/teacher/get-teachers/${teacherId}`);
-  // returns { subject_ids: "1,3", ... }
   const ids = res.data.subject_ids
     ? res.data.subject_ids.split(",").map(Number)
     : [];

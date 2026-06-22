@@ -14,7 +14,7 @@
   background: #ffffff;
   padding: 20px;
   border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
   overflow-x: auto;
 }
 
@@ -105,12 +105,12 @@
 
 .pass {
   background: #dcfce7;
-  color: #16a34a;
+  color: #166534;
 }
 
 .fail {
   background: #fee2e2;
-  color: #dc2626;
+  color: #991b1b;
 }
 
 /* LOADING */

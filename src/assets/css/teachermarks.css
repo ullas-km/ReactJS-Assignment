@@ -138,12 +138,12 @@
 
 /* SAVE */
 .submit-btn {
-  background: #10b981;
-  color: white;
+  background: #047857;
+  color: #ffffff;
 }
 
 .submit-btn:hover {
-  background: #059669;
+  background: #065f46;
   transform: translateY(-2px);
 }
 

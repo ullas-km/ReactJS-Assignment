@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import api from "../services/axiosInstance";
 
 import {
   getTeachers,
@@ -11,13 +10,7 @@ import {
 import { getSubjects } from "../services/SubjectApi";
 
 import "../assets/css/viewTeachers.css";
-interface Teacher {
-  teacher_id: number;
-  teacher_name: string;
-  email: string;
-  phone: number;
-  subjects: string;
-}
+import Pagination from "../components/Pagination";
 
 export default function ViewTeachers() {
   const [loading, setLoading] = useState(true);
@@ -42,6 +35,7 @@ export default function ViewTeachers() {
   const [showModal, setShowModal] = useState(false);
   const [subjectIds, setSubjectIds] = useState<number[]>([]);
   const [subjects, setSubjects] = useState<Subject[]>([]);
+  const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const rowsPerPage = 10;
 
@@ -110,26 +104,6 @@ export default function ViewTeachers() {
     setSubjectIds(selectedIds);
   };
 
-  const handleSubjectChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const id = Number(e.target.value);
-
-    if (e.target.checked) {
-      setSubjectIds((prev) => [...prev, id]);
-    } else {
-      setSubjectIds((prev) => prev.filter((subjectId) => subjectId !== id));
-    }
-  };
-
-  // const handleEdit = (t: Teacher) => {
-  //   setEditId(t.teacher_id);
-
-  //   setTeacherName(t.teacher_name);
-  //   setEmail(t.email || "");
-  //   setPhone(t.phone ? String(t.phone) : "");
-
-  //   setShowModal(true);
-  // };
-
   const handleEdit = async (t: Teacher) => {
     setEditId(t.teacher_id);
     setTeacherName(t.teacher_name);
@@ -142,7 +116,7 @@ export default function ViewTeachers() {
         const ids = teacherData.subject_ids
           .split(",")
           .map((id: string) => Number(id.trim()))
-          .filter((id: number) => !isNaN(id));
+          .filter((id: number) => !Number.isNaN(id));
         setSubjectIds(ids);
       } else {
         setSubjectIds([]);
@@ -182,9 +156,62 @@ export default function ViewTeachers() {
   const indexOfLastRow = currentPage * rowsPerPage;
   const indexOfFirstRow = indexOfLastRow - rowsPerPage;
 
-  const currentTeachers = teachers.slice(indexOfFirstRow, indexOfLastRow);
+  const filteredTeachers = teachers.filter(
+    (teacher) =>
+      teacher.teacher_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      teacher.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      teacher.subjects.toLowerCase().includes(searchTerm.toLowerCase()),
+  );
 
-  const totalPages = Math.ceil(teachers.length / rowsPerPage);
+  const totalPages = Math.ceil(filteredTeachers.length / rowsPerPage);
+
+  const currentTeachers = filteredTeachers.slice(
+    indexOfFirstRow,
+    indexOfLastRow,
+  );
+
+  let tableRows;
+
+if (loading) {
+  tableRows = (
+    <tr>
+      <td colSpan={4} className="loading-cell">
+        Loading teachers...
+      </td>
+    </tr>
+  );
+} else if (currentTeachers.length > 0) {
+  tableRows = currentTeachers.map((t) => (
+    <tr key={t.teacher_id}>
+      <td>{t.teacher_name}</td>
+      <td>{t.email}</td>
+      <td>{t.phone}</td>
+      <td>{t.subjects || "No Subjects"}</td>
+
+      <td>
+        <button className="edit-btn" onClick={() => handleEdit(t)}>
+          Edit
+        </button>
+
+        <button
+          className="delete-btn"
+          onClick={() => handleDelete(t.teacher_id)}
+        >
+          Delete
+        </button>
+      </td>
+    </tr>
+  ));
+} else {
+  tableRows = (
+    <tr>
+      <td colSpan={5} className="loading-cell">
+        No teachers found
+        {searchTerm && ` for "${searchTerm}"`}
+      </td>
+    </tr>
+  );
+}
 
   return (
     <div className="students-page">
@@ -213,8 +240,9 @@ export default function ViewTeachers() {
             </div>
 
             <div className="form-group">
-              <label>Email</label>
+              <label htmlFor="emailvt">Email</label>
               <input
+              id="emailvt"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Email"
@@ -222,8 +250,9 @@ export default function ViewTeachers() {
             </div>
 
             <div className="form-group">
-              <label>Phone</label>
+              <label htmlFor="phonevt">Phone</label>
               <input
+              id="phonevt"
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
                 placeholder="Phone"
@@ -232,8 +261,9 @@ export default function ViewTeachers() {
 
             {editId === null && (
               <div className="form-group">
-                <label>Password</label>
+                <label htmlFor="passwordvt">Password</label>
                 <input
+                id="passwordvt"
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
@@ -242,9 +272,10 @@ export default function ViewTeachers() {
               </div>
             )}
             <div className="form-group">
-              <label>Subjects</label>
+              <label htmlFor="subjectsvt">Subjects</label>
 
               <select
+              id="subjectsvt"
                 multiple
                 value={subjectIds.map(String)}
                 onChange={handleSubjectSelect}
@@ -284,7 +315,17 @@ export default function ViewTeachers() {
           </div>
         </div>
       )}
-
+      <div className="search-container">
+        <input
+          type="text"
+          placeholder="Search teacher..."
+          value={searchTerm}
+          onChange={(e) => {
+            setSearchTerm(e.target.value);
+            setCurrentPage(1);
+          }}
+        />
+      </div>
       <table className="students-table">
         <thead>
           <tr>
@@ -296,65 +337,15 @@ export default function ViewTeachers() {
           </tr>
         </thead>
 
-        <tbody>
-          {loading ? (
-            <tr>
-              <td colSpan={4} className="loading-cell">
-                Loading teachers...
-              </td>
-            </tr>
-          ) : (
-            currentTeachers.map((t) => (
-              <tr key={t.teacher_id}>
-                <td>{t.teacher_name}</td>
-                <td>{t.email}</td>
-                <td>{t.phone}</td>
-                <td>{t.subjects || "No Subjects"}</td>
-
-                <td>
-                  <button className="edit-btn" onClick={() => handleEdit(t)}>
-                    Edit
-                  </button>
-
-                  <button
-                    className="delete-btn"
-                    onClick={() => handleDelete(t.teacher_id)}
-                  >
-                    Delete
-                  </button>
-                </td>
-              </tr>
-            ))
-          )}
-        </tbody>
+        <tbody>{tableRows}</tbody>
       </table>
-      {!loading && teachers.length > rowsPerPage && (
-        <div className="pagination">
-          <button
-            disabled={currentPage === 1}
-            onClick={() => setCurrentPage(currentPage - 1)}
-          >
-            Prev
-          </button>
-
-          {Array.from({ length: totalPages }, (_, i) => (
-            <button
-              key={i + 1}
-              className={currentPage === i + 1 ? "active-page" : ""}
-              onClick={() => setCurrentPage(i + 1)}
-            >
-              {i + 1}
-            </button>
-          ))}
-
-          <button
-            disabled={currentPage === totalPages}
-            onClick={() => setCurrentPage(currentPage + 1)}
-          >
-            Next
-          </button>
-        </div>
-      )}
+      {!loading && filteredTeachers.length > rowsPerPage && (
+  <Pagination
+    currentPage={currentPage}
+    totalPages={totalPages}
+    onPageChange={setCurrentPage}
+  />
+)}
     </div>
   );
 }

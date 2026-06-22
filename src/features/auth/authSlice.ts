@@ -6,11 +6,11 @@ interface AuthState {
   user: User | null;
 }
 
+const storedUser = localStorage.getItem("user");
+
 const initialState: AuthState = {
   token: localStorage.getItem("token"),
-  user: localStorage.getItem("user")
-    ? JSON.parse(localStorage.getItem("user")!)
-    : null,
+  user: storedUser ? JSON.parse(storedUser) : null,
 };
 
 const authSlice = createSlice({
@@ -22,7 +22,7 @@ const authSlice = createSlice({
       action: PayloadAction<{
         token: string;
         user: User;
-      }>
+      }>,
     ) => {
       state.token = action.payload.token;
       state.user = action.payload.user;

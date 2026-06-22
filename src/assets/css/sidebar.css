@@ -12,7 +12,7 @@
   padding: 18px;
   transition: transform 0.3s ease;
   z-index: 1001;
-  border-right: 1px solid rgba(255,255,255,0.06);
+  border-right: 1px solid rgba(255, 255, 255, 0.06);
 }
 
 /* LOGO */
@@ -47,15 +47,15 @@
 
 /* HOVER */
 .menu-link:hover {
-  background: rgba(255,255,255,0.06);
-  color: white;
+  background: #1e293b;
+  color: #ffffff;
   transform: translateX(3px);
 }
 
 /* ACTIVE PAGE */
 .menu-link.active {
-  background: rgba(99,102,241,0.18);
-  color: white;
+  background: #3730a3;
+  color: #ffffff;
   font-weight: 600;
   border-left: 4px solid #6366f1;
   padding-left: 10px;
@@ -71,8 +71,8 @@
   padding: 12px;
   border: none;
   border-radius: 10px;
-  background: #ef4444;
-  color: white;
+  background: #b91c1c;
+  color: #ffffff;
   font-weight: 500;
   cursor: pointer;
   transition: 0.2s ease;
@@ -92,7 +92,7 @@
 .sidebar-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.55);
+  background: rgba(0, 0, 0, 0.55);
   border: none;
   z-index: 1000;
 }
@@ -161,9 +161,8 @@
   align-items: center;
   justify-content: center;
 
-  background: linear-gradient(135deg, #6366f1, #8b5cf6);
-
-  color: white;
+  background: linear-gradient(135deg, #4338ca, #6d28d9);
+  color: #ffffff;
   font-size: 18px;
   font-weight: 700;
 
@@ -216,24 +215,23 @@
   margin: 4px 0px;
 }
 
-.attendance:hover{
-  background-color: #2F80ED;
+.attendance:hover {
+  background-color: #2f80ed;
 }
-.attendance:active{
-  background: rgba(99, 102, 241, 0.18);
-    color: white;
-    font-weight: 600;
-    border-left: 4px solid #6366f1;
-    padding-left: 10px;
+.attendance.active {
+  background: #3730a3;
+  color: #ffffff;
+  font-weight: 600;
+  border-left: 4px solid #6366f1;
+  padding-left: 10px;
 }
 
-.attendance{
-      width: 100%;
-    padding: 12px;
-    border-radius: 8px;
-    background-color: #374151;
-    color: white;
-    text-decoration: none;
-    transition: 0.3s;
-    font-size: 15px;
+.attendance {
+  width: 100%;
+  padding: 12px;
+  border-radius: 8px;
+  color: white;
+  text-decoration: none;
+  transition: 0.3s;
+  font-size: 15px;
 }

@@ -1,10 +1,9 @@
 import { useState, type ChangeEvent } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate,Link } from "react-router-dom";
 import { loginUser } from "../services/authApi";
 import "../assets/css/login.css";
 import { useAppDispatch } from "../app/hooks";
 import { loginSuccess } from "../features/auth/authSlice";
-import { Link } from "react-router-dom";
 
 export default function LoginPage() {
   const navigate = useNavigate();

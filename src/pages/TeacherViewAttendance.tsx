@@ -46,8 +46,9 @@ export default function TeacherViewAttendance() {
       <div className="filter-card">
 
         <div className="filter-group">
-          <label>Class</label>
+          <label htmlFor="classt">Class</label>
           <select
+          id="classt"
             value={selectedClass}
             onChange={(e) => handleClassChange(e.target.value)}
           >
@@ -62,8 +63,9 @@ export default function TeacherViewAttendance() {
         </div>
 
         <div className="filter-group">
-          <label>Section</label>
+          <label htmlFor="sectiont">Section</label>
           <select
+          id="sectiont"
             value={selectedSection}
             onChange={(e) => setSelectedSection(e.target.value)}
           >
@@ -78,8 +80,9 @@ export default function TeacherViewAttendance() {
         </div>
 
         <div className="filter-group">
-          <label>Date</label>
+          <label htmlFor="datet">Date</label>
           <input
+          id="datet"
             type="date"
             value={date}
             onChange={(e) => setDate(e.target.value)}

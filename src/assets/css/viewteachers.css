@@ -1,56 +1,84 @@
-.form-box {
-  margin-bottom: 20px;
-  display: flex;
-  gap: 10px;
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
 
-.input-box {
-  padding: 10px;
-  border: 1px solid #d1d5db;
-  border-radius: 6px;
-  outline: none;
+/* PAGE */
+.students-page {
+  padding: 20px;
+  background: #f8fafc;
+  min-height: 100vh;
+}
+
+/* HEADER */
+.students-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.students-header h2 {
+  color: #111827;
+  font-size: 24px;
+  font-weight: 700;
+}
+
+/* TABLE */
+.students-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.students-table thead {
+  background: #1e3a8a;
+  color: white;
+}
+
+.students-table th,
+.students-table td {
+  padding: 12px;
+  text-align: center;
+}
+
+.students-table tbody tr {
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.students-table tbody tr:hover {
+  background: #f3f6ff;
 }
 
 /* ADD BUTTON */
 .add-btn {
-  background: #15803d; /* improved contrast green */
-  color: #ffffff;
+  background: #15803d;
+  color: white;
   border: none;
-  padding: 8px 14px;
-  border-radius: 6px;
+  padding: 10px 16px;
+  border-radius: 8px;
   cursor: pointer;
-  font-weight: 500;
+  font-weight: 600;
 }
 
 .add-btn:hover {
   background: #166534;
 }
 
-/* UPDATE BUTTON */
-.update-btn {
-  background: #b45309; /* improved amber */
-  color: #ffffff;
-  border: none;
-  padding: 8px 14px;
-  border-radius: 6px;
-  cursor: pointer;
-  font-weight: 500;
-}
-
-.update-btn:hover {
-  background: #92400e;
-}
-
 /* EDIT BUTTON */
 .edit-btn {
   background: #1d4ed8;
-  color: #ffffff;
+  color: white;
   border: none;
-  padding: 6px 10px;
-  margin-right: 5px;
-  border-radius: 5px;
+  padding: 6px 12px;
+  margin-right: 6px;
+  border-radius: 6px;
   cursor: pointer;
-  font-weight: 500;
 }
 
 .edit-btn:hover {
@@ -60,34 +88,116 @@
 /* DELETE BUTTON */
 .delete-btn {
   background: #dc2626;
-  color: #ffffff;
+  color: white;
   border: none;
-  padding: 6px 10px;
-  border-radius: 5px;
+  padding: 6px 12px;
+  border-radius: 6px;
   cursor: pointer;
-  font-weight: 500;
 }
 
 .delete-btn:hover {
   background: #b91c1c;
 }
 
-/* RESPONSIVE */
-@media (max-width: 768px) {
-  .form-box {
-    flex-direction: column;
-    gap: 12px;
-  }
-
-  .input-box {
-    width: 100%;
-  }
-
-  .add-btn,
-  .update-btn {
-    width: 100%;
-  }
+/* MODAL */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
+
+.modal-box {
+  width: 450px;
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.modal-box h2 {
+  color: #111827;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-group label {
+  font-weight: 600;
+  color: #374151;
+}
+
+.form-group input {
+  padding: 10px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: #2563eb;
+}
+
+/* SUBJECT MULTI SELECT */
+.subject-select {
+  min-height: 120px;
+  padding: 10px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+}
+
+.subject-select:focus {
+  outline: none;
+  border-color: #2563eb;
+}
+
+.form-group small {
+  color: #6b7280;
+  font-size: 12px;
+}
+
+/* MODAL ACTIONS */
+.modal-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.modal-add-btn {
+  flex: 1;
+  background: #15803d;
+  color: white;
+  border: none;
+  padding: 10px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.modal-add-btn:hover {
+  background: #166534;
+}
+
+.modal-cancel-btn {
+  flex: 1;
+  background: #dc2626;
+  color: white;
+  border: none;
+  padding: 10px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.modal-cancel-btn:hover {
+  background: #b91c1c;
+}
+
+/* LOADING */
 .loading-cell {
   text-align: center;
   padding: 30px;
@@ -95,6 +205,7 @@
   font-weight: 500;
 }
 
+/* PAGINATION */
 .pagination {
   display: flex;
   justify-content: center;
@@ -110,7 +221,6 @@
   background: white;
   border-radius: 6px;
   cursor: pointer;
-  transition: 0.2s;
 }
 
 .pagination button:hover:not(:disabled) {
@@ -126,4 +236,38 @@
   background: #2563eb !important;
   color: white;
   border-color: #2563eb !important;
+}
+
+/* MOBILE */
+@media (max-width: 768px) {
+  .students-page {
+    padding: 14px;
+  }
+
+  .students-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .students-table {
+    min-width: 800px;
+  }
+
+  .modal-box {
+    width: 90%;
+  }
+}
+
+.search-container {
+  margin-bottom: 15px;
+}
+
+.search-container input {
+  width: 300px;
+  max-width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 14px;
 }

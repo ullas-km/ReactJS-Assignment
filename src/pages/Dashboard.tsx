@@ -2,7 +2,6 @@ import { Outlet } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
 import Header from "../components/Header";
 import "../assets/css/dashboard.css";
-import { useAppSelector } from "../app/hooks";
 
 type User = {
   name: string;
