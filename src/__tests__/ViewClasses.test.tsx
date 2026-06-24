@@ -58,20 +58,39 @@ describe("ViewClasses", () => {
   });
 
   it("should delete class", async () => {
-    vi.mocked(classesApi.deleteClass).mockResolvedValue({
-      success: true,
-    });
-
-    render(<ViewClasses />);
-
-    const deleteButton = await screen.findByText("Delete");
-
-    await userEvent.click(deleteButton);
-
-    await waitFor(() => {
-      expect(classesApi.deleteClass).toHaveBeenCalledWith(1);
-    });
+  vi.mocked(classesApi.deleteClass).mockResolvedValue({
+    success: true,
   });
+
+  render(<ViewClasses />);
+
+  // Open delete modal
+  const rowDeleteButton = await screen.findByRole("button", {
+    name: "Delete",
+  });
+
+  await userEvent.click(rowDeleteButton);
+
+  // Verify modal opened
+  expect(
+    screen.getByText(/are you sure you want to delete this class/i),
+  ).toBeInTheDocument();
+
+  // Click modal delete button
+  const modalDeleteButton = document.querySelector(
+    ".modal-delete-button",
+  ) as HTMLButtonElement;
+
+  expect(modalDeleteButton).toBeInTheDocument();
+
+  await userEvent.click(modalDeleteButton);
+
+  expect(classesApi.deleteClass).toHaveBeenCalledTimes(1);
+
+  await waitFor(() => {
+    expect(classesApi.deleteClass).toHaveBeenCalledWith(1);
+  });
+});
 
   it("should update class", async () => {
     vi.mocked(classesApi.updateClass).mockResolvedValue({

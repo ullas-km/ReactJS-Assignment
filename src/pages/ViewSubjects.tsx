@@ -7,6 +7,8 @@ import {
   deleteSubject,
 } from "../services/SubjectApi";
 
+import DeleteModal from "../components/DeleteModal";
+
 import "../assets/css/viewsubjects.css";
 import Pagination from "../components/Pagination";
 
@@ -25,6 +27,11 @@ export default function ViewSubjects() {
 
   const [showModal, setShowModal] = useState(false);
 
+  const [subjectError, setSubjectError] = useState("");
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+
+const [deleteId, setDeleteId] = useState<number | null>(null);
+
   const [currentPage, setCurrentPage] = useState(1);
   const rowsPerPage = 10;
 
@@ -41,12 +48,33 @@ export default function ViewSubjects() {
     }
   };
 
+  const validateForm = () => {
+    setSubjectError("");
+
+    if (!subjectName.trim()) {
+      setSubjectError("Subject name is required");
+      return false;
+    }
+
+    if (!/^[A-Za-z ]+$/.test(subjectName.trim())) {
+      setSubjectError("Subject name can contain only letters and spaces");
+      return false;
+    }
+
+    if (subjectName.trim().length < 2) {
+      setSubjectError("Subject name must be at least 2 characters");
+      return false;
+    }
+
+    return true;
+  };
+
   useEffect(() => {
     void fetchSubjects();
   }, []);
 
   const handleAdd = async () => {
-    if (!subjectName.trim()) return;
+    if (!validateForm()) return;
 
     try {
       await addSubject(subjectName);
@@ -60,14 +88,25 @@ export default function ViewSubjects() {
     }
   };
 
-  const handleDelete = async (id: number) => {
-    try {
-      await deleteSubject(id);
-      fetchSubjects();
-    } catch (error) {
-      console.error("Failed to delete subject:", error);
-    }
-  };
+  const openDeleteModal = (id: number) => {
+  setDeleteId(id);
+  setShowDeleteModal(true);
+};
+
+const handleDelete = async () => {
+  if (deleteId === null) return;
+
+  try {
+    await deleteSubject(deleteId);
+
+    setShowDeleteModal(false);
+    setDeleteId(null);
+
+    fetchSubjects();
+  } catch (error) {
+    console.error("Failed to delete subject:", error);
+  }
+};
 
   const handleEdit = (s: Subject) => {
     setEditId(s.sub_id);
@@ -79,6 +118,7 @@ export default function ViewSubjects() {
     if (editId === null) return;
 
     try {
+      if (!validateForm()) return;
       await updateSubject(editId, subjectName);
 
       setEditId(null);
@@ -94,6 +134,7 @@ export default function ViewSubjects() {
   const handleOpenAddModal = () => {
     setEditId(null);
     setSubjectName("");
+    setSubjectError("");
     setShowModal(true);
   };
 
@@ -128,6 +169,9 @@ export default function ViewSubjects() {
                 onChange={(e) => setSubjectName(e.target.value)}
                 placeholder="Subject Name"
               />
+              {subjectError && (
+                <span className="error-text">{subjectError}</span>
+              )}
             </div>
 
             <div className="modal-actions">
@@ -144,6 +188,7 @@ export default function ViewSubjects() {
                   setShowModal(false);
                   setEditId(null);
                   setSubjectName("");
+                  setSubjectError("");
                 }}
               >
                 Cancel
@@ -179,11 +224,11 @@ export default function ViewSubjects() {
                   </button>
 
                   <button
-                    className="delete-btn"
-                    onClick={() => handleDelete(s.sub_id)}
-                  >
-                    Delete
-                  </button>
+  className="delete-btn"
+  onClick={() => openDeleteModal(s.sub_id)}
+>
+  Delete
+</button>
                 </td>
               </tr>
             ))
@@ -197,6 +242,16 @@ export default function ViewSubjects() {
           onPageChange={setCurrentPage}
         />
       )}
+      <DeleteModal
+  isOpen={showDeleteModal}
+  title="Delete Subject"
+  message="Are you sure you want to delete this subject?"
+  onConfirm={handleDelete}
+  onCancel={() => {
+    setShowDeleteModal(false);
+    setDeleteId(null);
+  }}
+/>
     </div>
   );
 }

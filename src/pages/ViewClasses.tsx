@@ -14,7 +14,7 @@ export default function ViewClasses() {
   const [loading, setLoading] = useState(true);
   interface Class {
     class_id: number;
-    class_name: string;
+    class_name: number;
   }
 
   const [classes, setClasses] = useState<Class[]>([]);
@@ -22,6 +22,11 @@ export default function ViewClasses() {
   const [showModal, setShowModal] = useState(false);
 
   const [className, setClassName] = useState("");
+  const [classError, setClassError] = useState("");
+  const [duplicateError, setDuplicateError] = useState("");
+
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+const [deleteId, setDeleteId] = useState<number | null>(null);
 
   const [editId, setEditId] = useState<number | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
@@ -44,11 +49,39 @@ export default function ViewClasses() {
     fetchClasses();
   }, []);
 
+  const validateForm = () => {
+    let valid = true;
+
+    setClassError("");
+    setDuplicateError("");
+
+    const trimmedClass = className.trim();
+
+    if (!trimmedClass) {
+      setClassError("Class name is required");
+      valid = false;
+    } else if (!/^\d+$/.test(trimmedClass)) {
+      setClassError("Class name must contain only numbers");
+      valid = false;
+    }
+
+    const duplicate = classes.some(
+      (c) => c.class_name.toString() === trimmedClass && c.class_id !== editId,
+    );
+
+    if (duplicate) {
+      setDuplicateError("Class already exists");
+      valid = false;
+    }
+
+    return valid;
+  };
+
   const handleAdd = async () => {
-    if (!className.trim()) return;
+    if (!validateForm()) return;
 
     try {
-      await addClass(className);
+      await addClass(className.trim());
 
       setClassName("");
       setShowModal(false);
@@ -59,14 +92,20 @@ export default function ViewClasses() {
     }
   };
 
-  const handleDelete = async (id: number) => {
-    try {
-      await deleteClass(id);
-      fetchClasses();
-    } catch (error) {
-      console.error("Failed to delete class:", error);
-    }
-  };
+  const handleDelete = async () => {
+  if (deleteId === null) return;
+
+  try {
+    await deleteClass(deleteId);
+
+    setShowDeleteModal(false);
+    setDeleteId(null);
+
+    fetchClasses();
+  } catch (error) {
+    console.error("Failed to delete class:", error);
+  }
+};
 
   const handleEdit = (c: Class) => {
     setEditId(c.class_id);
@@ -76,20 +115,22 @@ export default function ViewClasses() {
   };
 
   const handleUpdate = async () => {
-    if (editId === null) return;
+  if (editId === null) return;
 
-    try {
-      await updateClass(editId, className);
+  if (!validateForm()) return;
 
-      setEditId(null);
-      setClassName("");
-      setShowModal(false);
+  try {
+    await updateClass(editId, className.trim());
 
-      fetchClasses();
-    } catch (error) {
-      console.error("Failed to update class:", error);
-    }
-  };
+    setEditId(null);
+    setClassName("");
+    setShowModal(false);
+
+    fetchClasses();
+  } catch (error) {
+    console.error("Failed to update class:", error);
+  }
+};
 
   const indexOfLastRow = currentPage * rowsPerPage;
   const indexOfFirstRow = indexOfLastRow - rowsPerPage;
@@ -106,10 +147,12 @@ export default function ViewClasses() {
         <button
           className="add-btn"
           onClick={() => {
-            setEditId(null);
-            setClassName("");
-            setShowModal(true);
-          }}
+  setEditId(null);
+  setClassName("");
+  setClassError("");
+  setDuplicateError("");
+  setShowModal(true);
+}}
         >
           Add Class
         </button>
@@ -126,9 +169,21 @@ export default function ViewClasses() {
               <input
                 id="className"
                 value={className}
-                onChange={(e) => setClassName(e.target.value)}
+                // onChange={(e) => setClassName(e.target.value)}
+                onChange={(e) => {
+                  setClassName(e.target.value);
+                  setClassError("");
+                  setDuplicateError("");
+                }}
                 placeholder="Enter class name"
               />
+              {classError && (
+  <span className="error-text">{classError}</span>
+)}
+
+{duplicateError && (
+  <span className="error-text">{duplicateError}</span>
+)}
             </div>
 
             <div className="modal-actions">
@@ -142,10 +197,12 @@ export default function ViewClasses() {
               <button
                 className="modal-cancel-btn"
                 onClick={() => {
-                  setShowModal(false);
-                  setEditId(null);
-                  setClassName("");
-                }}
+  setShowModal(false);
+  setEditId(null);
+  setClassName("");
+  setClassError("");
+  setDuplicateError("");
+}}
               >
                 Cancel
               </button>
@@ -153,6 +210,37 @@ export default function ViewClasses() {
           </div>
         </div>
       )}
+      {showDeleteModal && (
+  <div className="modal-overlay">
+    <div className="modal-box">
+      <h2>Delete Class</h2>
+
+      <p className="delete-message">
+        Are you sure you want to delete this class?
+      </p>
+
+      <div className="modal-actions">
+        <button
+          className="modal-delete-button"
+          onClick={handleDelete}
+        >
+          Delete
+        </button>
+        <button
+          className="modal-cancel-button"
+          onClick={() => {
+            setShowDeleteModal(false);
+            setDeleteId(null);
+          }}
+        >
+          Cancel
+        </button>
+
+        
+      </div>
+    </div>
+  </div>
+)}
 
       <table className="students-table">
         <thead>
@@ -180,11 +268,14 @@ export default function ViewClasses() {
                   </button>
 
                   <button
-                    className="delete-btn"
-                    onClick={() => handleDelete(c.class_id)}
-                  >
-                    Delete
-                  </button>
+  className="delete-btn"
+  onClick={() => {
+    setDeleteId(c.class_id);
+    setShowDeleteModal(true);
+  }}
+>
+  Delete
+</button>
                 </td>
               </tr>
             ))
@@ -193,10 +284,10 @@ export default function ViewClasses() {
       </table>
       {!loading && classes.length > rowsPerPage && (
         <Pagination
-  currentPage={currentPage}
-  totalPages={totalPages}
-  onPageChange={setCurrentPage}
-/>
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={setCurrentPage}
+        />
       )}
     </div>
   );

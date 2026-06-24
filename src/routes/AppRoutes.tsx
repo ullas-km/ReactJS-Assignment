@@ -23,11 +23,13 @@ const TeacherTimetable = lazy(() => import("../pages/AddTimetable"));
 const Profile = lazy(() => import("../pages/Profile"));
 const TeacherStudents = lazy(() => import("../pages/TeacherStudents"));
 const TeacherAttendance = lazy(() => import("../pages/TeacherAttendance"));
-const LandingPage = lazy(() => import("../pages/Homepage"));
+const LandingPage = lazy(() => import("../pages/LandingPage"));
 const TeacherTimetableView = lazy(
   () => import("../pages/TeacherTimetableView"),
 );
-
+const MonthlyAttendanceReport = lazy(
+  () => import("../pages/MonthlyAttendanceReport")
+);
 export default function AppRoutes() {
   return (
     <Suspense
@@ -45,6 +47,7 @@ export default function AppRoutes() {
       }
     >
       <Routes>
+        {/* <Route path="/" element={<LandingPage />} /> */}
         <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={<LoginPage />} />
 
@@ -185,6 +188,15 @@ export default function AppRoutes() {
               </RoleRoute>
             }
           />
+          <Route
+  path="/monthly-attendance-report"
+  element={
+    <RoleRoute allowedRoles={["teacher"]}>
+      <MonthlyAttendanceReport />
+    </RoleRoute>
+  }
+/>
+
         </Route>
 
         <Route path="*" element={<NotFound />} />

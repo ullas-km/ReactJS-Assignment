@@ -159,6 +159,14 @@
   border-color: #2563eb;
 }
 
+.error-text {
+  color: #dc2626;
+  font-size: 13px;
+  margin-top: 4px;
+  display: block;
+  font-weight: 500;
+}
+
 /* MODAL ACTIONS */
 .modal-actions {
   display: flex;
@@ -251,4 +259,29 @@
     width: 100%;
     margin-bottom: 6px;
   }
+}
+
+.delete-message {
+  margin: 15px 0;
+  font-size: 15px;
+  color: #374151;
+  text-align: center;
+}
+.modal-cancel-button {
+  background: #6b7280;
+  color: white;
+  padding: 7px 10px; 
+  border: 1px solid black;
+  border-radius: 8px; 
+  cursor: pointer;
+}
+
+.modal-delete-button {
+  background: #dc2626;
+  color: white;
+  padding: 7px 10px;
+  border: none;
+  border-radius: 8px;
+  flex: 1;
+  cursor: pointer;
 }

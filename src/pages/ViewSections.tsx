@@ -33,6 +33,13 @@ export default function ViewSections() {
   const [editId, setEditId] = useState<number | null>(null);
   const [showModal, setShowModal] = useState(false);
 
+  const [sectionError, setSectionError] = useState("");
+  const [classError, setClassError] = useState("");
+  const [duplicateError, setDuplicateError] = useState("");
+
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [sectionToDelete, setSectionToDelete] = useState<Section | null>(null);
+
   const [currentPage, setCurrentPage] = useState(1);
   const rowsPerPage = 10;
 
@@ -47,6 +54,43 @@ export default function ViewSections() {
     } finally {
       setLoading(false);
     }
+  };
+
+  const validateForm = () => {
+    let valid = true;
+
+    setSectionError("");
+    setClassError("");
+    setDuplicateError("");
+
+    const trimmedSection = sectionName.trim();
+
+    if (!trimmedSection) {
+      setSectionError("Section name is required");
+      valid = false;
+    } else if (!/^[A-Za-z0-9]+$/.test(trimmedSection)) {
+      setSectionError("Section name can contain only letters and numbers");
+      valid = false;
+    }
+
+    if (!classId) {
+      setClassError("Please select a class");
+      valid = false;
+    }
+
+    const duplicate = sections.some(
+      (s) =>
+        s.class_id === Number(classId) &&
+        s.section_name.trim().toLowerCase() === trimmedSection.toLowerCase() &&
+        s.section_id !== editId,
+    );
+
+    if (duplicate) {
+      setDuplicateError("Section already exists for this class");
+      valid = false;
+    }
+
+    return valid;
   };
 
   useEffect(() => {
@@ -72,10 +116,10 @@ export default function ViewSections() {
   }, []);
 
   const handleAdd = async () => {
-    if (!sectionName || !classId) return;
+    if (!validateForm()) return;
 
     try {
-      await addSection(sectionName, Number(classId));
+      await addSection(sectionName.trim(), Number(classId));
 
       setSectionName("");
       setClassId("");
@@ -87,14 +131,23 @@ export default function ViewSections() {
     }
   };
 
-  const handleDelete = async (id: number) => {
-    try {
-      await deleteSection(id);
-      fetchSections();
-    } catch (error) {
-      console.error("Failed to delete section:", error);
-    }
-  };
+  const handleDelete = async () => {
+  console.log("DELETE CLICKED");
+  console.log("sectionToDelete =", sectionToDelete);
+
+  if (!sectionToDelete) return;
+
+  try {
+    await deleteSection(sectionToDelete.section_id);
+
+    setShowDeleteModal(false);
+    setSectionToDelete(null);
+
+    fetchSections();
+  } catch (error) {
+    console.error("Failed to delete section:", error);
+  }
+};
 
   const handleEdit = (s: Section) => {
     setEditId(s.section_id);
@@ -106,8 +159,10 @@ export default function ViewSections() {
   const handleUpdate = async () => {
     if (editId === null) return;
 
+    if (!validateForm()) return;
+
     try {
-      await updateSection(editId, sectionName, Number(classId));
+      await updateSection(editId, sectionName.trim(), Number(classId));
 
       setEditId(null);
       setSectionName("");
@@ -155,9 +210,20 @@ export default function ViewSections() {
               <input
                 id="section-name"
                 value={sectionName}
-                onChange={(e) => setSectionName(e.target.value)}
+                onChange={(e) => {
+                  setSectionName(e.target.value);
+                  setSectionError("");
+                  setDuplicateError("");
+                }}
                 placeholder="Section Name (A/B/C)"
               />
+
+              {sectionError && (
+                <span className="error-text">{sectionError}</span>
+              )}
+              {duplicateError && (
+                <span className="error-text">{duplicateError}</span>
+              )}
             </div>
 
             <div className="form-group">
@@ -166,7 +232,11 @@ export default function ViewSections() {
               <select
                 id="class-select"
                 value={classId}
-                onChange={(e) => setClassId(Number(e.target.value))}
+                onChange={(e) => {
+                  setClassId(Number(e.target.value));
+                  setClassError("");
+                  setDuplicateError("");
+                }}
               >
                 <option value="">Select Class</option>
 
@@ -176,6 +246,8 @@ export default function ViewSections() {
                   </option>
                 ))}
               </select>
+
+              {classError && <span className="error-text">{classError}</span>}
             </div>
 
             <div className="modal-actions">
@@ -196,6 +268,34 @@ export default function ViewSections() {
                 }}
               >
                 Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {showDeleteModal && (
+        <div className="modal-overlay">
+          <div className="modal-box">
+            <h2>Delete Section</h2>
+
+            <p className="delete-message">
+              Are you sure you want to delete this section?
+            </p>
+
+            <div className="modal-actions">
+              <button
+                className="modal-cancel-button"
+                onClick={() => {
+  setShowDeleteModal(false);
+  setSectionToDelete(null);
+}}
+              >
+                Cancel
+              </button>
+
+              <button className="modal-delete-button" onClick={handleDelete}>
+                Delete
               </button>
             </div>
           </div>
@@ -234,7 +334,10 @@ export default function ViewSections() {
 
                   <button
                     className="delete-btn"
-                    onClick={() => handleDelete(s.section_id)}
+                    onClick={() => {
+                      setSectionToDelete(s);
+                      setShowDeleteModal(true);
+                    }}
                   >
                     Delete
                   </button>
@@ -246,10 +349,10 @@ export default function ViewSections() {
       </table>
       {!loading && sections.length > rowsPerPage && (
         <Pagination
-  currentPage={currentPage}
-  totalPages={totalPages}
-  onPageChange={setCurrentPage}
-/>
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={setCurrentPage}
+        />
       )}
     </div>
   );

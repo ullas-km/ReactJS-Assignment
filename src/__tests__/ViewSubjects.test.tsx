@@ -64,30 +64,36 @@ it("should add subject", async () => {
   expect(addSubject).toHaveBeenCalledWith("Science");
 });
 
-  it("should delete subject", async () => {
-    vi.mocked(getSubjects).mockResolvedValue([
-      {
-        sub_id: 1,
-        subject_name: "Maths",
-      },
-    ]);
+  it("should delete subject after confirmation", async () => {
+  vi.mocked(getSubjects).mockResolvedValue([
+    {
+      sub_id: 1,
+      subject_name: "Maths",
+    },
+  ]);
 
-    vi.mocked(deleteSubject).mockResolvedValue({});
+  vi.mocked(deleteSubject).mockResolvedValue({});
 
-    render(<ViewSubjects />);
+  render(<ViewSubjects />);
 
-    await waitFor(() => {
-      expect(screen.getByText("Maths")).toBeInTheDocument();
-    });
-
-    const deleteButton = screen.getByRole("button", {
-      name: "Delete",
-    });
-
-    await userEvent.click(deleteButton);
-
-    expect(deleteSubject).toHaveBeenCalledWith(1);
+  await waitFor(() => {
+    expect(screen.getByText("Maths")).toBeInTheDocument();
   });
+
+  const deleteButtons = screen.getAllByRole("button", {
+    name: /^delete$/i,
+  });
+
+  await userEvent.click(deleteButtons[0]);
+
+  const confirmDeleteButtons = screen.getAllByRole("button", {
+    name: /^delete$/i,
+  });
+
+  await userEvent.click(confirmDeleteButtons[1]);
+
+  expect(deleteSubject).toHaveBeenCalledWith(1);
+});
 
   it("should update subject", async () => {
     vi.mocked(getSubjects).mockResolvedValue([

@@ -30,6 +30,10 @@ vi.mock("../services/axiosInstance", () => ({
   default: {},
 }));
 
+vi.mock("../components/Pagination", () => ({
+  default: () => <div>Pagination</div>,
+}));
+
 describe("ViewTeachers", () => {
   beforeEach(() => {
     vi.clearAllMocks();
@@ -55,47 +59,63 @@ describe("ViewTeachers", () => {
 
     render(<ViewTeachers />);
 
-    expect(
-      await screen.findByText("John")
-    ).toBeInTheDocument();
+    expect(await screen.findByText("John")).toBeInTheDocument();
   });
 
   it("adds teacher", async () => {
-    vi.mocked(getTeachers).mockResolvedValue([]);
+    const user = userEvent.setup();
+
+    vi.mocked(getTeachers)
+      .mockResolvedValueOnce([])
+      .mockResolvedValueOnce([
+        {
+          teacher_id: 1,
+          teacher_name: "John",
+          email: "john@test.com",
+          phone: 1234567890,
+          subjects: "Math",
+        },
+      ]);
+
     vi.mocked(addTeacher).mockResolvedValue({});
 
     render(<ViewTeachers />);
 
-    await userEvent.click(
+    await user.click(
       screen.getByRole("button", {
         name: /add teacher/i,
-      })
+      }),
     );
 
-    await userEvent.type(
+    await user.type(
       screen.getByPlaceholderText("Teacher Name"),
-      "John"
+      "John",
     );
 
-    await userEvent.type(
+    await user.type(
       screen.getByPlaceholderText("Email"),
-      "john@test.com"
+      "john@test.com",
     );
 
-    await userEvent.type(
+    await user.type(
       screen.getByPlaceholderText("Phone"),
-      "1234567890"
+      "1234567890",
     );
 
-    await userEvent.type(
+    await user.type(
       screen.getByPlaceholderText("Password"),
-      "123456"
+      "123456",
     );
 
-    await userEvent.click(
+    await user.selectOptions(
+      screen.getByLabelText(/subjects/i),
+      "1",
+    );
+
+    await user.click(
       screen.getByRole("button", {
         name: /^add$/i,
-      })
+      }),
     );
 
     await waitFor(() => {
@@ -104,34 +124,42 @@ describe("ViewTeachers", () => {
         "john@test.com",
         "1234567890",
         "123456",
-        []
+        [1],
       );
     });
   });
 
   it("deletes teacher", async () => {
-    vi.mocked(getTeachers).mockResolvedValue([
-      {
-        teacher_id: 1,
-        teacher_name: "John",
-        email: "john@test.com",
-        phone: 1234567890,
-        subjects: "Math",
-      },
-    ]);
+    const user = userEvent.setup();
+
+    vi.mocked(getTeachers)
+      .mockResolvedValueOnce([
+        {
+          teacher_id: 1,
+          teacher_name: "John",
+          email: "john@test.com",
+          phone: 1234567890,
+          subjects: "Math",
+        },
+      ])
+      .mockResolvedValueOnce([]);
 
     vi.mocked(deleteTeacher).mockResolvedValue({});
 
     render(<ViewTeachers />);
 
-    expect(
-      await screen.findByText("John")
-    ).toBeInTheDocument();
+    expect(await screen.findByText("John")).toBeInTheDocument();
 
-    await userEvent.click(
+    await user.click(
       screen.getByRole("button", {
         name: /delete/i,
-      })
+      }),
+    );
+
+    await user.click(
+      await screen.findByRole("button", {
+        name: /yes, delete/i,
+      }),
     );
 
     await waitFor(() => {
@@ -140,15 +168,27 @@ describe("ViewTeachers", () => {
   });
 
   it("edits teacher", async () => {
-    vi.mocked(getTeachers).mockResolvedValue([
-      {
-        teacher_id: 1,
-        teacher_name: "John",
-        email: "john@test.com",
-        phone: 1234567890,
-        subjects: "Math",
-      },
-    ]);
+    const user = userEvent.setup();
+
+    vi.mocked(getTeachers)
+      .mockResolvedValueOnce([
+        {
+          teacher_id: 1,
+          teacher_name: "John",
+          email: "john@test.com",
+          phone: 1234567890,
+          subjects: "Math",
+        },
+      ])
+      .mockResolvedValueOnce([
+        {
+          teacher_id: 1,
+          teacher_name: "John Updated",
+          email: "john@test.com",
+          phone: 1234567890,
+          subjects: "Math",
+        },
+      ]);
 
     vi.mocked(getTeacherById).mockResolvedValue({
       subject_ids: "1",
@@ -158,32 +198,27 @@ describe("ViewTeachers", () => {
 
     render(<ViewTeachers />);
 
-    expect(
-      await screen.findByText("John")
-    ).toBeInTheDocument();
+    expect(await screen.findByText("John")).toBeInTheDocument();
 
-    await userEvent.click(
+    await user.click(
       screen.getByRole("button", {
         name: /edit/i,
-      })
+      }),
     );
 
     const nameInput =
-      await screen.findByPlaceholderText(
-        "Teacher Name"
-      );
+      await screen.findByPlaceholderText("Teacher Name");
 
-    await userEvent.clear(nameInput);
+    await user.clear(nameInput);
 
-    await userEvent.type(
-      nameInput,
-      "John Updated"
-    );
+    await user.type(nameInput, "John Updated");
 
-    await userEvent.click(
+    await screen.findByDisplayValue("john@test.com");
+
+    await user.click(
       screen.getByRole("button", {
         name: /update/i,
-      })
+      }),
     );
 
     await waitFor(() => {
@@ -192,7 +227,7 @@ describe("ViewTeachers", () => {
         "John Updated",
         "john@test.com",
         "1234567890",
-        [1]
+        [1],
       );
     });
   });
@@ -203,11 +238,13 @@ describe("ViewTeachers", () => {
     render(<ViewTeachers />);
 
     expect(
-      await screen.findByText(/no teachers found/i)
+      await screen.findByText(/no teachers found/i),
     ).toBeInTheDocument();
   });
 
   it("filters teachers using search", async () => {
+    const user = userEvent.setup();
+
     vi.mocked(getTeachers).mockResolvedValue([
       {
         teacher_id: 1,
@@ -229,19 +266,87 @@ describe("ViewTeachers", () => {
 
     await screen.findByText("John");
 
-    await userEvent.type(
-      screen.getByPlaceholderText(
-        /search teacher/i
-      ),
-      "David"
+    await user.type(
+      screen.getByPlaceholderText(/search teacher/i),
+      "David",
+    );
+
+    expect(screen.getByText("David")).toBeInTheDocument();
+
+    expect(
+      screen.queryByText("John"),
+    ).not.toBeInTheDocument();
+  });
+
+  it("shows validation errors when adding empty teacher", async () => {
+    const user = userEvent.setup();
+
+    vi.mocked(getTeachers).mockResolvedValue([]);
+
+    render(<ViewTeachers />);
+
+    await user.click(
+      screen.getByRole("button", {
+        name: /add teacher/i,
+      }),
+    );
+
+    await user.click(
+      screen.getByRole("button", {
+        name: /^add$/i,
+      }),
     );
 
     expect(
-      screen.getByText("David")
+      await screen.findByText(/teacher name is required/i),
     ).toBeInTheDocument();
 
     expect(
-      screen.queryByText("John")
-    ).not.toBeInTheDocument();
+      screen.getByText(/email is required/i),
+    ).toBeInTheDocument();
+
+    expect(
+      screen.getByText(/phone number is required/i),
+    ).toBeInTheDocument();
+
+    expect(
+      screen.getByText(/password is required/i),
+    ).toBeInTheDocument();
+
+    expect(
+      screen.getByText(/select at least one subject/i),
+    ).toBeInTheDocument();
+
+    expect(addTeacher).not.toHaveBeenCalled();
+  });
+
+  it("closes add modal when cancel is clicked", async () => {
+    const user = userEvent.setup();
+
+    vi.mocked(getTeachers).mockResolvedValue([]);
+
+    render(<ViewTeachers />);
+
+    await user.click(
+      screen.getByRole("button", {
+        name: /add teacher/i,
+      }),
+    );
+
+    expect(
+      screen.getByPlaceholderText("Teacher Name"),
+    ).toBeInTheDocument();
+
+    await user.click(
+      screen.getByRole("button", {
+        name: /cancel/i,
+      }),
+    );
+
+    await waitFor(() => {
+      expect(
+        screen.queryByPlaceholderText("Teacher Name"),
+      ).not.toBeInTheDocument();
+    });
   });
 });

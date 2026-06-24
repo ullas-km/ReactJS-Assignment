@@ -39,6 +39,23 @@ export default function ViewTeachers() {
   const [currentPage, setCurrentPage] = useState(1);
   const rowsPerPage = 10;
 
+  const [teacherNameError, setTeacherNameError] = useState("");
+  const [emailError, setEmailError] = useState("");
+  const [phoneError, setPhoneError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
+  const [subjectError, setSubjectError] = useState("");
+
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+const [teacherToDelete, setTeacherToDelete] = useState<number | null>(null);
+
+  const clearFormErrors = () => {
+    setTeacherNameError("");
+    setEmailError("");
+    setPhoneError("");
+    setPasswordError("");
+    setSubjectError("");
+  };
+
   const fetchTeachers = async () => {
     try {
       setLoading(true);
@@ -73,29 +90,57 @@ export default function ViewTeachers() {
     void loadSubjects();
   }, []);
 
+  // const handleAdd = async () => {
+  //   if (!teacherName.trim()) return;
+
+  //   try {
+  //     await addTeacher(teacherName, email, phone, password, subjectIds);
+
+  //     setTeacherName("");
+  //     setShowModal(false);
+
+  //     fetchTeachers();
+  //   } catch (error) {
+  //     console.error("Failed to add teacher:", error);
+  //   }
+  // };
+
   const handleAdd = async () => {
-    if (!teacherName.trim()) return;
+    if (!validateForm()) return;
 
     try {
       await addTeacher(teacherName, email, phone, password, subjectIds);
 
+      clearFormErrors();
+
+      fetchTeachers();
+
       setTeacherName("");
+      setEmail("");
+      setPhone("");
+      setPassword("");
+      setSubjectIds([]);
       setShowModal(false);
-
-      fetchTeachers();
     } catch (error) {
-      console.error("Failed to add teacher:", error);
+      console.error(error);
     }
   };
 
-  const handleDelete = async (id: number) => {
-    try {
-      await deleteTeacher(id);
-      fetchTeachers();
-    } catch (error) {
-      console.error("Failed to delete teacher:", error);
-    }
-  };
+  const handleDelete = async () => {
+  if (teacherToDelete === null) return;
+
+  try {
+    await deleteTeacher(teacherToDelete);
+
+    setShowDeleteModal(false);
+    setTeacherToDelete(null);
+
+    fetchTeachers();
+  } catch (error) {
+    console.error("Failed to delete teacher:", error);
+  }
+};
+
   const handleSubjectSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedIds = Array.from(e.target.selectedOptions, (option) =>
       Number(option.value),
@@ -129,28 +174,106 @@ export default function ViewTeachers() {
     setShowModal(true);
   };
 
+  // const handleUpdate = async () => {
+  //   if (editId === null) return;
+
+  //   try {
+  //     await updateTeacher(editId, teacherName, email, phone, subjectIds);
+
+  //     setEditId(null);
+  //     setTeacherName("");
+  //     setEmail("");
+  //     setPhone("");
+  //     setShowModal(false);
+
+  //     fetchTeachers();
+  //   } catch (error) {
+  //     console.error("Failed to update teacher:", error);
+  //   }
+  // };
+
   const handleUpdate = async () => {
     if (editId === null) return;
+
+    if (!validateForm()) return;
 
     try {
       await updateTeacher(editId, teacherName, email, phone, subjectIds);
 
-      setEditId(null);
-      setTeacherName("");
-      setEmail("");
-      setPhone("");
-      setShowModal(false);
+      clearFormErrors();
 
       fetchTeachers();
+
+      setShowModal(false);
+      setEditId(null);
     } catch (error) {
-      console.error("Failed to update teacher:", error);
+      console.error(error);
     }
   };
 
   const handleOpenAddModal = () => {
     setEditId(null);
+
     setTeacherName("");
+    setEmail("");
+    setPhone("");
+    setPassword("");
+    setSubjectIds([]);
+
+    clearFormErrors();
+
     setShowModal(true);
+  };
+
+  const validateForm = () => {
+    let valid = true;
+
+    setTeacherNameError("");
+    setEmailError("");
+    setPhoneError("");
+    setPasswordError("");
+    setSubjectError("");
+
+    if (!teacherName.trim()) {
+      setTeacherNameError("Teacher name is required");
+      valid = false;
+    } else if (!/^[A-Za-z ]+$/.test(teacherName.trim())) {
+      setTeacherNameError("Teacher name can contain only letters");
+      valid = false;
+    }
+
+    if (!email.trim()) {
+      setEmailError("Email is required");
+      valid = false;
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      setEmailError("Enter a valid email");
+      valid = false;
+    }
+
+    if (!phone.trim()) {
+      setPhoneError("Phone number is required");
+      valid = false;
+    } else if (!/^[0-9]{10}$/.test(phone)) {
+      setPhoneError("Phone number must be 10 digits");
+      valid = false;
+    }
+
+    if (editId === null) {
+      if (!password.trim()) {
+        setPasswordError("Password is required");
+        valid = false;
+      } else if (password.length < 6) {
+        setPasswordError("Password must be at least 6 characters");
+        valid = false;
+      }
+    }
+
+    if (subjectIds.length === 0) {
+      setSubjectError("Select at least one subject");
+      valid = false;
+    }
+
+    return valid;
   };
 
   const indexOfLastRow = currentPage * rowsPerPage;
@@ -172,46 +295,49 @@ export default function ViewTeachers() {
 
   let tableRows;
 
-if (loading) {
-  tableRows = (
-    <tr>
-      <td colSpan={4} className="loading-cell">
-        Loading teachers...
-      </td>
-    </tr>
-  );
-} else if (currentTeachers.length > 0) {
-  tableRows = currentTeachers.map((t) => (
-    <tr key={t.teacher_id}>
-      <td>{t.teacher_name}</td>
-      <td>{t.email}</td>
-      <td>{t.phone}</td>
-      <td>{t.subjects || "No Subjects"}</td>
+  if (loading) {
+    tableRows = (
+      <tr>
+        <td colSpan={4} className="loading-cell">
+          Loading teachers...
+        </td>
+      </tr>
+    );
+  } else if (currentTeachers.length > 0) {
+    tableRows = currentTeachers.map((t) => (
+      <tr key={t.teacher_id}>
+        <td>{t.teacher_name}</td>
+        <td>{t.email}</td>
+        <td>{t.phone}</td>
+        <td>{t.subjects || "No Subjects"}</td>
 
-      <td>
-        <button className="edit-btn" onClick={() => handleEdit(t)}>
-          Edit
-        </button>
+        <td>
+          <button className="edit-btn" onClick={() => handleEdit(t)}>
+            Edit
+          </button>
 
-        <button
-          className="delete-btn"
-          onClick={() => handleDelete(t.teacher_id)}
-        >
-          Delete
-        </button>
-      </td>
-    </tr>
-  ));
-} else {
-  tableRows = (
-    <tr>
-      <td colSpan={5} className="loading-cell">
-        No teachers found
-        {searchTerm && ` for "${searchTerm}"`}
-      </td>
-    </tr>
-  );
-}
+          <button
+            className="delete-btn"
+            onClick={() => {
+  setTeacherToDelete(t.teacher_id);
+  setShowDeleteModal(true);
+}}
+          >
+            Delete
+          </button>
+        </td>
+      </tr>
+    ));
+  } else {
+    tableRows = (
+      <tr>
+        <td colSpan={5} className="loading-cell">
+          No teachers found
+          {searchTerm && ` for "${searchTerm}"`}
+        </td>
+      </tr>
+    );
+  }
 
   return (
     <div className="students-page">
@@ -237,45 +363,53 @@ if (loading) {
                 onChange={(e) => setTeacherName(e.target.value)}
                 placeholder="Teacher Name"
               />
+              {teacherNameError && (
+                <span className="error-text">{teacherNameError}</span>
+              )}
             </div>
 
             <div className="form-group">
               <label htmlFor="emailvt">Email</label>
               <input
-              id="emailvt"
+                id="emailvt"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Email"
               />
+              {emailError && <span className="error-text">{emailError}</span>}
             </div>
 
             <div className="form-group">
               <label htmlFor="phonevt">Phone</label>
               <input
-              id="phonevt"
+                id="phonevt"
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
                 placeholder="Phone"
               />
+              {phoneError && <span className="error-text">{phoneError}</span>}
             </div>
 
             {editId === null && (
               <div className="form-group">
                 <label htmlFor="passwordvt">Password</label>
                 <input
-                id="passwordvt"
+                  id="passwordvt"
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="Password"
                 />
+                {passwordError && (
+                  <span className="error-text">{passwordError}</span>
+                )}
               </div>
             )}
             <div className="form-group">
               <label htmlFor="subjectsvt">Subjects</label>
 
               <select
-              id="subjectsvt"
+                id="subjectsvt"
                 multiple
                 value={subjectIds.map(String)}
                 onChange={handleSubjectSelect}
@@ -287,10 +421,9 @@ if (loading) {
                   </option>
                 ))}
               </select>
-
-              <small>
-                Hold Ctrl (Windows) or Cmd (Mac) to select multiple subjects
-              </small>
+              {subjectError && (
+                <span className="error-text">{subjectError}</span>
+              )}
             </div>
 
             <div className="modal-actions">
@@ -306,7 +439,14 @@ if (loading) {
                 onClick={() => {
                   setShowModal(false);
                   setEditId(null);
+
                   setTeacherName("");
+                  setEmail("");
+                  setPhone("");
+                  setPassword("");
+                  setSubjectIds([]);
+
+                  clearFormErrors();
                 }}
               >
                 Cancel
@@ -326,6 +466,38 @@ if (loading) {
           }}
         />
       </div>
+      {
+  showDeleteModal && (
+    <div className="modal-overlay">
+      <div className="delete-modal-box">
+        <h3>Delete Teacher</h3>
+
+        <p>
+          Are you sure you want to delete this teacher?
+        </p>
+
+        <div className="modal-actions">
+          <button
+            className="modal-delete-btn"
+            onClick={handleDelete}
+          >
+            Yes, Delete
+          </button>
+
+          <button
+            className="modal-cancel-btn"
+            onClick={() => {
+              setShowDeleteModal(false);
+              setTeacherToDelete(null);
+            }}
+          >
+            Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+  )
+}
       <table className="students-table">
         <thead>
           <tr>
@@ -340,12 +512,12 @@ if (loading) {
         <tbody>{tableRows}</tbody>
       </table>
       {!loading && filteredTeachers.length > rowsPerPage && (
-  <Pagination
-    currentPage={currentPage}
-    totalPages={totalPages}
-    onPageChange={setCurrentPage}
-  />
-)}
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={setCurrentPage}
+        />
+      )}
     </div>
   );
 }

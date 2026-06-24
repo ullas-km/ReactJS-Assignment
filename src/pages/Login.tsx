@@ -1,5 +1,5 @@
 import { useState, type ChangeEvent } from "react";
-import { useNavigate,Link } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { loginUser } from "../services/authApi";
 import "../assets/css/login.css";
 import { useAppDispatch } from "../app/hooks";
@@ -24,11 +24,10 @@ export default function LoginPage() {
 
   const validateField = (name: string, value: string) => {
     if (name === "email") {
-      if (!value) {
-        return "Email is required";
-      }
+      if (!value) return "Email is required";
 
-      const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[A-Za-z]{2,}$/;
+      const emailRegex =
+        /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[A-Za-z]{2,}$/;
 
       if (!emailRegex.test(value)) {
         return "Invalid email format";
@@ -36,9 +35,7 @@ export default function LoginPage() {
     }
 
     if (name === "password") {
-      if (!value) {
-        return "Password is required";
-      }
+      if (!value) return "Password is required";
 
       if (value.length < 6) {
         return "Minimum 6 characters required";
@@ -51,20 +48,20 @@ export default function LoginPage() {
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
 
-    // update form state
     setForm((prev) => ({
       ...prev,
       [name]: value,
     }));
 
-    // live validation
     setErrors((prev) => ({
       ...prev,
       [name]: validateField(name, value),
     }));
   };
 
-  const handleLogin = async (e: React.BaseSyntheticEvent): Promise<void> => {
+  const handleLogin = async (
+    e: React.BaseSyntheticEvent,
+  ): Promise<void> => {
     e.preventDefault();
     setServerError("");
 
@@ -83,7 +80,6 @@ export default function LoginPage() {
       setLoading(true);
 
       const data = await loginUser(form);
-      console.log("USER DATA:", data.user);
 
       dispatch(
         loginSuccess({
@@ -104,16 +100,18 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="main">
-      <div className="container">
+    <div className="login-page">
+      <div className="login-container">
         <form onSubmit={handleLogin}>
-          <h2>Login</h2>
+          <h2 className="login-title">Login</h2>
 
-          {serverError && <p className="error">{serverError}</p>}
+          {serverError && (
+            <p className="login-error">{serverError}</p>
+          )}
 
-          {/* EMAIL */}
-          <div className="loginfields">
+          <div className="login-field">
             <label htmlFor="email">Email</label>
+
             <input
               id="email"
               name="email"
@@ -122,11 +120,14 @@ export default function LoginPage() {
               onChange={handleChange}
             />
           </div>
-          {errors.email && <p className="field-error">{errors.email}</p>}
 
-          {/* PASSWORD */}
-          <div className="loginfields">
+          {errors.email && (
+            <p className="field-error">{errors.email}</p>
+          )}
+
+          <div className="login-field">
             <label htmlFor="password">Password</label>
+
             <input
               id="password"
               name="password"
@@ -135,13 +136,19 @@ export default function LoginPage() {
               onChange={handleChange}
             />
           </div>
-          {errors.password && <p className="field-error">{errors.password}</p>}
 
-          {/* BUTTON */}
-          <button type="submit" className="loginbtn" disabled={loading}>
+          {errors.password && (
+            <p className="field-error">{errors.password}</p>
+          )}
+
+          <button
+            type="submit"
+            className="login-btn"
+            disabled={loading}
+          >
             {loading ? "Logging in..." : "Login"}
           </button>
-          {/* BACK TO HOME */}
+
           <div className="back-home">
             <Link to="/" className="home-link">
               ← Back to Home

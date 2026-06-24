@@ -49,3 +49,44 @@ export const getAttendanceByFilters = async (
 
   return res.data;
 };
+
+
+export const getMonthlyReport = async (
+  studentId: number,
+  month: number,
+  year: number
+) => {
+  const res = await api.get(
+    "/attendance/monthly-report",
+    {
+      params: {
+        student_id: studentId,
+        month,
+        year,
+      },
+    }
+  );
+
+  return res.data;
+};
+
+/* ==========================
+   LOW ATTENDANCE REPORT
+========================== */
+
+export const getLowAttendanceStudents = async (
+  month: number,
+  year: number
+) => {
+  const res = await api.get(
+    "/attendance/low-attendance",
+    {
+      params: {
+        month,
+        year,
+      },
+    }
+  );
+
+  return res.data;
+};

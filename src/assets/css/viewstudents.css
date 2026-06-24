@@ -202,3 +202,25 @@
   border-radius: 8px;
   font-size: 14px;
 }
+
+.delete-modal {
+  background: white;
+  padding: 24px;
+  border-radius: 12px;
+  width: 400px;
+  max-width: 90%;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+.confirm-delete-btn {
+  background: #dc2626;
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.confirm-delete-btn:hover {
+  background: #b91c1c;
+}

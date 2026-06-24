@@ -251,3 +251,42 @@
     margin-bottom: 6px;
   }
 }
+.error-text {
+  color: #dc2626;
+  font-size: 13px;
+  margin-top: 4px;
+  display: block;
+}
+
+.delete-message {
+  margin: 15px 0;
+  font-size: 15px;
+  color: #374151;
+  text-align: center;
+}
+
+.modal-cancel-button,
+.modal-delete-button {
+  flex: 1;
+  padding: 10px;
+  border: none;
+  border-radius: 8px;
+  color: white;
+  cursor: pointer;
+}
+
+.modal-cancel-button {
+  background: #6b7280;
+}
+
+.modal-cancel-button:hover {
+  background: #4b5563;
+}
+
+.modal-delete-button {
+  background: #dc2626;
+}
+
+.modal-delete-button:hover {
+  background: #b91c1c;
+}

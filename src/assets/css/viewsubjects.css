@@ -246,3 +246,11 @@
     margin-bottom: 6px;
   }
 }
+
+.error-text {
+  color: #dc2626;
+  font-size: 13px;
+  margin-top: 4px;
+  display: block;
+  font-weight: 500;
+}

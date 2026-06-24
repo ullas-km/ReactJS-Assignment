@@ -175,6 +175,14 @@ export default function Sidebar({ role }: SidebarProps) {
                     >
                       View Attendance
                     </NavLink>
+
+                    <NavLink
+                      to="/monthly-attendance-report"
+                      className={getLinkClass}
+                      onClick={closeSidebar}
+                    >
+                      Monthly Report
+                    </NavLink>
                   </div>
                 )}
               </div>

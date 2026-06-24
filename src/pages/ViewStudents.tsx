@@ -44,6 +44,9 @@ export default function ViewStudents() {
   const [sections, setSections] = useState<Section[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
 
+  const [studentToDelete, setStudentToDelete] =
+  useState<Student | null>(null);
+
   const [currentPage, setCurrentPage] = useState(1);
   const rowsPerPage = 10;
 
@@ -95,6 +98,20 @@ export default function ViewStudents() {
     }
   };
 
+  const confirmDelete = async () => {
+  if (!studentToDelete) return;
+
+  try {
+    await deleteStudent(studentToDelete.student_id);
+
+    setStudentToDelete(null);
+
+    fetchStudents();
+  } catch (error) {
+    console.error("Failed to delete student:", error);
+  }
+};
+
   const indexOfLastRow = currentPage * rowsPerPage;
   const indexOfFirstRow = indexOfLastRow - rowsPerPage;
 
@@ -136,11 +153,11 @@ export default function ViewStudents() {
             </button>
 
             <button
-              onClick={() => handleDelete(s.student_id)}
-              className="delete-btn"
-            >
-              Delete
-            </button>
+  onClick={() => setStudentToDelete(s)}
+  className="delete-btn"
+>
+  Delete
+</button>
           </div>
         </td>
       </tr>
@@ -222,6 +239,35 @@ export default function ViewStudents() {
           refreshStudents={fetchStudents}
         />
       )}
+      {studentToDelete && (
+  <div className="modal-overlay">
+    <div className="delete-modal">
+      <h3>Delete Student</h3>
+
+      <p>
+        Are you sure you want to delete
+        {" "}
+        <strong>{studentToDelete.name}</strong>?
+      </p>
+
+      <div className="modal-actions">
+        <button
+          className="modal-cancel-btn"
+          onClick={() => setStudentToDelete(null)}
+        >
+          Cancel
+        </button>
+
+        <button
+          className="confirm-delete-btn"
+          onClick={confirmDelete}
+        >
+          Delete
+        </button>
+      </div>
+    </div>
+  </div>
+)}
     </div>
   );
 }

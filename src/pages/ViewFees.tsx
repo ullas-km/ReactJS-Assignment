@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 
 import AddFeeModal from "../components/AddFeeModal";
 import EditFeeModal from "../components/EditFeeModal";
+import DeleteModal from "../components/DeleteModal";
 
 import { getFees, deleteFee } from "../services/FeesApi";
 
@@ -21,6 +22,7 @@ export default function ViewFees() {
   const [editingFee, setEditingFee] = useState<Fee | null>(null);
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
+  const [deleteFeeId, setDeleteFeeId] = useState<number | null>(null);
   const rowsPerPage = 10;
 
   const refreshFees = async () => {
@@ -43,6 +45,18 @@ export default function ViewFees() {
   const handleDelete = async (id: number) => {
     await deleteFee(id);
     await refreshFees();
+  };
+  const confirmDelete = async () => {
+    if (!deleteFeeId) return;
+
+    try {
+      await deleteFee(deleteFeeId);
+      await refreshFees();
+    } catch (error) {
+      console.error("Failed to delete fee:", error);
+    } finally {
+      setDeleteFeeId(null);
+    }
   };
 
   const indexOfLastRow = currentPage * rowsPerPage;
@@ -101,7 +115,7 @@ export default function ViewFees() {
 
                     <button
                       className="delete-btn"
-                      onClick={() => handleDelete(f.id)}
+                      onClick={() => setDeleteFeeId(f.id)}
                     >
                       Delete
                     </button>
@@ -154,6 +168,13 @@ export default function ViewFees() {
           refreshFees={refreshFees}
         />
       )}
+      <DeleteModal
+        isOpen={deleteFeeId !== null}
+        title="Delete Fee"
+        message="Are you sure you want to delete this fee record?"
+        onConfirm={confirmDelete}
+        onCancel={() => setDeleteFeeId(null)}
+      />
     </div>
   );
 }
