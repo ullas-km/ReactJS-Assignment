@@ -152,38 +152,43 @@ describe("StudentPayments", () => {
   });
 
   it("shows error when payment fails", async () => {
-    const user = userEvent.setup();
+  const user = userEvent.setup();
 
-    vi.mocked(getFees).mockResolvedValue([
-      {
-        id: 1,
-        student_id: 1,
-        amount: 5000,
-        due_date: "2026-06-30",
-        status: "pending",
-      },
-    ]);
+  vi.mocked(getFees).mockResolvedValue([
+    {
+      id: 1,
+      student_id: 1,
+      amount: 5000,
+      due_date: "2026-06-30",
+      status: "pending",
+    },
+  ]);
 
-    vi.mocked(makePayment).mockRejectedValue({
+  vi.mocked(makePayment).mockRejectedValue(
+    Object.assign(new Error("Request failed"), {
+      isAxiosError: true,
       response: {
         data: "Insufficient balance",
       },
-    });
+    }),
+  );
 
-    render(<StudentPayments />);
+  render(<StudentPayments />);
 
-    const payButton = await screen.findByRole("button", {
-      name: /pay now/i,
-    });
-
-    await user.click(payButton);
-
-    await waitFor(() => {
-      expect(makePayment).toHaveBeenCalled();
-    });
-
-    expect(window.alert).toHaveBeenCalledWith("Insufficient balance");
+  const payButton = await screen.findByRole("button", {
+    name: /pay now/i,
   });
+
+  await user.click(payButton);
+
+  await waitFor(() => {
+    expect(makePayment).toHaveBeenCalled();
+  });
+
+  expect(window.alert).toHaveBeenCalledWith(
+    "Insufficient balance",
+  );
+});
 
   it("calls getFees on mount", async () => {
     vi.mocked(getFees).mockResolvedValue([]);

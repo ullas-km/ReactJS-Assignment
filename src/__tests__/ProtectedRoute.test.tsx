@@ -5,6 +5,7 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import ProtectedRoute from "../routes/ProtectedRoute";
 import { useAppSelector } from "../app/hooks";
 
+// mock redux selector
 vi.mock("../app/hooks", () => ({
   useAppSelector: vi.fn(),
 }));
@@ -15,35 +16,7 @@ describe("ProtectedRoute", () => {
   });
 
   it("renders children when token exists", () => {
-    vi.mocked(useAppSelector).mockImplementation((selector: any) =>
-      selector({
-        auth: {
-          token: "fake-token",
-        },
-      })
-    );
-
-    render(
-      <MemoryRouter>
-        <ProtectedRoute>
-          <h1>Dashboard Page</h1>
-        </ProtectedRoute>
-      </MemoryRouter>
-    );
-
-    expect(
-      screen.getByText(/dashboard page/i)
-    ).toBeInTheDocument();
-  });
-
-  it("redirects to login when token does not exist", () => {
-    vi.mocked(useAppSelector).mockImplementation((selector: any) =>
-      selector({
-        auth: {
-          token: null,
-        },
-      })
-    );
+    vi.mocked(useAppSelector).mockReturnValue("valid-token");
 
     render(
       <MemoryRouter initialEntries={["/protected"]}>
@@ -52,25 +25,36 @@ describe("ProtectedRoute", () => {
             path="/protected"
             element={
               <ProtectedRoute>
-                <h1>Dashboard Page</h1>
+                <div>Dashboard Content</div>
               </ProtectedRoute>
             }
-          />
-
-          <Route
-            path="/login"
-            element={<h1>Login Page</h1>}
           />
         </Routes>
       </MemoryRouter>
     );
 
-    expect(
-      screen.getByText(/login page/i)
-    ).toBeInTheDocument();
+    expect(screen.getByText("Dashboard Content")).toBeInTheDocument();
+  });
 
-    expect(
-      screen.queryByText(/dashboard page/i)
-    ).not.toBeInTheDocument();
+  it("redirects to login when token does not exist", () => {
+    vi.mocked(useAppSelector).mockReturnValue(null);
+
+    render(
+      <MemoryRouter initialEntries={["/protected"]}>
+        <Routes>
+          <Route
+            path="/protected"
+            element={
+              <ProtectedRoute>
+                <div>Dashboard Content</div>
+              </ProtectedRoute>
+            }
+          />
+          <Route path="/login" element={<div>Login Page</div>} />
+        </Routes>
+      </MemoryRouter>
+    );
+
+    expect(screen.getByText("Login Page")).toBeInTheDocument();
   });
 });

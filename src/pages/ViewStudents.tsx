@@ -89,15 +89,6 @@ export default function ViewStudents() {
     loadData();
   }, []);
 
-  const handleDelete = async (id: number) => {
-    try {
-      await deleteStudent(id);
-      fetchStudents();
-    } catch (error) {
-      console.error("Failed to delete student:", error);
-    }
-  };
-
   const confirmDelete = async () => {
   if (!studentToDelete) return;
 

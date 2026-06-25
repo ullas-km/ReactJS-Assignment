@@ -24,21 +24,21 @@ describe("TeacherViewAttendance", () => {
   beforeEach(() => {
     vi.clearAllMocks();
 
-    (getClasses as any).mockResolvedValue([
+    vi.mocked(getClasses).mockResolvedValue([
       {
         class_id: 1,
         class_name: "Class 1",
       },
     ]);
 
-    (getSectionsByClass as any).mockResolvedValue([
+    vi.mocked(getSectionsByClass).mockResolvedValue([
       {
         section_id: 1,
         section_name: "A",
       },
     ]);
 
-    (getAttendanceByFilters as any).mockResolvedValue([
+    vi.mocked(getAttendanceByFilters).mockResolvedValue([
       {
         student_id: 1,
         name: "John",
@@ -55,7 +55,9 @@ describe("TeacherViewAttendance", () => {
   it("renders attendance page", async () => {
     render(<TeacherViewAttendance />);
 
-    expect(screen.getByText("View Attendance")).toBeInTheDocument();
+    expect(
+      screen.getByText("View Attendance")
+    ).toBeInTheDocument();
 
     expect(
       screen.getByRole("button", { name: /search/i })
@@ -69,7 +71,9 @@ describe("TeacherViewAttendance", () => {
   it("loads classes on mount", async () => {
     render(<TeacherViewAttendance />);
 
-    expect(await screen.findByText("Class 1")).toBeInTheDocument();
+    expect(
+      await screen.findByText("Class 1")
+    ).toBeInTheDocument();
   });
 
   it("displays attendance records after search", async () => {
@@ -83,10 +87,21 @@ describe("TeacherViewAttendance", () => {
       })
     );
 
-    expect(await screen.findByText("John")).toBeInTheDocument();
-    expect(screen.getByText("Mary")).toBeInTheDocument();
-    expect(screen.getByText("✅ Present")).toBeInTheDocument();
-    expect(screen.getByText("❌ Absent")).toBeInTheDocument();
+    expect(
+      await screen.findByText("John")
+    ).toBeInTheDocument();
+
+    expect(
+      screen.getByText("Mary")
+    ).toBeInTheDocument();
+
+    expect(
+      screen.getByText("✅ Present")
+    ).toBeInTheDocument();
+
+    expect(
+      screen.getByText("❌ Absent")
+    ).toBeInTheDocument();
   });
 
   it("shows empty state initially", () => {
@@ -100,7 +115,7 @@ describe("TeacherViewAttendance", () => {
   it("shows empty state when no records found", async () => {
     const user = userEvent.setup();
 
-    (getAttendanceByFilters as any).mockResolvedValue([]);
+    vi.mocked(getAttendanceByFilters).mockResolvedValue([]);
 
     render(<TeacherViewAttendance />);
 

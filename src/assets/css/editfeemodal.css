@@ -1,0 +1,79 @@
+.edit-fee-overlay {
+  position: fixed;
+  inset: 0;
+
+  background: rgba(0, 0, 0, 0.5);
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  z-index: 9999;
+}
+
+.edit-fee-modal {
+  width: 450px;
+  max-width: 90%;
+
+  background: #ffffff;
+
+  border-radius: 12px;
+
+  padding: 24px;
+
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+}
+
+.edit-fee-modal h2 {
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.edit-fee-modal .form-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 15px;
+}
+
+.edit-fee-modal label {
+  margin-bottom: 6px;
+  font-weight: 600;
+}
+
+.edit-fee-modal input,
+.edit-fee-modal select {
+  width: 100%;
+  padding: 10px;
+
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+
+  box-sizing: border-box;
+}
+
+.edit-fee-modal .modal-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.edit-fee-modal .modal-add-btn,
+.edit-fee-modal .modal-cancel-btn {
+  flex: 1;
+
+  padding: 10px;
+
+  border: none;
+  border-radius: 6px;
+
+  cursor: pointer;
+}
+
+.edit-fee-modal .modal-add-btn {
+  background: #2563eb;
+  color: white;
+}
+
+.edit-fee-modal .modal-cancel-btn {
+  background: #e5e7eb;
+}

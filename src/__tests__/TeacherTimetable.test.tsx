@@ -8,8 +8,6 @@ import {
 
 import TeacherTimetable from "../pages/AddTimetable";
 
-import axiosInstance from "../services/axiosInstance";
-
 import { getTeachers } from "../services/TeacherApi";
 import { getClasses } from "../services/ClassesApi";
 import { getSectionsByClass } from "../services/SectionApi";
@@ -18,8 +16,6 @@ import { getSubjects } from "../services/SubjectApi";
 import {
   getAllTimetablesGrouped,
   getTimetableByClassSection,
-  updateTimetableEntry,
-  deleteTimetableEntry,
   deleteTimetableByClassSection,
 } from "../services/timetableApi";
 

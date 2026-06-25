@@ -2,16 +2,23 @@ import { useEffect, useState } from "react";
 import { getStudentMarks } from "../services/marksApi";
 import { getExams } from "../services/dropdownsApi";
 import "../assets/css/studentMarks.css";
+ type Mark = {
+  id: number;
+  exam_id: number;
+  exam_name: string;
+  subject_name: string;
+  marks: number;
+};
 
+type Exam = {
+  id: number;
+  exam_name: string;
+};
 export default function StudentMarks() {
-  const [marks, setMarks] = useState<any[]>([]);
-  const [exams, setExams] = useState<any[]>([]);
+const [marks, setMarks] = useState<Mark[]>([]);
+const [exams, setExams] = useState<Exam[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedExam, setSelectedExam] = useState("all");
-
-  useEffect(() => {
-    loadData();
-  }, []);
 
   const loadData = async () => {
     try {
@@ -27,11 +34,15 @@ export default function StudentMarks() {
     }
   };
 
+ useEffect(() => {
+  void loadData();
+}, []);
+
   // 🔥 dynamic filtering
   const filteredMarks =
     selectedExam === "all"
       ? marks
-      : marks.filter((m) => m.exam_id == selectedExam);
+      :marks.filter((m) => String(m.exam_id) === selectedExam);
 
   return (
     <div className="marks-wrapper">

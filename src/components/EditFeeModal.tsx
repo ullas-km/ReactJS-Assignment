@@ -1,6 +1,7 @@
 import { useState } from "react";
 
 import { updateFee } from "../services/FeesApi";
+import "../assets/css/editfeemodal.css"
 
 type Fee = {
   id: number;
@@ -34,8 +35,8 @@ export default function EditFeeModal({ fee, onClose, refreshFees }: Props) {
   };
 
   return (
-    <div className="modal-overlay">
-      <div className="modal-box">
+    <div className="edit-fee-overlay">
+      <div className="edit-fee-modal">
         <h2>Edit Fee</h2>
 
         <div className="form-group">

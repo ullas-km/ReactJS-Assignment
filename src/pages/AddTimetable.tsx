@@ -28,7 +28,7 @@ type CellData = {
 const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
 const periods = [1, 2, 3, 4, 5, 6];
 
-const th = (extra?: any): React.CSSProperties => ({
+const th = (extra?: React.CSSProperties): React.CSSProperties => ({
   padding: "11px 14px",
   background: "#2563eb",
   color: "#fff",
@@ -37,7 +37,7 @@ const th = (extra?: any): React.CSSProperties => ({
   textAlign: "left",
   ...extra,
 });
-const td = (extra?: any): React.CSSProperties => ({
+const td = (extra?: React.CSSProperties): React.CSSProperties => ({
   padding: "10px 12px",
   borderBottom: "1px solid #e0eeff",
   borderLeft: "1px solid #e0eeff",
@@ -55,6 +55,21 @@ const selectStyle: React.CSSProperties = {
   width: "100%",
 };
 
+type TimetableRow = {
+  timetable_id?: number;
+  id?: number;
+  class_id: number;
+  section_id: number;
+  class_name: string;
+  section_name: string;
+  teacher_id: number;
+  teacher_name: string;
+  subject_id: number;
+  subject_name: string;
+  day: string;
+  period: number;
+};
+
 export default function TeacherTimetable() {
   const [teachers, setTeachers] = useState<Teacher[]>([]);
   const [classes, setClasses] = useState<ClassType[]>([]);
@@ -62,19 +77,12 @@ export default function TeacherTimetable() {
   const [selectedClass, setSelectedClass] = useState("");
   const [selectedSection, setSelectedSection] = useState("");
   const [timetable, setTimetable] = useState<Record<string, CellData>>({});
-  const [allTimetables, setAllTimetables] = useState<any[]>([]);
+  const [allTimetables, setAllTimetables] = useState<TimetableRow[]>([]);
   const [showAll, setShowAll] = useState(false);
   const [tab, setTab] = useState<"builder" | "view">("builder");
   const [subjects, setSubjects] = useState<SubjectType[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
-
-  useEffect(() => {
-    loadTeachers();
-    loadClasses();
-    getSubjects().then(setSubjects).catch(console.error);
-    loadAllTimetables();
-  }, []);
 
   const loadTeachers = async () => {
     try {
@@ -91,6 +99,24 @@ export default function TeacherTimetable() {
     }
   };
 
+  const loadAllTimetables = async () => {
+    try {
+      setAllTimetables(await getAllTimetablesGrouped());
+      setShowAll(true);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  useEffect(() => {
+    loadTeachers();
+    loadClasses();
+    getSubjects().then(setSubjects).catch(console.error);
+    loadAllTimetables();
+  }, []);
+
+  
+
   // Load existing timetable when class+section is selected
   const loadExistingTimetable = async (classId: string, sectionId: string) => {
     try {
@@ -99,7 +125,7 @@ export default function TeacherTimetable() {
         Number(sectionId),
       );
       const map: Record<string, CellData> = {};
-      data.forEach((row: any) => {
+      data.forEach((row: TimetableRow) => {
         const key = `${row.day}-${row.period}`;
         map[key] = {
           timetable_id: row.timetable_id ?? row.id,
@@ -267,15 +293,6 @@ export default function TeacherTimetable() {
     }
   };
 
-  const loadAllTimetables = async () => {
-    try {
-      setAllTimetables(await getAllTimetablesGrouped());
-      setShowAll(true);
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
   const handleDeleteWholeTimetable = async (
     classId: number,
     sectionId: number,
@@ -316,7 +333,16 @@ export default function TeacherTimetable() {
     });
   };
 
-  const grouped = allTimetables.reduce((acc: any, row: any) => {
+  const grouped = allTimetables.reduce<
+    Record<
+      string,
+      {
+        rows: TimetableRow[];
+        class_id: number;
+        section_id: number;
+      }
+    >
+  >((acc, row) => {
     const key = `${row.class_name} - ${row.section_name}`;
     if (!acc[key])
       acc[key] = {
@@ -337,8 +363,12 @@ export default function TeacherTimetable() {
     currentPage * itemsPerPage,
   );
 
-  const getTimetableCell = (rows: any[], day: string, period: number) => {
-    return rows.find((r: any) => r.day === day && r.period === period);
+  const getTimetableCell = (
+    rows: TimetableRow[],
+    day: string,
+    period: number,
+  ) => {
+    return rows.find((r) => r.day === day && r.period === period);
   };
 
   return (
@@ -624,7 +654,7 @@ export default function TeacherTimetable() {
               </p>
             )}
             {showAll &&
-              paginatedEntries.map(([heading, value]: any) => (
+              paginatedEntries.map(([heading, value]) => (
                 <div
                   key={heading}
                   style={{

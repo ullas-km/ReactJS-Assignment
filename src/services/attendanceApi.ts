@@ -1,16 +1,18 @@
 import api from "./axiosInstance";
 
+export interface AttendanceRecord {
+  student_id: number;
+  date: string;
+  status: string;
+}
+
 export const getAttendance = async () => {
   const res = await api.get("/attendance/get-attendance");
   return res.data;
 };
 
 export const addAttendance = async (
-  attendanceData: {
-    student_id: number;
-    date: string;
-    status: string;
-  }
+  attendanceData: AttendanceRecord
 ) => {
   const res = await api.post(
     "/attendance/post-attendance",
@@ -21,7 +23,7 @@ export const addAttendance = async (
 };
 
 export const bulkAddAttendance = async (
-  records: any[]
+  records: AttendanceRecord[]
 ) => {
   const res = await api.post(
     "/attendance/bulk-post-attendance",
@@ -50,7 +52,6 @@ export const getAttendanceByFilters = async (
   return res.data;
 };
 
-
 export const getMonthlyReport = async (
   studentId: number,
   month: number,
@@ -69,10 +70,6 @@ export const getMonthlyReport = async (
 
   return res.data;
 };
-
-/* ==========================
-   LOW ATTENDANCE REPORT
-========================== */
 
 export const getLowAttendanceStudents = async (
   month: number,

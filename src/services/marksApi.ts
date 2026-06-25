@@ -1,10 +1,20 @@
 import api from "./axiosInstance";
 
-export const addMarks = async (data: any) => {
+export interface MarksPayload {
+  exam_id: number;
+  subject_id: number;
+  student_id: number;
+  marks: number;
+}
+
+export const addMarks = async (data: MarksPayload) => {
   return api.post("/marks/post-marks", data);
 };
 
-export const updateMarks = async (id: number, data: any) => {
+export const updateMarks = async (
+  id: number,
+  data: MarksPayload,
+) => {
   return api.put(`/marks/edit-marks/${id}`, data);
 };
 

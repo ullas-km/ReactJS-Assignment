@@ -12,7 +12,7 @@ export const getClasses = async () => {
 };
 
 // ADD class
-export const addClass = async (class_name: string) => {
+export const addClass = async (class_name: number) => {
   try {
     const res = await axiosInstance.post("/classes/post-classes", {
       class_name,

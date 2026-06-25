@@ -5,6 +5,7 @@ import TeacherAddMarks from "../pages/TeacherAddMarks";
 import * as dropdownApi from "../services/dropdownsApi";
 import * as marksApi from "../services/marksApi";
 import axios from "axios";
+import type { AxiosResponse } from "axios";
 
 vi.mock("axios");
 
@@ -19,6 +20,14 @@ vi.mock("../services/marksApi", () => ({
   updateMarks: vi.fn(),
   deleteMarks: vi.fn(),
 }));
+
+const mockAxiosResponse: AxiosResponse = {
+  data: {},
+  status: 200,
+  statusText: "OK",
+  headers: {},
+  config: {} as never,
+};
 
 describe("TeacherAddMarks", () => {
   beforeEach(() => {
@@ -58,6 +67,10 @@ describe("TeacherAddMarks", () => {
           marks: 90,
         },
       ],
+      status: 200,
+      statusText: "OK",
+      headers: {},
+      config: {} as never,
     });
   });
 
@@ -103,7 +116,7 @@ describe("TeacherAddMarks", () => {
   });
 
   it("calls addMarks when submitting new marks", async () => {
-    vi.mocked(marksApi.addMarks).mockResolvedValue({} as any);
+    vi.mocked(marksApi.addMarks).mockResolvedValue(mockAxiosResponse);
 
     render(<TeacherAddMarks />);
 
@@ -162,7 +175,7 @@ describe("TeacherAddMarks", () => {
   it("calls deleteMarks when delete confirmed", async () => {
     window.confirm = vi.fn(() => true);
 
-    vi.mocked(marksApi.deleteMarks).mockResolvedValue({} as any);
+    vi.mocked(marksApi.deleteMarks).mockResolvedValue(mockAxiosResponse);
 
     render(<TeacherAddMarks />);
 

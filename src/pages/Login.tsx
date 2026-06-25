@@ -26,8 +26,7 @@ export default function LoginPage() {
     if (name === "email") {
       if (!value) return "Email is required";
 
-      const emailRegex =
-        /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[A-Za-z]{2,}$/;
+      const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[A-Za-z]{2,}$/;
 
       if (!emailRegex.test(value)) {
         return "Invalid email format";
@@ -59,9 +58,7 @@ export default function LoginPage() {
     }));
   };
 
-  const handleLogin = async (
-    e: React.BaseSyntheticEvent,
-  ): Promise<void> => {
+  const handleLogin = async (e: React.BaseSyntheticEvent): Promise<void> => {
     e.preventDefault();
     setServerError("");
 
@@ -105,9 +102,7 @@ export default function LoginPage() {
         <form onSubmit={handleLogin}>
           <h2 className="login-title">Login</h2>
 
-          {serverError && (
-            <p className="login-error">{serverError}</p>
-          )}
+          {serverError && <p className="login-error">{serverError}</p>}
 
           <div className="login-field">
             <label htmlFor="email">Email</label>
@@ -121,9 +116,7 @@ export default function LoginPage() {
             />
           </div>
 
-          {errors.email && (
-            <p className="field-error">{errors.email}</p>
-          )}
+          {errors.email && <p className="field-error">{errors.email}</p>}
 
           <div className="login-field">
             <label htmlFor="password">Password</label>
@@ -137,15 +130,9 @@ export default function LoginPage() {
             />
           </div>
 
-          {errors.password && (
-            <p className="field-error">{errors.password}</p>
-          )}
+          {errors.password && <p className="field-error">{errors.password}</p>}
 
-          <button
-            type="submit"
-            className="login-btn"
-            disabled={loading}
-          >
+          <button type="submit" className="login-btn" disabled={loading}>
             {loading ? "Logging in..." : "Login"}
           </button>
 

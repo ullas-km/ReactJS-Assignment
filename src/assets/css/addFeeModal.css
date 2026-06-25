@@ -1,0 +1,147 @@
+/* BACKDROP */
+.fees-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  z-index: 9999;
+  padding: 20px;
+}
+
+/* MODAL BOX */
+.fees-modal-box {
+  background: #ffffff;
+  width: 100%;
+  max-width: 500px;
+
+  padding: 24px;
+  border-radius: 12px;
+
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+
+  animation: modalFadeIn 0.25s ease;
+}
+
+/* TITLE */
+.fees-modal-box h2 {
+  margin-bottom: 20px;
+  color: #111827;
+  font-size: 24px;
+  text-align: center;
+}
+
+/* FORM */
+.fees-form-group {
+  margin-bottom: 16px;
+}
+
+.fees-form-group label {
+  display: block;
+  margin-bottom: 6px;
+
+  font-size: 14px;
+  font-weight: 600;
+  color: #374151;
+}
+
+.fees-form-group input,
+.fees-form-group select {
+  width: 100%;
+
+  padding: 10px 12px;
+
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+
+  font-size: 14px;
+
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.fees-form-group input:focus,
+.fees-form-group select:focus {
+  border-color: #2563eb;
+}
+
+/* BUTTON SECTION */
+.fees-modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+
+  margin-top: 24px;
+}
+
+/* ADD BUTTON */
+.fees-modal-add-btn {
+  border: none;
+  border-radius: 8px;
+
+  padding: 10px 18px;
+
+  background: #16a34a;
+  color: #ffffff;
+
+  font-weight: 600;
+  cursor: pointer;
+
+  transition: 0.2s ease;
+}
+
+.fees-modal-add-btn:hover {
+  background: #15803d;
+}
+
+/* CANCEL BUTTON */
+.fees-modal-cancel-btn {
+  border: none;
+  border-radius: 8px;
+
+  padding: 10px 18px;
+
+  background: #dc2626;
+  color: #ffffff;
+
+  font-weight: 600;
+  cursor: pointer;
+
+  transition: 0.2s ease;
+}
+
+.fees-modal-cancel-btn:hover {
+  background: #b91c1c;
+}
+
+/* ANIMATION */
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-15px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* MOBILE */
+@media (max-width: 768px) {
+  .fees-modal-box {
+    padding: 18px;
+  }
+
+  .fees-modal-actions {
+    flex-direction: column;
+  }
+
+  .fees-modal-add-btn,
+  .fees-modal-cancel-btn {
+    width: 100%;
+  }
+}

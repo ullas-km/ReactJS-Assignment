@@ -3,6 +3,8 @@ import { useState, useEffect } from "react";
 import { addFee } from "../services/FeesApi";
 import { getStudents } from "../services/studentsApi";
 
+import "../assets/css/addFeeModal.css"
+
 type Props = Readonly<{
   onClose: () => void;
   refreshFees: () => void;
@@ -47,8 +49,8 @@ export default function AddFeeModal({ onClose, refreshFees }: Props) {
 
   return (
     
-    <div className="modal-overlay">
-      <div className="modal-box">
+    <div className="fees-modal-overlay">
+      <div className="fees-modal-box">
         <h2>Add Fee</h2>
 
         {/* <div className="form-group">
@@ -60,7 +62,7 @@ export default function AddFeeModal({ onClose, refreshFees }: Props) {
             onChange={(e) => setStudentId(e.target.value)}
           />
         </div> */}
-       <div className="form-group">
+       <div className="fees-form-group">
   <label htmlFor="studentId">Student</label>
 
   <select
@@ -81,7 +83,7 @@ export default function AddFeeModal({ onClose, refreshFees }: Props) {
   </select>
 </div>
 
-        <div className="form-group">
+        <div className="fees-form-group">
           <label htmlFor="amount">Amount</label>
 
           <input
@@ -92,7 +94,7 @@ export default function AddFeeModal({ onClose, refreshFees }: Props) {
           />
         </div>
 
-        <div className="form-group">
+        <div className="fees-form-group">
           <label htmlFor="duedate">Due Date</label>
 
           <input
@@ -103,7 +105,7 @@ export default function AddFeeModal({ onClose, refreshFees }: Props) {
           />
         </div>
 
-        <div className="form-group">
+        <div className="fees-form-group">
           <label htmlFor="status">Status</label>
 
           <select
@@ -117,12 +119,12 @@ export default function AddFeeModal({ onClose, refreshFees }: Props) {
           </select>
         </div>
 
-        <div className="modal-actions">
-          <button className="modal-add-btn" onClick={handleAddFee}>
+        <div className="fees-modal-actions">
+          <button className="fees-modal-add-btn" onClick={handleAddFee}>
             Add
           </button>
 
-          <button className="modal-cancel-btn" onClick={onClose}>
+          <button className="fees-modal-cancel-btn" onClick={onClose}>
             Cancel
           </button>
         </div>

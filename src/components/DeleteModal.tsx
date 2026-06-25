@@ -1,11 +1,11 @@
 import "../assets/css/deleteModal.css";
 
 interface DeleteModalProps {
-  isOpen: boolean;
-  title?: string;
-  message?: string;
-  onConfirm: () => void;
-  onCancel: () => void;
+  readonly isOpen: boolean;
+  readonly title?: string;
+  readonly message?: string;
+  readonly onConfirm: () => void;
+  readonly onCancel: () => void;
 }
 
 export default function DeleteModal({

@@ -185,7 +185,7 @@
 
 .modal-cancel-btn {
   flex: 1;
-  background: #dc2626;
+   background-color: #6b7280;
   color: white;
   border: none;
   padding: 10px;
@@ -194,7 +194,7 @@
 }
 
 .modal-cancel-btn:hover {
-  background: #b91c1c;
+   background-color: #6b7280;
 }
 
 /* LOADING */
@@ -307,11 +307,4 @@
   padding: 10px;
   border-radius: 8px;
   cursor: pointer;
-}
-
-.modal-cancel-btn{
-  background-color: #6b7280;
-}
-.modal-cancel-btn:hover{
-  background-color: #6b7280;
 }

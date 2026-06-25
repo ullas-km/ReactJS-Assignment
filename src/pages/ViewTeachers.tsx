@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 
 import {
   getTeachers,
@@ -46,7 +46,7 @@ export default function ViewTeachers() {
   const [subjectError, setSubjectError] = useState("");
 
   const [showDeleteModal, setShowDeleteModal] = useState(false);
-const [teacherToDelete, setTeacherToDelete] = useState<number | null>(null);
+  const [teacherToDelete, setTeacherToDelete] = useState<number | null>(null);
 
   const clearFormErrors = () => {
     setTeacherNameError("");
@@ -56,7 +56,7 @@ const [teacherToDelete, setTeacherToDelete] = useState<number | null>(null);
     setSubjectError("");
   };
 
-  const fetchTeachers = async () => {
+  const fetchTeachers = useCallback(async () => {
     try {
       setLoading(true);
 
@@ -73,7 +73,7 @@ const [teacherToDelete, setTeacherToDelete] = useState<number | null>(null);
     } finally {
       setLoading(false);
     }
-  };
+  }, [currentPage]);
 
   useEffect(() => {
     void fetchTeachers();
@@ -88,22 +88,7 @@ const [teacherToDelete, setTeacherToDelete] = useState<number | null>(null);
     };
 
     void loadSubjects();
-  }, []);
-
-  // const handleAdd = async () => {
-  //   if (!teacherName.trim()) return;
-
-  //   try {
-  //     await addTeacher(teacherName, email, phone, password, subjectIds);
-
-  //     setTeacherName("");
-  //     setShowModal(false);
-
-  //     fetchTeachers();
-  //   } catch (error) {
-  //     console.error("Failed to add teacher:", error);
-  //   }
-  // };
+  }, [fetchTeachers]);
 
   const handleAdd = async () => {
     if (!validateForm()) return;
@@ -127,19 +112,19 @@ const [teacherToDelete, setTeacherToDelete] = useState<number | null>(null);
   };
 
   const handleDelete = async () => {
-  if (teacherToDelete === null) return;
+    if (teacherToDelete === null) return;
 
-  try {
-    await deleteTeacher(teacherToDelete);
+    try {
+      await deleteTeacher(teacherToDelete);
 
-    setShowDeleteModal(false);
-    setTeacherToDelete(null);
+      setShowDeleteModal(false);
+      setTeacherToDelete(null);
 
-    fetchTeachers();
-  } catch (error) {
-    console.error("Failed to delete teacher:", error);
-  }
-};
+      fetchTeachers();
+    } catch (error) {
+      console.error("Failed to delete teacher:", error);
+    }
+  };
 
   const handleSubjectSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedIds = Array.from(e.target.selectedOptions, (option) =>
@@ -173,24 +158,6 @@ const [teacherToDelete, setTeacherToDelete] = useState<number | null>(null);
 
     setShowModal(true);
   };
-
-  // const handleUpdate = async () => {
-  //   if (editId === null) return;
-
-  //   try {
-  //     await updateTeacher(editId, teacherName, email, phone, subjectIds);
-
-  //     setEditId(null);
-  //     setTeacherName("");
-  //     setEmail("");
-  //     setPhone("");
-  //     setShowModal(false);
-
-  //     fetchTeachers();
-  //   } catch (error) {
-  //     console.error("Failed to update teacher:", error);
-  //   }
-  // };
 
   const handleUpdate = async () => {
     if (editId === null) return;
@@ -253,7 +220,7 @@ const [teacherToDelete, setTeacherToDelete] = useState<number | null>(null);
     if (!phone.trim()) {
       setPhoneError("Phone number is required");
       valid = false;
-    } else if (!/^[0-9]{10}$/.test(phone)) {
+    } else if (!/^\d{10}$/.test(phone)) {
       setPhoneError("Phone number must be 10 digits");
       valid = false;
     }
@@ -319,9 +286,9 @@ const [teacherToDelete, setTeacherToDelete] = useState<number | null>(null);
           <button
             className="delete-btn"
             onClick={() => {
-  setTeacherToDelete(t.teacher_id);
-  setShowDeleteModal(true);
-}}
+              setTeacherToDelete(t.teacher_id);
+              setShowDeleteModal(true);
+            }}
           >
             Delete
           </button>
@@ -466,38 +433,31 @@ const [teacherToDelete, setTeacherToDelete] = useState<number | null>(null);
           }}
         />
       </div>
-      {
-  showDeleteModal && (
-    <div className="modal-overlay">
-      <div className="delete-modal-box">
-        <h3>Delete Teacher</h3>
+      {showDeleteModal && (
+        <div className="modal-overlay">
+          <div className="delete-modal-box">
+            <h3>Delete Teacher</h3>
 
-        <p>
-          Are you sure you want to delete this teacher?
-        </p>
+            <p>Are you sure you want to delete this teacher?</p>
 
-        <div className="modal-actions">
-          <button
-            className="modal-delete-btn"
-            onClick={handleDelete}
-          >
-            Yes, Delete
-          </button>
+            <div className="modal-actions">
+              <button className="modal-delete-btn" onClick={handleDelete}>
+                Yes, Delete
+              </button>
 
-          <button
-            className="modal-cancel-btn"
-            onClick={() => {
-              setShowDeleteModal(false);
-              setTeacherToDelete(null);
-            }}
-          >
-            Cancel
-          </button>
+              <button
+                className="modal-cancel-btn"
+                onClick={() => {
+                  setShowDeleteModal(false);
+                  setTeacherToDelete(null);
+                }}
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
         </div>
-      </div>
-    </div>
-  )
-}
+      )}
       <table className="students-table">
         <thead>
           <tr>

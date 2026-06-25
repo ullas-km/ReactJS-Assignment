@@ -10,32 +10,36 @@ type TimetableType = {
   subject_name: string;
 };
 
+type User = {
+  teacher_id: number;
+};
+
 const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
 const periods = [1, 2, 3, 4, 5, 6];
 
 export default function TeacherTimetableView() {
   const [timetable, setTimetable] = useState<TimetableType[]>([]);
 
-  const user = JSON.parse(localStorage.getItem("user") || "null");
+  const user: User | null = JSON.parse(localStorage.getItem("user") || "null");
 
   useEffect(() => {
     if (!user?.teacher_id) return;
 
-    loadTimetable();
-  }, []);
+    const loadTimetable = async () => {
+      try {
+        const data = await getTeacherTimetable(user.teacher_id);
+        setTimetable(data);
+      } catch (err) {
+        console.error(err);
+      }
+    };
 
-  const loadTimetable = async () => {
-    try {
-      const data = await getTeacherTimetable(user.teacher_id);
-      setTimetable(data);
-    } catch (err) {
-      console.error(err);
-    }
-  };
+    loadTimetable();
+  }, [user?.teacher_id]);
 
   const getCell = (day: string, period: number) => {
     return timetable.find(
-      (t) => t.day === day && Number(t.period) === Number(period)
+      (t) => t.day === day && Number(t.period) === Number(period),
     );
   };
 
@@ -69,9 +73,7 @@ export default function TeacherTimetableView() {
                     <td key={period}>
                       {cell ? (
                         <div className="tt-card">
-                          <div className="subject">
-                            {cell.subject_name}
-                          </div>
+                          <div className="subject">{cell.subject_name}</div>
 
                           <div className="class">
                             {cell.class_name} - {cell.section_name}

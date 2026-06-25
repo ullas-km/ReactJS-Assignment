@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { changePassword } from "../services/userApi";
 import "../assets/css/profile.css";
+import axios from "axios";
 
 export default function Profile() {
   const user = JSON.parse(localStorage.getItem("user") || "null");
@@ -37,21 +38,31 @@ export default function Profile() {
     }
 
     try {
-      setLoading(true);
-      await changePassword(user.user_id, currentPassword, newPassword);
-      setSuccess("Password changed successfully!");
-      setCurrentPassword("");
-      setNewPassword("");
-      setConfirmPassword("");
-      setTimeout(() => {
-        setShowModal(false);
-        setSuccess("");
-      }, 2000);
-    } catch (err: any) {
-      setError(err?.response?.data || "Failed to change password");
-    } finally {
-      setLoading(false);
-    }
+  setLoading(true);
+  await changePassword(user.user_id, currentPassword, newPassword);
+
+  setSuccess("Password changed successfully!");
+  setCurrentPassword("");
+  setNewPassword("");
+  setConfirmPassword("");
+
+  setTimeout(() => {
+    setShowModal(false);
+    setSuccess("");
+  }, 2000);
+} catch (err: unknown) {
+  if (axios.isAxiosError(err)) {
+    setError(
+      typeof err.response?.data === "string"
+        ? err.response.data
+        : "Failed to change password"
+    );
+  } else {
+    setError("Failed to change password");
+  }
+} finally {
+  setLoading(false);
+}
   };
 
   const handleCloseModal = () => {

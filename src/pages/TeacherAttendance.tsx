@@ -6,9 +6,19 @@ import { getStudentsByClassSection } from "../services/studentsApi";
 
 type Student = { student_id: number; name: string };
 
+type ClassType = {
+  class_id: number;
+  class_name: string;
+};
+
+type SectionType = {
+  section_id: number;
+  section_name: string;
+};
+
 export default function TeacherAttendance() {
-  const [classes, setClasses] = useState<any[]>([]);
-  const [sections, setSections] = useState<any[]>([]);
+  const [classes, setClasses] = useState<ClassType[]>([]);
+const [sections, setSections] = useState<SectionType[]>([]);
   const [students, setStudents] = useState<Student[]>([]);
   const [attendance, setAttendance] = useState<Record<number, "present" | "absent">>({});
 
@@ -107,11 +117,11 @@ export default function TeacherAttendance() {
                 {students.length} Students
               </span>
               <div style={{ display: "flex", gap: 8 }}>
-                <button onClick={() => { const all: any = {}; students.forEach((s) => { all[s.student_id] = "present"; }); setAttendance(all); }}
+                <button onClick={() => { const all: Record<number, "present" | "absent"> = {}; students.forEach((s) => { all[s.student_id] = "present"; }); setAttendance(all); }}
                   style={{ fontSize: 12, fontWeight: 600, padding: "5px 12px", background: "#dcfce7", color: "#16a34a", border: "none", borderRadius: 5, cursor: "pointer" }}>
                   All Present
                 </button>
-                <button onClick={() => { const all: any = {}; students.forEach((s) => { all[s.student_id] = "absent"; }); setAttendance(all); }}
+                <button onClick={() => { const all: Record<number, "present" | "absent"> = {}; students.forEach((s) => { all[s.student_id] = "absent"; }); setAttendance(all); }}
                   style={{ fontSize: 12, fontWeight: 600, padding: "5px 12px", background: "#fee2e2", color: "#dc2626", border: "none", borderRadius: 5, cursor: "pointer" }}>
                   All Absent
                 </button>

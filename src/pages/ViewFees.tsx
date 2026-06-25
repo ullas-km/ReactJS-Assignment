@@ -11,6 +11,7 @@ import "../assets/css/viewfees.css";
 interface Fee {
   id: number;
   student_id: number;
+  student_name: string;
   amount: number;
   due_date: string;
   status: string;
@@ -23,6 +24,7 @@ export default function ViewFees() {
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const [deleteFeeId, setDeleteFeeId] = useState<number | null>(null);
+  const [searchTerm, setSearchTerm] = useState("");
   const rowsPerPage = 10;
 
   const refreshFees = async () => {
@@ -42,10 +44,6 @@ export default function ViewFees() {
     void refreshFees();
   }, []);
 
-  const handleDelete = async (id: number) => {
-    await deleteFee(id);
-    await refreshFees();
-  };
   const confirmDelete = async () => {
     if (!deleteFeeId) return;
 
@@ -62,14 +60,34 @@ export default function ViewFees() {
   const indexOfLastRow = currentPage * rowsPerPage;
   const indexOfFirstRow = indexOfLastRow - rowsPerPage;
 
-  const currentFees = fees.slice(indexOfFirstRow, indexOfLastRow);
+  const filteredFees = fees.filter(
+    (fee) =>
+      fee.student_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      fee.student_id.toString().includes(searchTerm),
+  );
 
-  const totalPages = Math.ceil(fees.length / rowsPerPage);
+  const currentFees = filteredFees.slice(indexOfFirstRow, indexOfLastRow);
+
+  const totalPages = Math.ceil(filteredFees.length / rowsPerPage);
 
   return (
     <div className="students-page">
       <div className="students-header">
-        <h2>Fees Management</h2>
+        <div className="header-left">
+          <h2>Fees Management</h2>
+
+          <div className="search-box">
+            <input
+              type="text"
+              placeholder="Search by Student ID or Name..."
+              value={searchTerm}
+              onChange={(e) => {
+                setSearchTerm(e.target.value);
+                setCurrentPage(1);
+              }}
+            />
+          </div>
+        </div>
 
         <button className="add-btn" onClick={() => setShowAddModal(true)}>
           Add Fee
@@ -80,8 +98,8 @@ export default function ViewFees() {
         <table className="students-table">
           <thead>
             <tr>
-              <th>ID</th>
               <th>Student ID</th>
+              <th>Student Name</th>
               <th>Amount</th>
               <th>Due Date</th>
               <th>Status</th>
@@ -96,11 +114,19 @@ export default function ViewFees() {
                   Loading fees...
                 </td>
               </tr>
+            ) : filteredFees.length === 0 ? (
+              <tr>
+                <td colSpan={6} className="loading-cell">
+                  {searchTerm
+                    ? `No students found for "${searchTerm}"`
+                    : "No fee records found"}
+                </td>
+              </tr>
             ) : (
               currentFees.map((f) => (
                 <tr key={f.id}>
-                  <td>{f.id}</td>
                   <td>{f.student_id}</td>
+                  <td>{f.student_name}</td>
                   <td>{f.amount}</td>
                   <td>{new Date(f.due_date).toLocaleDateString()}</td>
                   <td>{f.status}</td>
@@ -126,7 +152,7 @@ export default function ViewFees() {
           </tbody>
         </table>
       </div>
-      {!loading && fees.length > rowsPerPage && (
+      {!loading && filteredFees.length > rowsPerPage && (
         <div className="pagination">
           <button
             disabled={currentPage === 1}

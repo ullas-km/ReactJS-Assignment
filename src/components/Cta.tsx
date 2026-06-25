@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import "../assets/css/cta.css";
 
-export default function CTA() {
+export default function Cta() {
   const navigate = useNavigate();
 
   return (

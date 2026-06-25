@@ -1,7 +1,5 @@
 import { render, screen, waitFor } from "@testing-library/react";
-
 import userEvent from "@testing-library/user-event";
-
 import { describe, it, expect, vi } from "vitest";
 
 import AddStudentModal from "../components/AddStudentModal";
@@ -39,35 +37,60 @@ describe("AddStudentModal", () => {
     });
 
     render(
-      <AddStudentModal refreshStudents={refreshStudents} onClose={onClose} />,
+      <AddStudentModal
+        refreshStudents={refreshStudents}
+        onClose={onClose}
+      />
     );
 
     await waitFor(() => {
       expect(screen.getByText("Add")).toBeInTheDocument();
     });
 
-    const inputs = screen.getAllByRole("textbox");
+    await userEvent.type(
+      screen.getByLabelText(/name/i),
+      "John"
+    );
 
-    await userEvent.type(inputs[0], "John");
+    await userEvent.type(
+      screen.getByLabelText(/email/i),
+      "john@gmail.com"
+    );
 
-    await userEvent.type(inputs[1], "john@gmail.com");
+    await userEvent.type(
+      screen.getByLabelText(/password/i),
+      "password123"
+    );
 
-    await userEvent.type(inputs[2], "9999999999");
+    await userEvent.type(
+      screen.getByLabelText(/phone/i),
+      "9999999999"
+    );
 
     const selects = screen.getAllByRole("combobox");
 
     await userEvent.selectOptions(selects[0], "1");
 
+    await waitFor(() => {
+      expect(selects[1]).toBeInTheDocument();
+    });
+
     await userEvent.selectOptions(selects[1], "1");
 
-    const addButton = screen.getByText("Add");
+    await userEvent.click(screen.getByRole("button", { name: /add/i }));
 
-    await userEvent.click(addButton);
+    await waitFor(() => {
+      expect(studentsApi.addStudent).toHaveBeenCalledWith(
+        "John",
+        "john@gmail.com",
+        "9999999999",
+        1,
+        1,
+        "password123"
+      );
 
-    expect(studentsApi.addStudent).toHaveBeenCalled();
-
-    expect(refreshStudents).toHaveBeenCalled();
-
-    expect(onClose).toHaveBeenCalled();
+      expect(refreshStudents).toHaveBeenCalledTimes(1);
+      expect(onClose).toHaveBeenCalledTimes(1);
+    });
   }, 10000);
 });
