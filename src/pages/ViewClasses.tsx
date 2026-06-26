@@ -26,7 +26,7 @@ export default function ViewClasses() {
   const [duplicateError, setDuplicateError] = useState("");
 
   const [showDeleteModal, setShowDeleteModal] = useState(false);
-const [deleteId, setDeleteId] = useState<number | null>(null);
+  const [deleteId, setDeleteId] = useState<number | null>(null);
 
   const [editId, setEditId] = useState<number | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
@@ -93,19 +93,19 @@ const [deleteId, setDeleteId] = useState<number | null>(null);
   };
 
   const handleDelete = async () => {
-  if (deleteId === null) return;
+    if (deleteId === null) return;
 
-  try {
-    await deleteClass(deleteId);
+    try {
+      await deleteClass(deleteId);
 
-    setShowDeleteModal(false);
-    setDeleteId(null);
+      setShowDeleteModal(false);
+      setDeleteId(null);
 
-    fetchClasses();
-  } catch (error) {
-    console.error("Failed to delete class:", error);
-  }
-};
+      fetchClasses();
+    } catch (error) {
+      console.error("Failed to delete class:", error);
+    }
+  };
 
   const handleEdit = (c: Class) => {
     setEditId(c.class_id);
@@ -115,22 +115,22 @@ const [deleteId, setDeleteId] = useState<number | null>(null);
   };
 
   const handleUpdate = async () => {
-  if (editId === null) return;
+    if (editId === null) return;
 
-  if (!validateForm()) return;
+    if (!validateForm()) return;
 
-  try {
-    await updateClass(editId, className.trim());
+    try {
+      await updateClass(editId, className.trim());
 
-    setEditId(null);
-    setClassName("");
-    setShowModal(false);
+      setEditId(null);
+      setClassName("");
+      setShowModal(false);
 
-    fetchClasses();
-  } catch (error) {
-    console.error("Failed to update class:", error);
-  }
-};
+      fetchClasses();
+    } catch (error) {
+      console.error("Failed to update class:", error);
+    }
+  };
 
   const indexOfLastRow = currentPage * rowsPerPage;
   const indexOfFirstRow = indexOfLastRow - rowsPerPage;
@@ -147,12 +147,12 @@ const [deleteId, setDeleteId] = useState<number | null>(null);
         <button
           className="add-btn"
           onClick={() => {
-  setEditId(null);
-  setClassName("");
-  setClassError("");
-  setDuplicateError("");
-  setShowModal(true);
-}}
+            setEditId(null);
+            setClassName("");
+            setClassError("");
+            setDuplicateError("");
+            setShowModal(true);
+          }}
         >
           Add Class
         </button>
@@ -169,7 +169,6 @@ const [deleteId, setDeleteId] = useState<number | null>(null);
               <input
                 id="className"
                 value={className}
-                // onChange={(e) => setClassName(e.target.value)}
                 onChange={(e) => {
                   setClassName(e.target.value);
                   setClassError("");
@@ -177,13 +176,11 @@ const [deleteId, setDeleteId] = useState<number | null>(null);
                 }}
                 placeholder="Enter class name"
               />
-              {classError && (
-  <span className="error-text">{classError}</span>
-)}
+              {classError && <span className="error-text">{classError}</span>}
 
-{duplicateError && (
-  <span className="error-text">{duplicateError}</span>
-)}
+              {duplicateError && (
+                <span className="error-text">{duplicateError}</span>
+              )}
             </div>
 
             <div className="modal-actions">
@@ -197,12 +194,12 @@ const [deleteId, setDeleteId] = useState<number | null>(null);
               <button
                 className="modal-cancel-btn"
                 onClick={() => {
-  setShowModal(false);
-  setEditId(null);
-  setClassName("");
-  setClassError("");
-  setDuplicateError("");
-}}
+                  setShowModal(false);
+                  setEditId(null);
+                  setClassName("");
+                  setClassError("");
+                  setDuplicateError("");
+                }}
               >
                 Cancel
               </button>
@@ -211,36 +208,31 @@ const [deleteId, setDeleteId] = useState<number | null>(null);
         </div>
       )}
       {showDeleteModal && (
-  <div className="modal-overlay">
-    <div className="modal-box">
-      <h2>Delete Class</h2>
+        <div className="modal-overlay">
+          <div className="modal-box">
+            <h2>Delete Class</h2>
 
-      <p className="delete-message">
-        Are you sure you want to delete this class?
-      </p>
+            <p className="delete-message">
+              Are you sure you want to delete this class?
+            </p>
 
-      <div className="modal-actions">
-        <button
-          className="modal-delete-button"
-          onClick={handleDelete}
-        >
-          Delete
-        </button>
-        <button
-          className="modal-cancel-button"
-          onClick={() => {
-            setShowDeleteModal(false);
-            setDeleteId(null);
-          }}
-        >
-          Cancel
-        </button>
-
-        
-      </div>
-    </div>
-  </div>
-)}
+            <div className="modal-actions">
+              <button className="modal-delete-button" onClick={handleDelete}>
+                Delete
+              </button>
+              <button
+                className="modal-cancel-button"
+                onClick={() => {
+                  setShowDeleteModal(false);
+                  setDeleteId(null);
+                }}
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       <table className="students-table">
         <thead>
@@ -268,14 +260,14 @@ const [deleteId, setDeleteId] = useState<number | null>(null);
                   </button>
 
                   <button
-  className="delete-btn"
-  onClick={() => {
-    setDeleteId(c.class_id);
-    setShowDeleteModal(true);
-  }}
->
-  Delete
-</button>
+                    className="delete-btn"
+                    onClick={() => {
+                      setDeleteId(c.class_id);
+                      setShowDeleteModal(true);
+                    }}
+                  >
+                    Delete
+                  </button>
                 </td>
               </tr>
             ))
