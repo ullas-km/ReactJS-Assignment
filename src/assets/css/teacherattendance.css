@@ -1,0 +1,126 @@
+/* PAGE */
+.attendance-page {
+  padding: 20px;
+  background: #f8fafc;
+  min-height: 100vh;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+/* HEADER */
+.attendance-page h2 {
+  font-size: 24px;
+  font-weight: bold;
+  color: #111827;
+  margin-bottom: 15px;
+}
+
+/* FORM WRAPPER */
+.attendance-page form {
+  background: #ffffff;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+
+  margin-bottom: 20px;
+}
+
+/* INPUTS */
+.attendance-page select,
+.attendance-page input[type="date"] {
+  padding: 10px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  outline: none;
+  font-size: 14px;
+}
+
+.attendance-page select:focus,
+.attendance-page input[type="date"]:focus {
+  border-color: #1d4ed8;
+}
+
+/* BUTTON */
+.attendance-page button {
+  padding: 10px 16px;
+  border: none;
+  border-radius: 8px;
+  background-color: #15803d;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.attendance-page button:hover {
+  background-color: #166534;
+}
+
+/* TABLE WRAPPER STYLE (same as students) */
+.attendance-page table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+/* HEADER */
+.attendance-page thead {
+  background-color: #1e3a8a;
+  color: #ffffff;
+}
+
+.attendance-page th,
+.attendance-page td {
+  text-align: center;
+  padding: 12px;
+}
+
+/* ROWS */
+.attendance-page td {
+  border-bottom: 1px solid #eee;
+}
+
+.attendance-page tbody tr:hover {
+  background-color: #f3f6ff;
+  transition: 0.2s;
+}
+
+/* STATUS COLORS */
+.status {
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.status.present {
+  color: #16a34a;
+}
+
+.status.absent {
+  color: #dc2626;
+}
+
+/* LOADING */
+.loading-cell {
+  text-align: center;
+  padding: 30px;
+  font-size: 16px;
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  .attendance-page {
+    padding: 14px;
+  }
+
+  .attendance-page table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+}

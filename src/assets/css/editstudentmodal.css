@@ -1,0 +1,37 @@
+.modal-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+/* Update Button */
+.student-modal-update {
+  flex: 1;
+  padding: 10px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+
+  background: #15803d;
+  color: white;
+}
+
+.student-modal-update:hover {
+  background: #166534;
+}
+
+/* Cancel Button */
+.student-modal-cancel {
+  flex: 1;
+  padding: 10px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+
+  background: #dc2626;
+  color: white;
+}
+
+.student-modal-cancel:hover {
+  background: #b91c1c;
+}

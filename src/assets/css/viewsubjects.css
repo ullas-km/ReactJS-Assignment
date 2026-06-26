@@ -1,0 +1,256 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+/* PAGE */
+.students-page {
+  padding: 20px;
+  background: #f8fafc;
+  min-height: 100vh;
+}
+
+/* HEADER */
+.students-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.students-header h2 {
+  font-size: 24px;
+  font-weight: bold;
+  color: #111827;
+}
+
+/* TABLE */
+.students-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.students-table thead {
+  background: #1e3a8a;
+  color: white;
+}
+
+.students-table th,
+.students-table td {
+  padding: 12px;
+  text-align: center;
+}
+
+.students-table td {
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.students-table tbody tr:hover {
+  background: #f3f6ff;
+}
+
+/* LOADING */
+.loading-cell {
+  text-align: center;
+  padding: 30px;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+/* BUTTONS */
+.add-btn {
+  padding: 10px 18px;
+  border: none;
+  border-radius: 8px;
+  background: #15803d;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.add-btn:hover {
+  background: #166534;
+}
+
+.edit-btn {
+  padding: 6px 12px;
+  background: #1d4ed8;
+  border: none;
+  color: white;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-right: 8px;
+}
+
+.edit-btn:hover {
+  background: #1e40af;
+}
+
+.delete-btn {
+  padding: 6px 12px;
+  background: #dc2626;
+  border: none;
+  color: white;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.delete-btn:hover {
+  background: #b91c1c;
+}
+
+/* MODAL */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-box {
+  width: 420px;
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+}
+
+.modal-box h2 {
+  margin-bottom: 15px;
+}
+
+/* FORM */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 15px;
+}
+
+.form-group label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #374151;
+}
+
+.form-group input {
+  padding: 10px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  outline: none;
+}
+
+.form-group input:focus {
+  border-color: #2563eb;
+}
+
+/* MODAL BUTTONS */
+.modal-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.modal-add-btn {
+  flex: 1;
+  padding: 10px;
+  border: none;
+  border-radius: 8px;
+  background: #15803d;
+  color: white;
+  cursor: pointer;
+}
+
+.modal-add-btn:hover {
+  background: #166534;
+}
+
+.modal-cancel-btn {
+  flex: 1;
+  padding: 10px;
+  border: none;
+  border-radius: 8px;
+  background: #dc2626;
+  color: white;
+  cursor: pointer;
+}
+
+.modal-cancel-btn:hover {
+  background: #b91c1c;
+}
+
+/* PAGINATION */
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  margin-top: 20px;
+  flex-wrap: wrap;
+}
+
+.pagination button {
+  padding: 8px 14px;
+  border: 1px solid #d1d5db;
+  background: white;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.pagination button:hover:not(:disabled) {
+  background: #f3f4f6;
+}
+
+.pagination button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.active-page {
+  background: #2563eb !important;
+  color: white;
+  border-color: #2563eb !important;
+}
+
+/* MOBILE */
+@media (max-width: 768px) {
+  .students-page {
+    padding: 14px;
+  }
+
+  .students-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .students-table {
+    min-width: 500px;
+  }
+
+  .modal-box {
+    width: 90%;
+  }
+
+  .edit-btn,
+  .delete-btn {
+    width: 100%;
+    margin-bottom: 6px;
+  }
+}
+
+.error-text {
+  color: #dc2626;
+  font-size: 13px;
+  margin-top: 4px;
+  display: block;
+  font-weight: 500;
+}

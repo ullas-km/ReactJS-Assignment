@@ -1,0 +1,26 @@
+{
+  "files": [],
+  "references": [
+    { "path": "./tsconfig.app.json" },
+    { "path": "./tsconfig.node.json" }
+  ],
+  "compilerOptions": {
+     "types": ["vitest/globals"],
+    "jsx": "react-jsx",
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+     "target": "es2020",  
+    "module": "es2020",  
+
+    "types": [
+      "jest",
+      "node",
+      "@testing-library/jest-dom",
+      "vite/client"
+    ]
+  },
+  "include": [
+    "src",
+    "src/global.d.ts"
+  ]
+}
