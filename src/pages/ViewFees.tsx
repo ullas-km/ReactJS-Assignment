@@ -70,6 +70,48 @@ export default function ViewFees() {
 
   const totalPages = Math.ceil(filteredFees.length / rowsPerPage);
 
+  let tableContent: React.ReactNode;
+
+  if (loading) {
+    tableContent = (
+      <tr>
+        <td colSpan={6} className="loading-cell">
+          Loading fees...
+        </td>
+      </tr>
+    );
+  } else if (filteredFees.length === 0) {
+    tableContent = (
+      <tr>
+        <td colSpan={6} className="loading-cell">
+          {searchTerm
+            ? `No students found for "${searchTerm}"`
+            : "No fee records found"}
+        </td>
+      </tr>
+    );
+  } else {
+    tableContent = currentFees.map((f) => (
+      <tr key={f.id}>
+        <td>{f.student_id}</td>
+        <td>{f.student_name}</td>
+        <td>{f.amount}</td>
+        <td>{new Date(f.due_date).toLocaleDateString()}</td>
+        <td>{f.status}</td>
+
+        <td className="actions">
+          <button className="edit-btn" onClick={() => setEditingFee(f)}>
+            Edit
+          </button>
+
+          <button className="delete-btn" onClick={() => setDeleteFeeId(f.id)}>
+            Delete
+          </button>
+        </td>
+      </tr>
+    ));
+  }
+
   return (
     <div className="students-page">
       <div className="students-header">
@@ -107,49 +149,7 @@ export default function ViewFees() {
             </tr>
           </thead>
 
-          <tbody>
-            {loading ? (
-              <tr>
-                <td colSpan={6} className="loading-cell">
-                  Loading fees...
-                </td>
-              </tr>
-            ) : filteredFees.length === 0 ? (
-              <tr>
-                <td colSpan={6} className="loading-cell">
-                  {searchTerm
-                    ? `No students found for "${searchTerm}"`
-                    : "No fee records found"}
-                </td>
-              </tr>
-            ) : (
-              currentFees.map((f) => (
-                <tr key={f.id}>
-                  <td>{f.student_id}</td>
-                  <td>{f.student_name}</td>
-                  <td>{f.amount}</td>
-                  <td>{new Date(f.due_date).toLocaleDateString()}</td>
-                  <td>{f.status}</td>
-
-                  <td className="actions">
-                    <button
-                      className="edit-btn"
-                      onClick={() => setEditingFee(f)}
-                    >
-                      Edit
-                    </button>
-
-                    <button
-                      className="delete-btn"
-                      onClick={() => setDeleteFeeId(f.id)}
-                    >
-                      Delete
-                    </button>
-                  </td>
-                </tr>
-              ))
-            )}
-          </tbody>
+          <tbody>{tableContent}</tbody>
         </table>
       </div>
       {!loading && filteredFees.length > rowsPerPage && (

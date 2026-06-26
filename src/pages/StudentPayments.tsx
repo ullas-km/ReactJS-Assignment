@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { getFees } from "../services/FeesApi";
 import { makePayment } from "../services/PaymentsApi";
 import "../assets/css/studentPayments.css";
-import axios from "axios";
 import PaymentModal from "../components/PaymentModal";
 import "../assets/css/paymentmodal.css";
 
@@ -110,7 +109,11 @@ export default function StudentPayments() {
                     </td>
 
                     <td>
-                      {fee.status !== "paid" ? (
+                      {fee.status === "paid" ? (
+                        <button className="paid-btn" disabled>
+                          Paid
+                        </button>
+                      ) : (
                         <button
                           className="pay-btn"
                           onClick={() => {
@@ -119,10 +122,6 @@ export default function StudentPayments() {
                           }}
                         >
                           Pay Now
-                        </button>
-                      ) : (
-                        <button className="paid-btn" disabled>
-                          Paid
                         </button>
                       )}
                     </td>

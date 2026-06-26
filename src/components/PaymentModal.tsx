@@ -1,11 +1,11 @@
 import { useState } from "react";
 import "../assets/css/paymentModal.css";
 
-interface PaymentModalProps {
+type PaymentModalProps = Readonly<{
   amount: number;
   onSuccess: () => void;
   onClose: () => void;
-}
+}>;
 
 export default function PaymentModal({
   amount,
@@ -49,7 +49,7 @@ export default function PaymentModal({
           placeholder="Card Number"
           maxLength={16}
           value={cardNumber}
-          onChange={(e) => setCardNumber(e.target.value.replace(/\D/g, ""))}
+          onChange={(e) => setCardNumber(e.target.value.replaceAll(/\D/g, ""))}
         />
 
         <input
@@ -74,7 +74,7 @@ export default function PaymentModal({
             placeholder="CVV"
             maxLength={3}
             value={cvv}
-            onChange={(e) => setCvv(e.target.value.replace(/\D/g, ""))}
+            onChange={(e) => setCvv(e.target.value.replaceAll(/\D/g, ""))}
           />
         </div>
 

@@ -4,7 +4,7 @@ import { addMarks, updateMarks, deleteMarks } from "../services/marksApi";
 import { getStudents, getSubjects, getExams } from "../services/dropdownsApi";
 import "../assets/css/teachermarks.css";
 
-const API = "http://localhost:3000";
+const API = import.meta.env.VITE_API_URL;
 
 type Student = {
   student_id: number;

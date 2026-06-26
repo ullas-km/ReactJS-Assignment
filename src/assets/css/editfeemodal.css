@@ -57,8 +57,8 @@
   margin-top: 20px;
 }
 
-.edit-fee-modal .modal-add-btn,
-.edit-fee-modal .modal-cancel-btn {
+.edit-fee-modal .edit-modal-add-btn,
+.edit-fee-modal .edit-modal-cancel-btn {
   flex: 1;
 
   padding: 10px;
@@ -69,11 +69,12 @@
   cursor: pointer;
 }
 
-.edit-fee-modal .modal-add-btn {
-  background: #2563eb;
+.edit-fee-modal .edit-modal-add-btn {
+  background: #15803d;
   color: white;
 }
 
-.edit-fee-modal .modal-cancel-btn {
-  background: #e5e7eb;
+.edit-fee-modal .edit-modal-cancel-btn {
+  background: #dc2626;
+  color: white;
 }

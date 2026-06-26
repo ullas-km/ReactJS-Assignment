@@ -1,6 +1,7 @@
 import { useState } from "react";
 
 import { updateStudent } from "../services/studentsApi";
+import "../assets/css/editstudentmodal.css"
 
 type Student = {
   student_id: number;
@@ -141,11 +142,11 @@ export default function EditStudentModal({
         </div>
 
         <div className="modal-actions">
-          <button className="modal-add-btn" onClick={handleUpdate}>
+          <button className="student-modal-update" onClick={handleUpdate}>
             Update
           </button>
 
-          <button className="modal-cancel-btn" onClick={onClose}>
+          <button className="student-modal-cancel" onClick={onClose}>
             Cancel
           </button>
         </div>

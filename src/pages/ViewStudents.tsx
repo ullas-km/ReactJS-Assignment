@@ -241,19 +241,20 @@ export default function ViewStudents() {
         <strong>{studentToDelete.name}</strong>?
       </p>
 
-      <div className="modal-actions">
-        <button
-          className="modal-cancel-btn"
-          onClick={() => setStudentToDelete(null)}
-        >
-          Cancel
-        </button>
+      <div className="delete-modal-actions">
 
         <button
           className="confirm-delete-btn"
           onClick={confirmDelete}
         >
           Delete
+        </button>
+
+        <button
+          className="student-modal-cancel-btn"
+          onClick={() => setStudentToDelete(null)}
+        >
+          Cancel
         </button>
       </div>
     </div>

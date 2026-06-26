@@ -175,7 +175,7 @@
   color: white;
   border: none;
   padding: 10px;
-  border-radius: 8px;
+  border-radius: 6px;
   cursor: pointer;
 }
 
@@ -185,16 +185,16 @@
 
 .modal-cancel-btn {
   flex: 1;
-   background-color: #6b7280;
+  background: #dc2626;
   color: white;
   border: none;
   padding: 10px;
-  border-radius: 8px;
+  border-radius: 6px;
   cursor: pointer;
 }
 
 .modal-cancel-btn:hover {
-   background-color: #6b7280;
+  background: #b91c1c;
 }
 
 /* LOADING */

@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { addStudent } from "../services/studentsApi";
 import { getClasses } from "../services/ClassesApi";
 import { getSections } from "../services/SectionApi";
-import "../assets/css/addstudentmoda.css"
+import "../assets/css/addstudentmoda.css";
 type Props = Readonly<{
   onClose: () => void;
   refreshStudents: () => void;
@@ -21,13 +21,13 @@ type SectionItem = {
 
 export default function AddStudentModal({ onClose, refreshStudents }: Props) {
   const [errors, setErrors] = useState({
-  name: "",
-  email: "",
-  phone: "",
-  classId: "",
-  sectionId: "",
-  password: "",
-});
+    name: "",
+    email: "",
+    phone: "",
+    classId: "",
+    sectionId: "",
+    password: "",
+  });
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
@@ -51,59 +51,73 @@ export default function AddStudentModal({ onClose, refreshStudents }: Props) {
     loadData();
   }, []);
   const handleAddStudent = async () => {
-  const newErrors = {
-    name: "",
-    email: "",
-    phone: "",
-    classId: "",
-    sectionId: "",
-    password: "",
+    const newErrors = {
+      name: "",
+      email: "",
+      phone: "",
+      classId: "",
+      sectionId: "",
+      password: "",
+    };
+
+    if (!name.trim()) {
+      newErrors.name = "Name is required";
+    }
+
+    const trimmedEmail = email.trim();
+
+    if (trimmedEmail) {
+      const atIndex = trimmedEmail.indexOf("@");
+      const lastAtIndex = trimmedEmail.lastIndexOf("@");
+      const dotIndex = trimmedEmail.lastIndexOf(".");
+
+      const isValidEmail =
+        atIndex > 0 &&
+        atIndex === lastAtIndex &&
+        dotIndex > atIndex + 1 &&
+        dotIndex < trimmedEmail.length - 1;
+
+      if (!isValidEmail) {
+        newErrors.email = "Invalid email address";
+      }
+    } else {
+      newErrors.email = "Email is required";
+    }
+
+    if (!/^\d{10}$/.test(phone)) {
+      newErrors.phone = "Phone number must be 10 digits";
+    }
+
+    if (!classId) {
+      newErrors.classId = "Please select a class";
+    }
+
+    if (!sectionId) {
+      newErrors.sectionId = "Please select a section";
+    }
+
+    if (password.length < 6) {
+      newErrors.password = "Password must be at least 6 characters";
+    }
+
+    setErrors(newErrors);
+
+    if (Object.values(newErrors).some((error) => error !== "")) {
+      return;
+    }
+
+    await addStudent(
+      name,
+      email,
+      phone,
+      Number(classId),
+      Number(sectionId),
+      password,
+    );
+
+    refreshStudents();
+    onClose();
   };
-
-  if (!name.trim()) {
-    newErrors.name = "Name is required";
-  }
-
-  if (!email.trim()) {
-    newErrors.email = "Email is required";
-  } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-    newErrors.email = "Invalid email address";
-  }
-
-  if (!/^\d{10}$/.test(phone)) {
-    newErrors.phone = "Phone number must be 10 digits";
-  }
-
-  if (!classId) {
-    newErrors.classId = "Please select a class";
-  }
-
-  if (!sectionId) {
-    newErrors.sectionId = "Please select a section";
-  }
-
-  if (password.length < 6) {
-    newErrors.password = "Password must be at least 6 characters";
-  }
-
-  setErrors(newErrors);
-
-  if (Object.values(newErrors).some((error) => error !== "")) {
-    return;
-  }
-
-  await addStudent(
-    name,
-    email,
-    phone,
-    Number(classId),
-    Number(sectionId),
-    password,
-  );
-
-  refreshStudents();
-  onClose();
-};
 
   return (
     <div className="modal-overlay">
@@ -113,48 +127,46 @@ export default function AddStudentModal({ onClose, refreshStudents }: Props) {
         <div className="form-group">
           <label htmlFor="name">Name</label>
           <input
-  id="name"
-  value={name}
-  onChange={(e) => setName(e.target.value)}
-/>
+            id="name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
 
-{errors.name && <p className="error-text">{errors.name}</p>}
+          {errors.name && <p className="error-text">{errors.name}</p>}
         </div>
 
         <div className="form-group">
           <label htmlFor="email">Email</label>
           <input
-  id="email"
-  value={email}
-  onChange={(e) => setEmail(e.target.value)}
-/>
+            id="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
 
-{errors.email && <p className="error-text">{errors.email}</p>}
+          {errors.email && <p className="error-text">{errors.email}</p>}
         </div>
 
         <div className="form-group">
           <label htmlFor="password">Password</label>
           <input
-  id="password"
-  type="password"
-  value={password}
-  onChange={(e) => setPassword(e.target.value)}
-/>
+            id="password"
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
 
-{errors.password && (
-  <p className="error-text">{errors.password}</p>
-)}
+          {errors.password && <p className="error-text">{errors.password}</p>}
         </div>
 
         <div className="form-group">
           <label htmlFor="phone">Phone</label>
           <input
-  id="phone"
-  value={phone}
-  onChange={(e) => setPhone(e.target.value)}
-/>
+            id="phone"
+            value={phone}
+            onChange={(e) => setPhone(e.target.value)}
+          />
 
-{errors.phone && <p className="error-text">{errors.phone}</p>}
+          {errors.phone && <p className="error-text">{errors.phone}</p>}
         </div>
 
         <div className="form-group">
@@ -165,9 +177,7 @@ export default function AddStudentModal({ onClose, refreshStudents }: Props) {
             value={classId}
             onChange={(e) => setClassId(e.target.value)}
           >
-            {errors.classId && (
-  <p className="error-text">{errors.classId}</p>
-)}
+            {errors.classId && <p className="error-text">{errors.classId}</p>}
             <option value="">Select Class</option>
 
             {classes.map((c) => (
@@ -187,8 +197,8 @@ export default function AddStudentModal({ onClose, refreshStudents }: Props) {
             onChange={(e) => setSectionId(e.target.value)}
           >
             {errors.sectionId && (
-  <p className="error-text">{errors.sectionId}</p>
-)}
+              <p className="error-text">{errors.sectionId}</p>
+            )}
             <option value="">Select Section</option>
 
             {sections

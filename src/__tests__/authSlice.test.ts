@@ -1,4 +1,8 @@
-import authReducer, { loginSuccess, logout } from "../features/auth/authSlice";
+import authReducer, {
+  loginSuccess,
+  logout,
+} from "../features/auth/authSlice";
+import type { User } from "../services/authApi";
 
 describe("authSlice", () => {
   const initialState = {
@@ -6,15 +10,20 @@ describe("authSlice", () => {
     user: null,
   };
 
-  test("should handle loginSuccess", () => {
-    const user = { id: 1, name: "Test User" };
+  const user: User = {
+    user_id: 1,
+    name: "Test User",
+    email: "test@test.com",
+    role: "teacher",
+  };
 
+  test("should handle loginSuccess", () => {
     const state = authReducer(
       initialState,
       loginSuccess({
         token: "abc123",
-        user: user as any,
-      })
+        user,
+      }),
     );
 
     expect(state.token).toBe("abc123");
@@ -24,7 +33,7 @@ describe("authSlice", () => {
   test("should handle logout", () => {
     const loggedInState = {
       token: "abc123",
-      user: { id: 1, name: "Test User" } as any,
+      user,
     };
 
     const state = authReducer(loggedInState, logout());

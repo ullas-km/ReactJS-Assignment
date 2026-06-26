@@ -15,6 +15,24 @@ vi.mock("../services/PaymentsApi", () => ({
   makePayment: vi.fn(),
 }));
 
+// Mock PaymentModal
+vi.mock("../components/PaymentModal", () => ({
+  default: ({
+    onSuccess,
+    onClose,
+  }: {
+    amount: number;
+    onSuccess: () => void;
+    onClose: () => void;
+  }) => (
+    <div>
+      <p>Mock Payment Modal</p>
+      <button onClick={onSuccess}>Mock Success</button>
+      <button onClick={onClose}>Mock Close</button>
+    </div>
+  ),
+}));
+
 describe("StudentPayments", () => {
   beforeEach(() => {
     vi.clearAllMocks();
@@ -113,6 +131,32 @@ describe("StudentPayments", () => {
     expect(paidButton).toBeDisabled();
   });
 
+  it("opens payment modal when Pay Now is clicked", async () => {
+    const user = userEvent.setup();
+
+    vi.mocked(getFees).mockResolvedValue([
+      {
+        id: 1,
+        student_id: 1,
+        amount: 5000,
+        due_date: "2026-06-30",
+        status: "pending",
+      },
+    ]);
+
+    render(<StudentPayments />);
+
+    const payButton = await screen.findByRole("button", {
+      name: /pay now/i,
+    });
+
+    await user.click(payButton);
+
+    expect(
+      screen.getByText("Mock Payment Modal"),
+    ).toBeInTheDocument();
+  });
+
   it("makes payment successfully", async () => {
     const user = userEvent.setup();
 
@@ -138,57 +182,100 @@ describe("StudentPayments", () => {
 
     await user.click(payButton);
 
+    const successButton = await screen.findByRole("button", {
+      name: /mock success/i,
+    });
+
+    await user.click(successButton);
+
     await waitFor(() => {
       expect(makePayment).toHaveBeenCalledWith(1, 1, 5000);
     });
 
-    expect(window.alert).toHaveBeenCalledWith("Payment successful");
+    expect(window.alert).toHaveBeenCalledWith("Payment Successful");
 
     expect(
       screen.getByRole("button", {
-        name: /^paid$/i,
+        name: /paid/i,
       }),
     ).toBeDisabled();
   });
 
   it("shows error when payment fails", async () => {
-  const user = userEvent.setup();
+    const user = userEvent.setup();
 
-  vi.mocked(getFees).mockResolvedValue([
-    {
-      id: 1,
-      student_id: 1,
-      amount: 5000,
-      due_date: "2026-06-30",
-      status: "pending",
-    },
-  ]);
-
-  vi.mocked(makePayment).mockRejectedValue(
-    Object.assign(new Error("Request failed"), {
-      isAxiosError: true,
-      response: {
-        data: "Insufficient balance",
+    vi.mocked(getFees).mockResolvedValue([
+      {
+        id: 1,
+        student_id: 1,
+        amount: 5000,
+        due_date: "2026-06-30",
+        status: "pending",
       },
-    }),
-  );
+    ]);
 
-  render(<StudentPayments />);
+    vi.mocked(makePayment).mockRejectedValue(
+      new Error("Request failed"),
+    );
 
-  const payButton = await screen.findByRole("button", {
-    name: /pay now/i,
+    render(<StudentPayments />);
+
+    const payButton = await screen.findByRole("button", {
+      name: /pay now/i,
+    });
+
+    await user.click(payButton);
+
+    const successButton = await screen.findByRole("button", {
+      name: /mock success/i,
+    });
+
+    await user.click(successButton);
+
+    await waitFor(() => {
+      expect(makePayment).toHaveBeenCalledWith(1, 1, 5000);
+    });
+
+    expect(window.alert).toHaveBeenCalledWith("Payment Failed");
   });
 
-  await user.click(payButton);
+  it("closes payment modal", async () => {
+    const user = userEvent.setup();
 
-  await waitFor(() => {
-    expect(makePayment).toHaveBeenCalled();
+    vi.mocked(getFees).mockResolvedValue([
+      {
+        id: 1,
+        student_id: 1,
+        amount: 5000,
+        due_date: "2026-06-30",
+        status: "pending",
+      },
+    ]);
+
+    render(<StudentPayments />);
+
+    const payButton = await screen.findByRole("button", {
+      name: /pay now/i,
+    });
+
+    await user.click(payButton);
+
+    expect(
+      screen.getByText("Mock Payment Modal"),
+    ).toBeInTheDocument();
+
+    await user.click(
+      screen.getByRole("button", {
+        name: /mock close/i,
+      }),
+    );
+
+    await waitFor(() => {
+      expect(
+        screen.queryByText("Mock Payment Modal"),
+      ).not.toBeInTheDocument();
+    });
   });
-
-  expect(window.alert).toHaveBeenCalledWith(
-    "Insufficient balance",
-  );
-});
 
   it("calls getFees on mount", async () => {
     vi.mocked(getFees).mockResolvedValue([]);
@@ -196,7 +283,7 @@ describe("StudentPayments", () => {
     render(<StudentPayments />);
 
     await waitFor(() => {
-      expect(getFees).toHaveBeenCalled();
+      expect(getFees).toHaveBeenCalledTimes(1);
     });
   });
 
@@ -206,7 +293,16 @@ describe("StudentPayments", () => {
     render(<StudentPayments />);
 
     expect(screen.getByText("My Fees")).toBeInTheDocument();
-
     expect(screen.getByText("Fee payment details")).toBeInTheDocument();
+  });
+
+  it("shows no fee records message", async () => {
+    vi.mocked(getFees).mockResolvedValue([]);
+
+    render(<StudentPayments />);
+
+    expect(
+      await screen.findByText(/no fee records found/i),
+    ).toBeInTheDocument();
   });
 });

@@ -1,144 +1,115 @@
+import {
+  render,
+  screen,
+  waitFor,
+} from "@testing-library/react";
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { render, screen, waitFor } from "@testing-library/react";
 
-import ViewStudents from "../pages/ViewStudents";
-
+import TeacherStudents from "../pages/TeacherStudents";
 import { getStudents } from "../services/studentsApi";
-import { getClasses } from "../services/ClassesApi";
-import { getSections } from "../services/SectionApi";
 
 vi.mock("../services/studentsApi", () => ({
   getStudents: vi.fn(),
 }));
 
-vi.mock("../services/ClassesApi", () => ({
-  getClasses: vi.fn(),
-}));
-
-vi.mock("../services/SectionApi", () => ({
-  getSections: vi.fn(),
-}));
-
-describe("ViewStudents", () => {
+describe("TeacherStudents", () => {
   beforeEach(() => {
     vi.clearAllMocks();
-
-    vi.mocked(getClasses).mockResolvedValue([]);
-    vi.mocked(getSections).mockResolvedValue([]);
   });
 
-  it("shows loading state initially", () => {
-    vi.mocked(getStudents).mockReturnValue(
-      new Promise(() => {})
+  it("shows loading initially", () => {
+    vi.mocked(getStudents).mockImplementation(
+      () => new Promise(() => {})
     );
 
-    render(<ViewStudents />);
+    render(<TeacherStudents />);
 
     expect(
-      screen.getByText(/loading students/i)
+      screen.getByText("Loading students...")
     ).toBeInTheDocument();
   });
 
-  it("renders students after successful fetch", async () => {
+  it("renders students after successful API call", async () => {
     vi.mocked(getStudents).mockResolvedValue([
       {
         student_id: 1,
         name: "John Doe",
         email: "john@test.com",
-        phone: "1234567890",
-        class_name: "10",
+        phone: "9876543210",
+        class_name: "Class 10",
         section_name: "A",
-        class_id: 1,
+        class_id: 10,
         section_id: 1,
       },
       {
         student_id: 2,
-        name: "Jane Doe",
+        name: "Jane Smith",
         email: "jane@test.com",
-        phone: "9876543210",
-        class_name: "11",
+        phone: "9999999999",
+        class_name: "Class 9",
         section_name: "B",
-        class_id: 2,
+        class_id: 9,
         section_id: 2,
       },
     ]);
 
-    render(<ViewStudents />);
+    render(<TeacherStudents />);
 
-    await waitFor(() => {
-      expect(
-        screen.getByText("John Doe")
-      ).toBeInTheDocument();
+    expect(await screen.findByText("John Doe")).toBeInTheDocument();
+    expect(screen.getByText("Jane Smith")).toBeInTheDocument();
 
-      expect(
-        screen.getByText("Jane Doe")
-      ).toBeInTheDocument();
-    });
+    expect(screen.getByText("john@test.com")).toBeInTheDocument();
+    expect(screen.getByText("jane@test.com")).toBeInTheDocument();
+
+    expect(screen.getByText("9876543210")).toBeInTheDocument();
+    expect(screen.getByText("9999999999")).toBeInTheDocument();
+
+    expect(screen.getByText("Class 10")).toBeInTheDocument();
+    expect(screen.getByText("Class 9")).toBeInTheDocument();
+
+    expect(screen.getByText("A")).toBeInTheDocument();
+    expect(screen.getByText("B")).toBeInTheDocument();
 
     expect(
-      screen.getByText("john@test.com")
-    ).toBeInTheDocument();
-
-    expect(
-      screen.getByText("jane@test.com")
-    ).toBeInTheDocument();
-
-    expect(getStudents).toHaveBeenCalledTimes(1);
-    expect(getClasses).toHaveBeenCalledTimes(1);
-    expect(getSections).toHaveBeenCalledTimes(1);
+      screen.queryByText("Loading students...")
+    ).not.toBeInTheDocument();
   });
 
-  it("handles API error gracefully", async () => {
-    const consoleSpy = vi
+  it("handles API failure", async () => {
+    const errorSpy = vi
       .spyOn(console, "error")
       .mockImplementation(() => {});
 
     vi.mocked(getStudents).mockRejectedValue(
-      new Error("Failed to load")
+      new Error("API Error")
     );
 
-    render(<ViewStudents />);
+    render(<TeacherStudents />);
 
     await waitFor(() => {
-      expect(
-        screen.queryByText(/loading students/i)
-      ).not.toBeInTheDocument();
+      expect(errorSpy).toHaveBeenCalledWith(
+        "Failed to load data:",
+        expect.any(Error)
+      );
     });
 
-    expect(consoleSpy).toHaveBeenCalled();
+    expect(
+      screen.queryByText("Loading students...")
+    ).not.toBeInTheDocument();
 
-    consoleSpy.mockRestore();
+    errorSpy.mockRestore();
   });
 
   it("renders table headers", async () => {
     vi.mocked(getStudents).mockResolvedValue([]);
 
-    render(<ViewStudents />);
+    render(<TeacherStudents />);
 
-    await waitFor(() => {
-      expect(
-        screen.getByText("ID")
-      ).toBeInTheDocument();
-    });
-
-    expect(
-      screen.getByText("Name")
-    ).toBeInTheDocument();
-
-    expect(
-      screen.getByText("Email")
-    ).toBeInTheDocument();
-
-    expect(
-      screen.getByText("Phone")
-    ).toBeInTheDocument();
-
-    expect(
-      screen.getByText("Class")
-    ).toBeInTheDocument();
-
-    expect(
-      screen.getByText("Section")
-    ).toBeInTheDocument();
+    expect(await screen.findByText("ID")).toBeInTheDocument();
+    expect(screen.getByText("Name")).toBeInTheDocument();
+    expect(screen.getByText("Email")).toBeInTheDocument();
+    expect(screen.getByText("Phone")).toBeInTheDocument();
+    expect(screen.getByText("Class")).toBeInTheDocument();
+    expect(screen.getByText("Section")).toBeInTheDocument();
   });
 });

@@ -88,11 +88,11 @@ export default function EditFeeModal({ fee, onClose, refreshFees }: Props) {
         </div>
 
         <div className="modal-actions">
-          <button className="modal-add-btn" onClick={handleUpdate}>
+          <button className="edit-modal-add-btn" onClick={handleUpdate}>
             Update
           </button>
 
-          <button className="modal-cancel-btn" onClick={onClose}>
+          <button className="edit-modal-cancel-btn" onClick={onClose}>
             Cancel
           </button>
         </div>

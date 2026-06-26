@@ -111,6 +111,24 @@ export default function ViewTeachers() {
     }
   };
 
+  const isValidEmail = (email: string): boolean => {
+    const value = email.trim();
+
+    if (!value || value.includes(" ")) return false;
+
+    const atIndex = value.indexOf("@");
+    const lastAtIndex = value.lastIndexOf("@");
+
+    if (atIndex <= 0 || atIndex !== lastAtIndex) return false;
+
+    const domain = value.slice(atIndex + 1);
+    const dotIndex = domain.lastIndexOf(".");
+
+    if (dotIndex <= 0 || dotIndex === domain.length - 1) return false;
+
+    return true;
+  };
+
   const handleDelete = async () => {
     if (teacherToDelete === null) return;
 
@@ -212,7 +230,7 @@ export default function ViewTeachers() {
     if (!email.trim()) {
       setEmailError("Email is required");
       valid = false;
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    } else if (!isValidEmail(email)) {
       setEmailError("Enter a valid email");
       valid = false;
     }

@@ -248,13 +248,3 @@
   display: flex;
   justify-content: center;
 }
-
-.search-box input {
-  width: 320px;
-  padding: 10px 14px;
-
-  border: 1px solid #d1d5db;
-  border-radius: 8px;
-
-  font-size: 14px;
-}

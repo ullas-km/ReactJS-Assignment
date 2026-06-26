@@ -85,9 +85,37 @@
   gap: 10px;
 }
 
-.modal-actions {
+.delete-modal-actions {
   display: flex;
+  justify-content: flex-end;
   gap: 10px;
+  margin-top: 20px;
+}
+
+.student-modal-cancel-btn {
+  background: #6b7280;
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.student-modal-cancel-btn:hover {
+  background: #4b5563;
+}
+
+.confirm-delete-btn {
+  background: #dc2626;
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.confirm-delete-btn:hover {
+  background: #b91c1c;
 }
 
 /* EDIT BUTTON */
@@ -210,17 +238,4 @@
   width: 400px;
   max-width: 90%;
   box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-}
-
-.confirm-delete-btn {
-  background: #dc2626;
-  color: white;
-  border: none;
-  padding: 10px 16px;
-  border-radius: 6px;
-  cursor: pointer;
-}
-
-.confirm-delete-btn:hover {
-  background: #b91c1c;
 }
