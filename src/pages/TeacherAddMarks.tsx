@@ -48,6 +48,13 @@ export default function TeacherAddMarks() {
   const [marksList, setMarksList] = useState<Mark[]>([]);
   const [editingId, setEditingId] = useState<number | null>(null);
 
+  const [errors, setErrors] = useState({
+    exam_id: "",
+    subject_id: "",
+    student_id: "",
+    marks: "",
+  });
+
   const [form, setForm] = useState<FormData>({
     exam_id: "",
     subject_id: "",
@@ -116,24 +123,86 @@ export default function TeacherAddMarks() {
     }
   };
 
+  // const handleChange = (
+  //   e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
+  // ) => {
+  //   setForm({ ...form, [e.target.name]: e.target.value });
+  // };
+
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
   ) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
+    setForm({
+      ...form,
+      [e.target.name]: e.target.value,
+    });
+
+    setErrors({
+      ...errors,
+      [e.target.name]: "",
+    });
+  };
+
+  const validateStep = (currentStep: number) => {
+    const newErrors = {
+      exam_id: "",
+      subject_id: "",
+      student_id: "",
+      marks: "",
+    };
+
+    let valid = true;
+
+    if (currentStep === 1) {
+      if (!form.exam_id) {
+        newErrors.exam_id = "Please select an exam";
+        valid = false;
+      }
+    }
+
+    if (currentStep === 2) {
+      if (!form.subject_id) {
+        newErrors.subject_id = "Please select a subject";
+        valid = false;
+      }
+    }
+
+    if (currentStep === 3) {
+      if (!form.student_id) {
+        newErrors.student_id = "Please select a student";
+        valid = false;
+      }
+    }
+
+    if (currentStep === 4) {
+      if (!form.marks) {
+        newErrors.marks = "Marks are required";
+        valid = false;
+      } else {
+        const mark = Number(form.marks);
+
+        if (Number.isNaN(mark)) {
+          newErrors.marks = "Marks must be a number";
+          valid = false;
+        } else if (mark < 0) {
+          newErrors.marks = "Marks cannot be negative";
+          valid = false;
+        } else if (mark > 100) {
+          newErrors.marks = "Marks cannot exceed 100";
+          valid = false;
+        }
+      }
+    }
+
+    setErrors(newErrors);
+    return valid;
   };
 
   const handleSubmit = async () => {
+    if (!validateStep(4)) {
+      return;
+    }
     try {
-      if (
-        !form.exam_id ||
-        !form.subject_id ||
-        !form.student_id ||
-        !form.marks
-      ) {
-        alert("Fill all fields");
-        return;
-      }
-
       const payload = {
         exam_id: Number(form.exam_id),
         subject_id: Number(form.subject_id),
@@ -193,7 +262,7 @@ export default function TeacherAddMarks() {
 
               <select
                 id="selectexam"
-                className="marks-select"
+                className={`marks-select ${errors.exam_id ? "error" : ""}`}
                 name="exam_id"
                 value={form.exam_id}
                 onChange={handleChange}
@@ -205,8 +274,18 @@ export default function TeacherAddMarks() {
                   </option>
                 ))}
               </select>
+              {errors.exam_id && (
+                <span className="error-text">{errors.exam_id}</span>
+              )}
 
-              <button className="next-btn" onClick={() => setStep(2)}>
+              <button
+                className="next-btn"
+                onClick={() => {
+                  if (validateStep(1)) {
+                    setStep(2);
+                  }
+                }}
+              >
                 Continue →
               </button>
             </div>
@@ -218,7 +297,7 @@ export default function TeacherAddMarks() {
 
               <select
                 id="selectsub"
-                className="marks-select"
+                className={`marks-select ${errors.subject_id ? "error" : ""}`}
                 name="subject_id"
                 value={form.subject_id}
                 onChange={handleChange}
@@ -230,13 +309,23 @@ export default function TeacherAddMarks() {
                   </option>
                 ))}
               </select>
+              {errors.subject_id && (
+  <span className="error-text">{errors.subject_id}</span>
+)}
 
               <div className="btn-group">
                 <button className="back-btn" onClick={() => setStep(1)}>
                   ← Back
                 </button>
 
-                <button className="next-btn" onClick={() => setStep(3)}>
+                <button
+                  className="next-btn"
+                  onClick={() => {
+                    if (validateStep(2)) {
+                      setStep(3);
+                    }
+                  }}
+                >
                   Continue →
                 </button>
               </div>
@@ -249,7 +338,7 @@ export default function TeacherAddMarks() {
 
               <select
                 id="selectstudent"
-                className="marks-select"
+               className={`marks-select ${errors.student_id ? "error" : ""}`}
                 name="student_id"
                 value={form.student_id}
                 onChange={handleChange}
@@ -261,13 +350,23 @@ export default function TeacherAddMarks() {
                   </option>
                 ))}
               </select>
+              {errors.student_id && (
+  <span className="error-text">{errors.student_id}</span>
+)}
 
               <div className="btn-group">
                 <button className="back-btn" onClick={() => setStep(2)}>
                   ← Back
                 </button>
 
-                <button className="next-btn" onClick={() => setStep(4)}>
+                <button
+                  className="next-btn"
+                  onClick={() => {
+                    if (validateStep(3)) {
+                      setStep(4);
+                    }
+                  }}
+                >
                   Continue →
                 </button>
               </div>
@@ -280,13 +379,16 @@ export default function TeacherAddMarks() {
 
               <input
                 id="entermarks"
-                className="marks-input"
+                className={`marks-input ${errors.marks ? "error" : ""}`}
                 type="number"
                 name="marks"
                 value={form.marks}
                 onChange={handleChange}
                 placeholder="Enter marks out of 100"
               />
+              {errors.marks && (
+  <span className="error-text">{errors.marks}</span>
+)}
 
               <div className="btn-group">
                 <button className="back-btn" onClick={() => setStep(3)}>

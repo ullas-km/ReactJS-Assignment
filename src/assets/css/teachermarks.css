@@ -271,3 +271,16 @@
 .cancel-btn:hover {
   background: #4b5563;
 }
+
+.error-text {
+  display: block;
+  color: #dc2626;
+  font-size: 13px;
+  margin-top: 6px;
+  font-weight: 500;
+}
+
+.marks-input.error,
+.marks-select.error {
+  border: 1px solid #dc2626;
+}
